@@ -1,0 +1,4 @@
+userId,firstName,lastName,email,referralId,commission
+21,aru,Mugam,aru@example.com,R0021,300.50
+22,Gobi,Krishnan,gk@example.com,R0022,250.75
+23,karthi,krishnaramaujam,karthi@example.com,R0023,550.00
