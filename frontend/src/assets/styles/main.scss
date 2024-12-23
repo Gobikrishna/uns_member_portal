@@ -1,0 +1,51 @@
+@import "bootstrap/scss/bootstrap";
+
+$dgreen: #364E3F;
+$lgreen: #456509;
+$white: #ffffff;
+$black: #333333;
+
+footer{
+  background-color: $lgreen;
+  padding:10px;
+}
+header{
+  background-color: $lgreen;
+  .navbar-expand-lg{
+    .navbar-nav{
+      .nav-link{
+        color: $white;
+      }
+    }
+  }
+}
+.home-link{
+  color: $white;
+  font-weight: 500;
+}
+.navbar-bg {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/*======================Home Page starts here===============================*/
+  .home-cont{
+    background-color: $dgreen;
+    height:100vh;
+  }
+  .select-coloumn{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
+  .uns-items{
+    img{
+      width: 100%;
+      // min-height: 213px;
+    }
+  }
+/*======================Home Page End here===============================*/
+
+/*@media Query styles*/
+@media screen and (max-width: 992px) { 
+  .home-cont{
+    height:auto;
+  }
+}
