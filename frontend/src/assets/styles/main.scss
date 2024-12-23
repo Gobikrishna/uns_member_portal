@@ -2,9 +2,20 @@
 
 $dgreen: #364E3F;
 $lgreen: #456509;
+$brngreen: #28A745;
 $white: #ffffff;
 $black: #333333;
+$ddgreen: #0d3019;
 
+a{
+  color:$brngreen;
+}
+
+.btn.btn-primary{
+  background-color: $brngreen;
+  color: $white;
+  border:none;
+}
 footer{
   background-color: $lgreen;
   padding:10px;
@@ -26,6 +37,7 @@ header{
 .navbar-bg {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 /*======================Home Page starts here===============================*/
   .home-cont{
     background-color: $dgreen;
@@ -42,6 +54,37 @@ header{
     }
   }
 /*======================Home Page End here===============================*/
+
+/*=====================Signup & Register starts================================*/
+.bg-image {
+  background-image: url('../images/bgimage.png'); /* Adjust the path to your image */
+  background-size: cover; /* Ensures the image covers the entire container */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  height: 100vh; /* Sets the height to full viewport height */
+  width: 100%; /* Ensures full width */
+}
+.boxbg {
+  position: relative; /* Establish a context for pseudo-element */
+  overflow: hidden; /* Prevents overflow issues */
+  background: none;
+}
+
+.bg-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left:0;
+  top:0;
+  background-color: $ddgreen;
+  opacity: 0.5; /* Adjust opacity here */
+  z-index: 1; /* Places it behind the content */
+}
+.cont-int{
+  position: relative;
+  z-index:2;
+}
+/*=====================Signup & Register end================================*/
 
 /*@media Query styles*/
 @media screen and (max-width: 992px) { 

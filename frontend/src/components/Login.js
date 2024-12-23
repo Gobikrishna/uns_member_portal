@@ -50,6 +50,7 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import logo from "../assets/images/logo.png";
 
 const Login = () => {
   const { setAuthState } = useContext(AuthContext);
@@ -85,9 +86,16 @@ const Login = () => {
 
   return (
     <>
-      <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-        <div className="card shadow p-4" style={{ width: "400px" }}>
-          <h1 className="card-title text-center mb-4">Login</h1>
+      <div className="bg-image d-flex align-items-center justify-content-center vh-100 bg-light">
+        <div className="card shadow p-4 boxbg" style={{ width: "400px" }}>
+        <div className="bg-overlay"></div>
+        <div className="cont-int text-white">
+          <div className="text-center mb-2">
+            <Link className="navbar-brand" to="/home">
+              <img width="100" src={logo} alt="Logo" />
+            </Link>
+          </div>
+          <h5 className="card-title text-center mb-2 text-uppercase">sign UP your account</h5>
           <form onSubmit={handleLogin}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
@@ -125,6 +133,7 @@ const Login = () => {
               Register here
             </Link>
           </p>
+          </div>
         </div>
       </div>
     </>

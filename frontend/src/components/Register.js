@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import logo from "../assets/images/logo.png";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -8,7 +10,7 @@ const Register = () => {
     email: "",
     mobile: "",
     password: "",
-    role: "",
+    role: "primary",
   });
   const [message, setMessage] = useState("");
 
@@ -50,7 +52,7 @@ const Register = () => {
         email: "",
         mobile: "",
         password: "",
-        role: "",
+        role: "primary",
       });
 
       // Optionally redirect to login
@@ -63,9 +65,16 @@ const Register = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow p-4" style={{ width: "500px" }}>
-        <h2 className="card-title text-center mb-4">Register</h2>
+    <div className="bg-image d-flex align-items-center justify-content-center vh-100 bg-light">
+      <div className="card shadow p-4 boxbg" style={{ width: "500px" }}>
+      <div className="bg-overlay"></div>
+      <div className="cont-int text-white">
+      <div className="text-center mb-2">
+        <Link className="navbar-brand  text-center" to="/home">
+          <img width="100" src={logo} alt="Logo" />
+        </Link>
+      </div>
+        <h5 className="card-title text-center mb-2 text-uppercase">Register your account</h5>
         {message && <p className="text-center text-danger">{message}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -138,28 +147,18 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="role" className="form-label">
-              Role
-            </label>
-            <select
-              id="role"
-              name="role"
-              className="form-select"
-              value={formData.role}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>
-                Select Role
-              </option>
-              <option value="primary">Primary</option>
-            </select>
-          </div>
+          
           <button type="submit" className="btn btn-primary w-100">
             Register
           </button>
         </form>
+        <p className="text-center mt-3">
+        If you have an account?{" "}
+            <Link to="/login" className="text-decoration-none">
+            SIGNIN
+            </Link>
+          </p>
+      </div>
       </div>
     </div>
   );

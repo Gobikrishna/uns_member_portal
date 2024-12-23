@@ -10,23 +10,19 @@ const Header = () => {
             <Link className="navbar-brand" to="/">
               <img width="100" src={logo} alt="Logo" />
             </Link>
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link className="nav-link active home-link" to="/">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
+            <div className="d-flex gap-2">
+              <div className="nav-item">
                 <Link className="nav-link home-link" to="/login">
                   Sign In
                 </Link>
-              </li>
-              <li className="nav-item">
+              </div>
+              <div className="nav-item">|</div>
+              <div className="nav-item">
                 <Link className="nav-link home-link" to="/register">
                   Sign Up
                 </Link>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </nav>
       </div>
