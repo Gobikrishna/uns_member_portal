@@ -99,7 +99,9 @@ import Dashboard from "./components/Dashboard";
 import { AuthContext } from "./context/AuthContext";
 import Register from "./components/Register";
 import Home from "./components/Home";
+import Pagination from './components/pagination';
 import "../src/assets/styles/main.scss";
+import "../src/assets/styles/dashboard.scss";
 function App() {
   const { authState, setAuthState } = useContext(AuthContext); // Access context here
   const [loading, setLoading] = useState(true); // Loading state for initial auth check
@@ -140,6 +142,7 @@ function App() {
           authState.isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
         }
       />
+      <Route path="/pagination" element={<Pagination />} />
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );

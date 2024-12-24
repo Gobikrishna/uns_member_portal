@@ -6,6 +6,7 @@ $brngreen: #28A745;
 $white: #ffffff;
 $black: #333333;
 $ddgreen: #0d3019;
+$hmbggreen: #4f730b;
 
 a{
   color:$brngreen;
@@ -40,8 +41,8 @@ header{
 
 /*======================Home Page starts here===============================*/
   .home-cont{
-    background-color: $dgreen;
-    height:100vh;
+    background-color: $hmbggreen;
+    height:86vh;
   }
   .select-coloumn{
     display: grid;
