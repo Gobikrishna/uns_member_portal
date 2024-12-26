@@ -139,101 +139,108 @@ const Dashboard = () => {
       
       
 
-<div className="container mt-2 mb-5">
+      <div className="container mt-2 mb-5">
   <h5 className="w-100 pb-3 border-bottom border-secondary">Member Portal</h5>
-      {/* Table Header */}
-      <div className="row py-2 rounded">
-        <div className="col-1">Member ID</div>
-        <div className="col-2">Role</div>
-        <div className="col-3">Full Name</div>
-        <div className="col-2">Phone Number</div>
-        <div className="col-2">Email</div>
-      </div>
-      {/* Table Rows */}
-        <div className="row py-2 border-bottom align-items-center">
-          <div className="col-1">{member.id}</div>
-          <div className="col-2">{member.role}</div>
-          <div className="col-3">{member.fullName}</div>
-          <div className="col-2">{member.mobile}</div>
-          <div className="col-2">{member.email}</div>
-        </div>
-    </div>
+
+  {/* Table Wrapper for Responsiveness */}
+  <div className="table-responsive">
+    <table className="table">
+      <thead className="bg-light">
+        <tr>
+          <th scope="col">Member ID</th>
+          <th scope="col">Role</th>
+          <th scope="col">Full Name</th>
+          <th scope="col">Phone Number</th>
+          <th scope="col">Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{member.id}</td>
+          <td>{member.role}</td>
+          <td>{member.fullName}</td>
+          <td>{member.mobile}</td>
+          <td>{member.email}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 
-    <div className="container mt-2">
-      <div className="row align-items-center">
+<div className="container mt-2">
+  <div className="row align-items-center">
+    {/* Title and Controls */}
+    <div className="mb-3 border-bottom border-secondary pb-2">
+      <div className="d-flex flex-wrap align-items-center gap-3">
         {/* Title */}
-        <div className="mb-3 border-bottom border-secondary">
-          <div className="d-flex gap-3">
-          <h5 className="m-0 pt-2">Referral Contact List</h5>
-          <div className="input-group">
+        <h5 className="m-0 pt-2">Referral Contact List</h5>
+
+        {/* Search Input */}
+        <div className="input-group flex-grow-2">
           <input
             type="text"
             className="form-control"
             placeholder="Search Mobile Number"
           />
-        <span className="input-group-text">
-          <img src={search} alt="search icon" /> {/* Bootstrap Search Icon */}
-        </span>
+          <span className="input-group-text">
+            <img src={search} alt="search icon" />
+          </span>
+        </div>
+
+        {/* Button */}
+        <div>
+          <button className="btn btn-primary">Add New Contact</button>
+        </div>
       </div>
-      <div>
-      <button className="btn btn-primary">
-              Add New Contact
-            </button>
-      </div>
+    </div>
+  </div>
 </div>
-          <div className="col-md-4 col-12 mb-2 mt-3">
-              {/* Search Input */}
-              <div>
-                </div>
-        </div>
-        </div>
 
-      
-        
 
-        {/* Buttons */}
-        {/* <div className="col-md-4 col-12 d-flex justify-content-md-end gap-2">
-          <button className="btn btn-primary">Download Referral Form</button>
-          <button className="btn btn-secondary">Upload New Referral</button>
-        </div> */}
-      </div>
-    </div>
+<div className="container mt-0">
+  <div className="table-responsive">
+    <table className="table">
+      <thead className="bg-success text-white">
+        <tr>
+          <th scope="col">S.No</th>
+          <th scope="col">Member ID</th>
+          <th scope="col">Member Name</th>
+          <th scope="col">Mobile Number</th>
+          <th scope="col">Role</th>
+          <th scope="col">Status</th>
+          <th scope="col">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {members.map((member, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{member.id}</td>
+            <td>{member.name}</td>
+            <td>{member.mobile}</td>
+            <td>{member.role}</td>
+            <td>
+              <span
+                className={`badge ${
+                  member.status === "Active" ? "bg-success" : "bg-danger"
+                }`}
+              >
+                {member.status}
+              </span>
+            </td>
+            <td>
+              <button className="btn btn-sm btn-info text-white">
+                Add Details / View
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
 
-    <div className="container mt-0">
-      {/* Table Header */}
-      <div className="row bg-success text-white py-2 rounded">
-        <div className="col-1">S.No</div>
-        <div className="col-2">Member ID</div>
-        <div className="col-2">Member Name</div>
-        <div className="col-2">Mobile Number</div>
-        <div className="col-2">Role</div>
-        <div className="col-1">Status</div>
-        <div className="col-2">Details</div>
-      </div>
-      {/* Table Rows */}
-      {members.map((member, index) => (
-        <div className="row py-2 border-bottom align-items-center" key={index}>
-          <div className="col-1">{index + 1}</div>
-          <div className="col-2">{member.id}</div>
-          <div className="col-2">{member.name}</div>
-          <div className="col-2">{member.mobile}</div>
-          <div className="col-2">{member.role}</div>
-          <div className="col-1">
-            <span
-              className={`badge ${
-                member.status === "Active" ? "bg-success" : "bg-danger"
-              }`}
-            >
-              {member.status}
-            </span>
-          </div>
-          <div className="col-2">
-            <button className="btn btn-sm btn-info text-white">Add Details / View</button>
-          </div>
-        </div>
-      ))}
-    </div>
     <Pagination />
     
       {/* Commission Details */}
