@@ -24,37 +24,142 @@ exports.checkUserExists = (req, res) => {
 };
 
 // User Registration
+
 exports.registerUser = async (req, res) => {
-  const { firstName, lastName, email, password, role, mobile } = req.body;
+  const { firstName, lastName, email, password, role, mobile, referredBy } =
+    req.body;
 
   try {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert user into the database
-    const query = `INSERT INTO users (firstName, lastName, email, password, role, mobile) VALUES (?, ?, ?, ?, ?, ?)`;
-
-    db.query(
-      query,
-      [firstName, lastName, email, hashedPassword, role, mobile],
-      (err, result) => {
-        if (err) {
-          if (err.code === "ER_DUP_ENTRY") {
-            return res
-              .status(400)
-              .json({ error: "Mobile number already exists." });
-          }
-          console.error("Error inserting user:", err);
-          return res.status(500).json({ error: "Server error" });
-        }
-        res.status(201).json({ message: "User registered successfully" });
+    // Start a transaction to ensure consistency between `users` and `members` tables
+    db.beginTransaction(async (transactionError) => {
+      if (transactionError) {
+        console.error("Error starting transaction:", transactionError);
+        return res.status(500).json({ error: "Server error" });
       }
-    );
+
+      try {
+        // Insert user into the `users` table
+        const userQuery = `INSERT INTO users (firstName, lastName, email, password, role, mobile, referredBy) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+        db.query(
+          userQuery,
+          [
+            firstName,
+            lastName,
+            email,
+            hashedPassword,
+            role,
+            mobile,
+            referredBy || null,
+          ],
+          (userErr, userResult) => {
+            if (userErr) {
+              db.rollback(() => {
+                if (userErr.code === "ER_DUP_ENTRY") {
+                  return res
+                    .status(400)
+                    .json({ error: "Email or mobile number already exists." });
+                }
+                console.error("Error inserting user:", userErr);
+                return res.status(500).json({ error: "Server error" });
+              });
+            } else {
+              // Insert member into the `members` table
+              const userId = userResult.insertId; // Get the inserted user's ID
+              const memberQuery = `INSERT INTO members (userId, firstName, lastName, email, role, referralId) VALUES (?, ?, ?, ?, ?, ?)`;
+
+              db.query(
+                memberQuery,
+                [
+                  userId,
+                  firstName,
+                  lastName,
+                  email,
+                  role === "Primary" ? "Secondary" : role, // Default to Secondary if role is Primary
+                  referredBy || null,
+                ],
+                (memberErr, memberResult) => {
+                  if (memberErr) {
+                    db.rollback(() => {
+                      console.error("Error inserting member:", memberErr);
+                      return res.status(500).json({ error: "Server error" });
+                    });
+                  } else {
+                    // Commit the transaction if both inserts succeed
+                    db.commit((commitErr) => {
+                      if (commitErr) {
+                        console.error(
+                          "Error committing transaction:",
+                          commitErr
+                        );
+                        return res.status(500).json({ error: "Server error" });
+                      }
+                      res.status(201).json({
+                        message:
+                          "User registered and member record created successfully",
+                      });
+                    });
+                  }
+                }
+              );
+            }
+          }
+        );
+      } catch (error) {
+        db.rollback(() => {
+          console.error("Error during registration transaction:", error);
+          res.status(500).json({ error: "Server error" });
+        });
+      }
+    });
   } catch (error) {
     console.error("Error hashing password:", error);
     res.status(500).json({ error: "Server error" });
   }
 };
+// User Registration
+// exports.registerUser = async (req, res) => {
+//   const { firstName, lastName, email, password, role, mobile } = req.body;
+
+//   try {
+//     // Hash the password
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     // Insert user into the database
+//     const userQuery = `INSERT INTO users (firstName, lastName, email, password, role, mobile) VALUES (?, ?, ?, ?, ?, ?)`;
+
+//     db.query(
+//       userQuery,
+//       [
+//         firstName,
+//         lastName,
+//         email,
+//         hashedPassword,
+//         role,
+//         mobile,
+//         referredBy || null,
+//       ],
+//       (userErr, userResult) => {
+//         if (userErr) {
+//           if (userErr.code === "ER_DUP_ENTRY") {
+//             return res
+//               .status(400)
+//               .json({ error: "Mobile number already exists." });
+//           }
+//           console.error("Error inserting user:", userErr);
+//           return res.status(500).json({ error: "Server error" });
+//         }
+//         res.status(201).json({ message: "User registered successfully" });
+//       }
+//     );
+//   } catch (error) {
+//     console.error("Error hashing password:", error);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// };
 // exports.registerUser = async (req, res) => {
 //   const { firstName, lastName, email, password, role, mobile } = req.body;
 
@@ -83,7 +188,7 @@ exports.loginUser = async (req, res) => {
 
   console.log("backend side--->" + email + password);
   const query = "SELECT * FROM users WHERE email = ?";
-
+  console.log("Login query", query);
   db.query(query, [email], async (err, result) => {
     console.log("entered");
     if (err) {
@@ -109,13 +214,13 @@ exports.loginUser = async (req, res) => {
 
     // // console.log(isMatch);
 
-    // if (!isMatch) {
-    //   return res.status(400).json({ msg: "Invalid credentials" });
-    // }
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
 
     const payload = { userId: user.id, role: user.role };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "60s",
     });
     console.log("mytoken" + token);
     // res.json({ token });
@@ -132,25 +237,88 @@ exports.loginUser = async (req, res) => {
   });
 };
 
+// Get User Data
+exports.getUserData = (req, res) => {
+  const id = req.params.userId; // Get user id from the URL parameter
+
+  // Query to get the member's data
+  const query = "SELECT * FROM users WHERE id = ?";
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error fetching user data:", err);
+      return res.status(500).json({ error: "Server error" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Return user data
+    res.json(result[0]); // Assuming we want to return the first matching member
+  });
+};
+
 // Get Member Data
 exports.getMemberData = (req, res) => {
   const userId = req.params.userId; // Get userId from the URL parameter
+  // const role = req.query.role; // Get role from query parameter
+  const role = req.headers.role;
+  console.log("user details", req.params);
+  console.log("userId", userId + " " + "userRole", role);
+  // New query to fetch member data based on referralId
+  const query = `
+    SELECT * 
+    FROM members 
+    WHERE referralId = (SELECT id FROM members WHERE userId = ? AND role = ?)
+  `;
 
-  // Query to get the member's data
-  const query = "SELECT * FROM members WHERE userId = ?";
-
-  db.query(query, [userId], (err, result) => {
+  // Execute the query with the userId parameter
+  db.query(query, [userId, role], (err, result) => {
     if (err) {
       console.error("Error fetching member data:", err);
       return res.status(500).json({ error: "Server error" });
     }
 
     if (result.length === 0) {
-      return res.status(404).json({ msg: "Member not found" });
+      return res
+        .status(404)
+        .json({ msg: "No members found for the given referralId" });
     }
 
-    // Return member data
-    res.json(result[0]); // Assuming we want to return the first matching member
+    // Return the member data
+    res.json(result); // Return all matching members (not just the first)
+  });
+};
+
+// Get Referral Members for a Primary Member
+exports.getReferralMembers = (req, res) => {
+  const userId = req.params.userId; // Get userId from the URL parameter
+
+  // Query to get the referral members (i.e., secondary members) for the primary member
+  const query = `
+    SELECT 
+      m.id AS MemberID,
+      u.firstName AS MemberFirstName,
+      u.lastName AS MemberLastName,
+      u.email AS MemberEmail,
+      m.role AS MemberRole
+    FROM members m
+    JOIN users u ON m.userId = u.id
+    WHERE m.referralId = ?;  -- Only get secondary members referred by this user
+  `;
+
+  db.query(query, [userId], (err, result) => {
+    if (err) {
+      console.error("Error fetching referral members:", err);
+      return res.status(500).json({ error: "Server error" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ msg: "No referral members found" });
+    }
+
+    res.json(result); // Return the list of referral members
   });
 };
 
