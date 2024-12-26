@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import search from "../assets/images/search.png";
 import { AuthContext } from "../context/AuthContext";
 // import FileUpload from "./FileUpload";
 import Header from "./Header";
 import Footer from "./Footer";
-import search from "../assets/images/search.png";
-import Pagination from "./pagination";
+import Modal from "./Modal";
+import Pagination from "./Pagination";
+
 
 const Dashboard = () => {
   const { authState } = useContext(AuthContext);
@@ -15,6 +17,25 @@ const Dashboard = () => {
   // const [memberHierarchy, setMemberHierarchy] = useState([]);
   const [referralMembers, setReferralMembers] = useState([]); // Renamed to reflect referral members
   const [commissionDetails, setCommissionDetails] = useState([]);
+
+
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    sNo: "",
+    memberId: "",
+    memberName: "",
+    mobileNumber: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSave = () => {
+    console.log("Saved Data:", formData);
+    setShowModal(false); // Close the modal
+  };
 
   useEffect(() => {
     console.log("authState details==>", authState);
@@ -215,7 +236,24 @@ const Dashboard = () => {
 
                 {/* Button */}
                 <div>
-                  <button className="btn btn-primary">Add New Contact</button>
+                <div className="container mt-4">
+      {/* Add New Contact Button */}
+            <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+            Add New Member
+            </button>
+
+            {/* Modal Component */}
+            <Modal
+              title="Add New Contact"
+              showModal={showModal}
+              onClose={() => setShowModal(false)}
+              onSave={handleSave}
+              formData={formData}
+              handleChange={handleChange}
+            />
+          </div>
+
+                  {/* <button className="btn btn-primary">Add New Member</button> */}
                 </div>
               </div>
             </div>
@@ -223,9 +261,9 @@ const Dashboard = () => {
         </div>
 
         <div className="container mt-0">
-          <div className="table-responsive">
+          <div className="table-responsive data-table">
             <table className="table">
-              <thead className="bg-success text-white">
+              <thead className="bg-lgreen text-white">
                 <tr>
                   <th scope="col">S.No</th>
                   <th scope="col">Member ID</th>

@@ -12,6 +12,14 @@
 .input-group{
   width: auto;
 }
+.data-table{
+  tr{
+    th{
+      background: none;
+      color: $white;
+    }
+  }
+}
 .user-avatar {
   background-color: #47B749; /* Primary color for avatar */
   color: white;

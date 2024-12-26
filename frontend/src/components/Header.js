@@ -11,12 +11,8 @@ const Header = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const onSettings = (event) => {
-    event.preventDefault();
-    console.log("Settings clicked");
-  };
-
   const onLogout = () => {
+    setAuthState({ isAuthenticated: false, user: null }); // Clear auth state
     console.log("Logout clicked");
   };
 
@@ -28,9 +24,10 @@ const Header = () => {
             <Link className="navbar-brand" to="/">
               <img width="100" src={logo} alt="Logo" />
             </Link>
-            <div className="d-flex gap-2">
+            <div>
               {!authState.isAuthenticated ? (
-                <div className="hd-links">
+                // Show Login and Register Links
+                <div className="hd-links d-flex gap-2">
                   <div className="nav-item">
                     <Link className="nav-link home-link" to="/login">
                       Sign In
@@ -44,8 +41,8 @@ const Header = () => {
                   </div>
                 </div>
               ) : (
-                <div className="dropdown">
-                  {/* Dropdown Button */}
+                // Show Dropdown for Logged-In Users
+                <div className={`dropdown ${isDropdownOpen ? "show" : ""}`}>
                   <button
                     className="btn btn-secondary dropdown-toggle"
                     type="button"
@@ -53,36 +50,30 @@ const Header = () => {
                     aria-expanded={isDropdownOpen}
                     onClick={toggleDropdown}
                   >
-                    KR
+                    {authState.user?.initials || "KR"}
                   </button>
-                  <span className="ps-2">Kalyana Raman</span>
+                  <span className="ps-2">{authState.user?.name || "User Name"}</span>
 
-                  {/* Dropdown Menu */}
-                  {isDropdownOpen && (
-                    <ul
-                      className="dropdown-menu dropdown-menu-end"
-                      aria-labelledby="dropdownMenuButton"
-                    >
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          href="#"
-                          onClick={onSettings}
-                        >
-                          <i className="fa fa-cog me-2"></i>Settings
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          href="#"
-                          onClick={onLogout}
-                        >
-                          <i className="fa fa-sign-out me-2"></i>Logout
-                        </a>
-                      </li>
-                    </ul>
-                  )}
+                  <ul
+                    className={`dropdown-menu dropdown-menu-end ${
+                      isDropdownOpen ? "show" : ""
+                    }`}
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <li>
+                      <Link className="dropdown-item" to="/settings">
+                        <i className="fa fa-cog me-2"></i>Settings
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        onClick={onLogout}
+                      >
+                        <i className="fa fa-sign-out me-2"></i>Logout
+                      </button>
+                    </li>
+                  </ul>
                 </div>
               )}
             </div>

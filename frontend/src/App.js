@@ -7,10 +7,14 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import "../src/assets/styles/main.scss";
 import "../src/assets/styles/dashboard.scss";
+import Settings from "./components/Settings";
+import MemberDetails from "./components/MemberDetails";
+
 
 function App() {
   const { authState, setAuthState } = useContext(AuthContext); // Access context here
   const [loading, setLoading] = useState(true); // Loading state for initial auth check
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -43,6 +47,8 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/memberdetails" element={<MemberDetails />} />
       <Route
         path="/dashboard"
         element={

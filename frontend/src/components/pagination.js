@@ -22,7 +22,7 @@ const Pagination = ({ totalItems, itemsPerPage, onPageChange }) => {
   };
 
   return (
-    <div className="d-flex justify-content-between align-items-center mt-4">
+    <div className="container m-0 d-flex justify-content-between align-items-center mt-4">
       <button
         className="btn btn-primary"
         onClick={handlePrevious}
