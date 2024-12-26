@@ -1,7 +1,25 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/images/logo.png";
+import { useState } from "react";
+
 
 const Header = () => {
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+  
+  const onSettings = (event) => {
+    event.preventDefault();
+    console.log("Settings clicked");
+  };
+  
+  const onLogout = () => {
+    console.log("Logout clicked");
+  };
+
   return (
     <header className="text-white navbar-bg">
       <div className="container">
@@ -19,9 +37,38 @@ const Header = () => {
               <div className="nav-item">|</div>
               <div className="nav-item">
                 <Link className="nav-link home-link" to="/register">
-                  Sign Up
+                  Register
                 </Link>
               </div>
+              <div className="dropdown">
+      {/* Dropdown Button */}
+      <button
+        className="btn btn-secondary dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        aria-expanded={isDropdownOpen}
+        onClick={toggleDropdown}
+      >
+        KR
+      </button>
+      <span className="ps-2">Kalyana Raman</span>
+
+      {/* Dropdown Menu */}
+      {isDropdownOpen && (
+        <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+          <li>
+            <a className="dropdown-item" href="#" onClick={onSettings}>
+              <i className="fa fa-cog me-2"></i>Settings
+            </a>
+          </li>
+          <li>
+            <a className="dropdown-item" href="#" onClick={onLogout}>
+              <i className="fa fa-sign-out me-2"></i>Logout
+            </a>
+          </li>
+        </ul>
+      )}
+    </div>
             </div>
           </div>
         </nav>
