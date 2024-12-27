@@ -8,6 +8,7 @@ import Footer from "./Footer";
 import Modal from "./Modal";
 import Pagination from "./Pagination";
 import Register from "./Register";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const { authState } = useContext(AuthContext);
@@ -299,9 +300,11 @@ const Dashboard = () => {
                         </span>
                       </td>
                       <td>
-                        <button className="btn btn-sm btn-info text-white">
-                          Add Details / View
-                        </button>
+                        <Link to="/memberdetails">
+                          <button className="btn btn-sm btn-info text-white">
+                            Add Details / View
+                          </button>
+                        </Link>
                       </td>
                     </tr>
                   ))}
