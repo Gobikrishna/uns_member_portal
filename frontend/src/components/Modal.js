@@ -26,33 +26,34 @@ const Modal = ({ title, showModal, onClose, onSave, formData, handleChange }) =>
           </div>
           <div className="modal-body">
             {/* Form Fields */}
+            
             <div className="mb-3">
-              <label htmlFor="sNo" className="form-label">
-                S.No
+              <label htmlFor="firstName" className="form-label">
+                First Name
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="sNo"
-                name="sNo"
-                value={formData.sNo}
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleChange}
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="memberId" className="form-label">
-                Member ID
+              <label htmlFor="lastName" className="form-label">
+                Last Name
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="memberId"
-                name="memberId"
-                value={formData.memberId}
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label htmlFor="memberName" className="form-label">
                 Member Name
               </label>
@@ -64,7 +65,7 @@ const Modal = ({ title, showModal, onClose, onSave, formData, handleChange }) =>
                 value={formData.memberName}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
             
             <div className="mb-3">
               <label htmlFor="mobileNumber" className="form-label">
@@ -79,10 +80,23 @@ const Modal = ({ title, showModal, onClose, onSave, formData, handleChange }) =>
                 onChange={handleChange}
               />
             </div>
+            <div className="mb-3">
+              <label htmlFor="sNo" className="form-label">
+                Email
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
-              Close
+              Cancel
             </button>
             <button type="button" className="btn btn-primary" onClick={onSave}>
               Save

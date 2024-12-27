@@ -1,11 +1,47 @@
-import React from 'react'
+import React, { useState } from "react";
 
-const Footer = () => {
+const Pagination = ({ totalItems, itemsPerPage, onPageChange }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      const newPage = currentPage - 1;
+      setCurrentPage(newPage);
+      onPageChange(newPage);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      const newPage = currentPage + 1;
+      setCurrentPage(newPage);
+      onPageChange(newPage);
+    }
+  };
+
   return (
-    <footer className="bg-green text-white">
-    <div className="container text-center">&copy; 2024 UNS. All rights reserved.</div>
-  </footer>
-  )
-}
+    <div className="container m-0 d-flex justify-content-between align-items-center mt-4">
+      <button
+        className="btn btn-primary"
+        onClick={handlePrevious}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </button>
+      <span>
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        className="btn btn-primary"
+        onClick={handleNext}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
+    </div>
+  );
+};
 
-export default Footer
+export default Pagination;
