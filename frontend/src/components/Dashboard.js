@@ -269,7 +269,7 @@ const Dashboard = () => {
                   <th scope="col">Member ID</th>
                   <th scope="col">Member Name</th>
                   <th scope="col">Mobile Number</th>
-                  <th scope="col">Role</th>
+                  <th scope="col">Email</th>
                   <th scope="col">Status</th>
                   <th scope="col">Details</th>
                 </tr>
@@ -282,7 +282,7 @@ const Dashboard = () => {
                       <td>{member.id}</td>
                       <td>{member.firstName + " " + member.lastName}</td>
                       <td>{member.mobile}</td>
-                      <td>{member.role}</td>
+                      <td>{member.email}</td>
                       <td>
                         <span
                           className={`badge ${
