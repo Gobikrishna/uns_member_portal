@@ -9,6 +9,7 @@ import Modal from "./Modal";
 import Pagination from "./Pagination";
 import Register from "./Register";
 import { Link } from "react-router-dom";
+import MemberList from "./MemberList";
 
 const Dashboard = () => {
   const { authState } = useContext(AuthContext);
@@ -172,6 +173,7 @@ const Dashboard = () => {
   return (
     <div className="bg-light dashboard-cont">
       <Header />
+      {!authState.userRole === "admin" ? (
       <div className="container p-3 bg-white">
         <div className="container">
           <div className="d-flex align-items-center  p-3 rounded">
@@ -340,6 +342,11 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      ) : (
+        <div>
+          <MemberList />
+        </div>
+      ) }
       {/* Footer */}
       <Footer />
     </div>
