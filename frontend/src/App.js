@@ -8,8 +8,8 @@ import Home from "./components/Home";
 import "../src/assets/styles/main.scss";
 import "../src/assets/styles/dashboard.scss";
 import Settings from "./components/Settings";
+import MemberList from "./components/MemberList";
 import MemberDetails from "./components/MemberDetails";
-
 
 function App() {
   const { authState, setAuthState } = useContext(AuthContext); // Access context here
@@ -48,7 +48,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/settings" element={<Settings />} />
-      <Route path="/memberdetails" element={<MemberDetails />} />
+      <Route path="/memberdetails" element={<MemberDetails />}/>
+      <Route path="/memberlist" element={<MemberList />} />
       <Route
         path="/dashboard"
         element={
