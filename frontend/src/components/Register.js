@@ -3,14 +3,15 @@ import axios from "axios";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 
-const Register = () => {
+const Register = ({ initialRole = "primary", referralId = null }) => {
+  // Default role is "primary"
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     mobile: "",
     password: "",
-    role: "primary",
+    role: initialRole, // Use the passed role or the default
   });
   const [message, setMessage] = useState("");
 
@@ -26,6 +27,16 @@ const Register = () => {
     e.preventDefault();
 
     try {
+      // Prepare form data
+      const submitData = { ...formData };
+
+      // If the user is a primary member, ensure referredBy is null
+      if (formData.role === "Primary") {
+        submitData.referredBy = null; // Ensure referredBy is null for primary members
+      } else {
+        // If it's a secondary member, include the passed referralId
+        submitData.referredBy = referralId || null; // Use the referralId passed from the parent
+      }
       // Check if user exists
       const checkRes = await axios.post(
         "http://localhost:5001/api/auth/check-user",
@@ -42,7 +53,7 @@ const Register = () => {
       // Proceed to register the user if no conflict
       const res = await axios.post(
         "http://localhost:5001/api/auth/register",
-        formData
+        submitData
       );
 
       setMessage(res.data.message);
@@ -52,7 +63,8 @@ const Register = () => {
         email: "",
         mobile: "",
         password: "",
-        role: "primary",
+        role: initialRole, // Reset the role to the initial value (e.g., "primary" or "secondary")
+        referralId: referralId, // Make sure the referral ID is included here
       });
 
       // Optionally redirect to login
@@ -70,7 +82,7 @@ const Register = () => {
         <div className="bg-overlay"></div>
         <div className="cont-int text-white">
           <div className="text-center mb-2">
-            <Link className="navbar-brand  text-center" to="/home">
+            <Link className="navbar-brand text-center" to="/home">
               <img width="100" src={logo} alt="Logo" />
             </Link>
           </div>

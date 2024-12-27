@@ -1,6 +1,6 @@
 import React from "react";
 
-const Modal = ({ title, showModal, onClose, onSave, formData, handleChange }) => {
+const Modal = ({ title, showModal, onClose, children }) => {
   if (!showModal) return null; // Don't render the modal if `showModal` is false
 
   return (
@@ -26,80 +26,16 @@ const Modal = ({ title, showModal, onClose, onSave, formData, handleChange }) =>
           </div>
           <div className="modal-body">
             {/* Form Fields */}
-            
-            <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">
-                First Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-              />
-            </div>
-            {/* <div className="mb-3">
-              <label htmlFor="memberName" className="form-label">
-                Member Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="memberName"
-                name="memberName"
-                value={formData.memberName}
-                onChange={handleChange}
-              />
-            </div> */}
-            
-            <div className="mb-3">
-              <label htmlFor="mobileNumber" className="form-label">
-                Mobile Number
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="mobileNumber"
-                name="mobileNumber"
-                value={formData.mobileNumber}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="sNo" className="form-label">
-                Email
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
+            {/* Modal Content */}
+            {children} {/* Render Register form inside the modal */}
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+            >
               Cancel
-            </button>
-            <button type="button" className="btn btn-primary" onClick={onSave}>
-              Save
             </button>
           </div>
         </div>

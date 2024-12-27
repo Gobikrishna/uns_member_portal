@@ -68,16 +68,14 @@ VALUES (1, 'karthik', 'K', 'karthik@test.com', 'Secondary', 1);  -- Referred by 
 
 -- Insert Secondary Member sathish (Referred by Aru, ID 2)
 INSERT INTO members (userId, firstName, lastName, email, role, referralId)
-VALUES (2, 'sathish', 'G', 'sathish@test.com', 'Referred', 2);  -- Referred by Aru
+VALUES (2, 'sathish', 'G', 'sathish@test.com', 'Secondary', 2);  -- Referred by Aru
 
 
 -- Insert Bob as a Secondary Member (Referred by Karthik)
 INSERT INTO members (userId, firstName, lastName, email, role, referralId)
-VALUES (3, 'pandi', 'raj', 'pandi@test.com', 'Secondary', 4);
+VALUES (1, 'pandi', 'raj', 'pandi@test.com', 'Referred', 4);
 
--- Insert Secondary Member Bob (Referred by Alice, ID 3)
-INSERT INTO members (userId, firstName, lastName, email, role, referralId)
-VALUES (4, 'Bob', 'Martin', 'bob.martin@example.com', 'Secondary', 3);  -- Referred by Alice
+
 
 
 

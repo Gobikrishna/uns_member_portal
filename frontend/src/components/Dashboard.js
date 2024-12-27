@@ -7,7 +7,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Modal from "./Modal";
 import Pagination from "./Pagination";
-
+import Register from "./Register";
 
 const Dashboard = () => {
   const { authState } = useContext(AuthContext);
@@ -17,7 +17,6 @@ const Dashboard = () => {
   // const [memberHierarchy, setMemberHierarchy] = useState([]);
   const [referralMembers, setReferralMembers] = useState([]); // Renamed to reflect referral members
   const [commissionDetails, setCommissionDetails] = useState([]);
-
 
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,6 +34,13 @@ const Dashboard = () => {
   const handleSave = () => {
     console.log("Saved Data:", formData);
     setShowModal(false); // Close the modal
+  };
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -178,7 +184,9 @@ const Dashboard = () => {
 
             {/* Text Column */}
             <div className="user-info">
-              <h3 className="user-name">{userData.firstName}</h3>
+              <h3 className="user-name">
+                {userData.firstName + " " + userData.lastName}
+              </h3>
               <p className="user-role">{userData.role}</p>
             </div>
           </div>
@@ -217,7 +225,7 @@ const Dashboard = () => {
         <div className="container mt-2">
           <div className="row align-items-center">
             {/* Title and Controls */}
-            <div className="mb-3 border-bottom border-secondary pb-2">
+            <div className="mb-3 border-bottom border-secondary pb-3">
               <div className="d-flex flex-wrap align-items-center gap-3">
                 {/* Title */}
                 <h5 className="m-0 pt-2">Referral Contact List</h5>
@@ -236,24 +244,20 @@ const Dashboard = () => {
 
                 {/* Button */}
                 <div>
-                <div className="container mt-4">
-      {/* Add New Contact Button */}
-            <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            Add New Member
-            </button>
-
-            {/* Modal Component */}
-            <Modal
-              title="Add New Contact"
-              showModal={showModal}
-              onClose={() => setShowModal(false)}
-              onSave={handleSave}
-              formData={formData}
-              handleChange={handleChange}
-            />
-          </div>
-
-                  {/* <button className="btn btn-primary">Add New Member</button> */}
+                  <div className="container">
+                    {/* Add New Contact Button */}
+                    <button onClick={openModal} className="btn btn-primary">
+                      Add New Member
+                    </button>
+                    {/* Modal Component */}
+                    <Modal showModal={showModal} onClose={closeModal}>
+                      {/* Pass "secondary" role to Register component in modal */}
+                      <Register
+                        initialRole="secondary"
+                        referralId={userData.id}
+                      />
+                    </Modal>
+                  </div>
                 </div>
               </div>
             </div>

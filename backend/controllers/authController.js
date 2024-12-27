@@ -32,7 +32,10 @@ exports.registerUser = async (req, res) => {
   try {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    console.log("referredBy", referredBy);
+    // If the role is "Primary", ensure referredBy is null
+    const referralId = role === "Primary" ? null : referredBy;
+    console.log("referralId==>", referralId + " and role is " + role);
     // Start a transaction to ensure consistency between `users` and `members` tables
     db.beginTransaction(async (transactionError) => {
       if (transactionError) {
@@ -53,7 +56,7 @@ exports.registerUser = async (req, res) => {
             hashedPassword,
             role,
             mobile,
-            referredBy || null,
+            referralId, // Use referralId here instead of referredBy
           ],
           (userErr, userResult) => {
             if (userErr) {
@@ -79,7 +82,7 @@ exports.registerUser = async (req, res) => {
                   lastName,
                   email,
                   role === "Primary" ? "Secondary" : role, // Default to Secondary if role is Primary
-                  referredBy || null,
+                  referralId, // Use referralId here instead of referredBy
                 ],
                 (memberErr, memberResult) => {
                   if (memberErr) {
