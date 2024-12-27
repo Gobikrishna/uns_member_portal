@@ -169,7 +169,7 @@ const Dashboard = () => {
   //   </div>
   // );
   return (
-    <div className="bg-light">
+    <div className="bg-light dashboard-cont">
       <Header />
       <div className="container p-3 bg-white">
         <div className="container">
