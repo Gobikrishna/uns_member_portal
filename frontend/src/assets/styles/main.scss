@@ -56,7 +56,8 @@ header{
 /*======================Home Page starts here===============================*/
   .home-cont{
     background-color: $hmbggreen;
-    height:86vh;
+    height:auto;
+    min-height:100vh;
   }
   .select-coloumn{
     display: grid;
@@ -69,6 +70,14 @@ header{
     }
   }
 /*======================Home Page End here===============================*/
+
+/*=====================Member Details===================================*/
+.memberfillform{
+  display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+}
+/*==================  Member Detail  s===================================*/
+
 
 /*=====================Signup & Register starts================================*/
 .bg-image {
