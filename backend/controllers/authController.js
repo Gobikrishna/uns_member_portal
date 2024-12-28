@@ -121,65 +121,6 @@ exports.registerUser = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-// User Registration
-// exports.registerUser = async (req, res) => {
-//   const { firstName, lastName, email, password, role, mobile } = req.body;
-
-//   try {
-//     // Hash the password
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     // Insert user into the database
-//     const userQuery = `INSERT INTO users (firstName, lastName, email, password, role, mobile) VALUES (?, ?, ?, ?, ?, ?)`;
-
-//     db.query(
-//       userQuery,
-//       [
-//         firstName,
-//         lastName,
-//         email,
-//         hashedPassword,
-//         role,
-//         mobile,
-//         referredBy || null,
-//       ],
-//       (userErr, userResult) => {
-//         if (userErr) {
-//           if (userErr.code === "ER_DUP_ENTRY") {
-//             return res
-//               .status(400)
-//               .json({ error: "Mobile number already exists." });
-//           }
-//           console.error("Error inserting user:", userErr);
-//           return res.status(500).json({ error: "Server error" });
-//         }
-//         res.status(201).json({ message: "User registered successfully" });
-//       }
-//     );
-//   } catch (error) {
-//     console.error("Error hashing password:", error);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// };
-// exports.registerUser = async (req, res) => {
-//   const { firstName, lastName, email, password, role, mobile } = req.body;
-
-//   const hashedPassword = await bcrypt.hash(password, 10);
-
-//   const query = `INSERT INTO users (firstName, lastName, email, password, role, mobile) VALUES (?, ?, ?, ?, ?, ?)`;
-
-//   db.query(
-//     query,
-//     [firstName, lastName, email, hashedPassword, role, mobile],
-//     (err, result) => {
-//       if (err) {
-//         console.error("Error inserting user:", err);
-//         return res.status(500).json({ error: "Server error" });
-//       }
-//       res.status(201).json({ message: "User registered successfully" });
-//     }
-//   );
-// };
 
 // User Login
 exports.loginUser = async (req, res) => {
@@ -291,6 +232,37 @@ exports.getMemberData = (req, res) => {
     res.json(result); // Return all matching members (not just the first)
   });
 };
+
+// Update User Details
+exports.updateUserDetails = (req, res) => {
+  const userId = req.params.userId; // Get the user id from URL parameter
+  const userDetails = req.body.user_details; // Get the user details from request body
+
+  if (!userDetails || typeof userDetails !== "object") {
+    return res.status(400).json({ error: "Invalid user details format" });
+  }
+
+  // Query to update the user_details JSON column
+  const query = `
+    UPDATE users 
+    SET user_details = ? 
+    WHERE id = ?
+  `;
+
+  db.query(query, [JSON.stringify(userDetails), userId], (err, result) => {
+    if (err) {
+      console.error("Error updating user details:", err);
+      return res.status(500).json({ error: "Server error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ message: "User details updated successfully" });
+  });
+};
+
 // Change Passwored Settings
 exports.changePassword = async (req, res) => {
   const userId = req.params.userId; // Retrieve the user ID from the URL parameter

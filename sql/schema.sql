@@ -49,6 +49,75 @@ CREATE TABLE transactions (
     FOREIGN KEY (memberId) REFERENCES members(id) ON DELETE CASCADE -- Links to `members` table
 );
 
+ALTER TABLE users
+ADD COLUMN user_details JSON AFTER referredBy;
+-- Updating the 'user_details' column with a JSON object that includes multiple fields
+UPDATE users
+SET user_details = JSON_OBJECT(
+  'mental_age', NULL, 
+  'family_values', NULL,  
+  'traditions_of_family', NULL, 
+  'family_member_details', NULL, 
+  'legacy_of_family', NULL, 
+  'emotional_range', NULL, 
+  'thoughts_about', NULL,  
+  'conversation_style', NULL, 
+  'working_style', NULL, 
+  'spending_style', NULL, 
+  'thoughts_on_lifestyle', NULL, 
+  'past_vacations', NULL, 
+  'physical_looks', NULL, 
+  'disfigurements', NULL, 
+  'internal_organs_health', NULL, 
+  'personality', NULL, 
+  'dressing', NULL, 
+  'behaviour_in_sg', NULL, 
+  'area_of_living', NULL, 
+  'how_many_transfer', NULL, 
+  'idea_of_settle', NULL, 
+  'areas_of_interest', NULL, 
+  'possession', NULL, 
+  'future_travel', NULL, 
+  'marks', NULL, 
+  'courses_apart', NULL, 
+  'areas_of_success', NULL, 
+  'activities_involved', NULL, 
+  'leadership_position', NULL, 
+  'typing_speed', NULL, 
+  'interesting_subjects', NULL, 
+  'current_occupation', NULL, 
+  'interest_in_occupation', NULL, 
+  'work_designation', NULL, 
+  'interact_with_coworkers', NULL,  
+  'nature_of_job', NULL, 
+  'relation_with', NULL, 
+  'issues_in_family', NULL, 
+  'circle_of_friends', NULL, 
+  'number_of_partners', NULL, 
+  'fluency_in_lang', NULL, 
+  'interest_in_other_lang', NULL, 
+  'caste', NULL, 
+  'faiths', NULL, 
+  'beliefs', NULL, 
+  'no_of_cars', NULL, 
+  'no_of_house', NULL, 
+  'financial_literacy', NULL, 
+  'views_on_invest', NULL, 
+  'how_many_debts', NULL, 
+  'comfort_with_tech', NULL, 
+  'electronic_devices', NULL, 
+  'appliances_in_use', NULL, 
+  'technological_interests', NULL, 
+  'how_often_change_devices', NULL, 
+  'traditional_items', NULL, 
+  'types_of_brands', NULL, 
+  'volunteer_services', NULL, 
+  'fears', NULL, 
+  'motivations_drawbacks', NULL,  
+  'free_time', NULL, 
+  'outings', NULL
+);
+
 
 
 -- insert data 
