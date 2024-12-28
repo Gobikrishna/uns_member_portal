@@ -121,7 +121,7 @@ const Dashboard = () => {
   return (
     <div className="bg-light dashboard-cont">
       <Header />
-      {authState.user.role !== "admin" ? (
+      {authState.user.role !== "Admin" ? (
         <div className="container p-3 bg-white">
           <div className="container">
             <div className="d-flex align-items-center  p-3 rounded">

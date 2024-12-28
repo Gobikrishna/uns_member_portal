@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import Back from "../assets/images/back.png";
 import { AuthContext } from "../context/AuthContext";
 // import FileUpload from "./FileUpload";
 import Header from "./Header";
@@ -7,7 +8,7 @@ import Footer from "./Footer";
 import { Link, useNavigate } from "react-router-dom";
 const MemberDetails = () => {
   const { authState } = useContext(AuthContext);
-
+  const [activeTab, setActiveTab] = useState("referral");
   // to get the initials of first name and last name
   const getInitials = (firstName, lastName) => {
     const firstInitial = firstName?.charAt(0).toUpperCase() || "";
@@ -20,10 +21,11 @@ const MemberDetails = () => {
       {/* Navigation Bar */}
       <Header />
 
+
       {/* Hero Section */}
       <div className="container mt-4">
-        <div className="container">
-          <div className="d-flex align-items-center  p-3 rounded">
+        <div className="">
+          <div className="d-flex align-items-center rounded">
             {/* Logo Column */}
             <div className=" d-flex flex-column align-items-center justify-content-center me-3">
               <div className="user-avatar d-flex align-items-center justify-content-center">
@@ -37,6 +39,8 @@ const MemberDetails = () => {
               </div>
             </div>
 
+            
+
             {/* Text Column */}
             <div className="user-info">
               <h3 className="user-name">
@@ -46,8 +50,33 @@ const MemberDetails = () => {
             </div>
           </div>
         </div>
-        <h3 className="text-center mb-4">Detailed Form</h3>
-        <form>
+
+       <div className="my-4"><img src={Back} alt="back" /> Back to Member Portal</div>
+
+<div>
+
+{/* Tab Links */}
+<div className="tab-links">
+        <button
+          className={activeTab === "referral" ? "active" : ""}
+          onClick={() => setActiveTab("referral")}
+        >
+          Referral Details
+        </button>
+        <button
+          className={activeTab === "transaction" ? "active" : ""}
+          onClick={() => setActiveTab("transaction")}
+        >
+          All Transaction Details
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="tab-content">
+        {activeTab === "referral" && (
+          <div>
+            <h2>Referral Details</h2>
+            <form>
           {/* First Section */}
           <div className="memberfillform grid align-items-center flex-wrap gap-4 mb-4">
             <div className="form-group">
@@ -541,6 +570,20 @@ const MemberDetails = () => {
             </button>
           </div>
         </form>
+          </div>
+        )}
+        {activeTab === "transaction" && (
+          <div>
+            <h2>All Transaction Details</h2>
+            <p>Here are the details for all transactions.</p>
+          </div>
+        )}
+      </div>
+
+</div>
+
+
+        
       </div>
 
       {/* Footer */}

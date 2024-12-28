@@ -1,7 +1,150 @@
 import React from "react";
+import { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+
 
 const MemberList = () => {
-  return <div>MemberList</div>;
+  const [memberData, setMemberData] = useState([]);
+  const { authState } = useContext(AuthContext);
+  const [userData, setUserData] = useState({});
+  const [transactions, setTransactions] = useState([]);
+  const [referralMembers, setReferralMembers] = useState([]); // Renamed to reflect referral members
+  const [commissionDetails, setCommissionDetails] = useState([]);
+
+  useEffect(() => {
+    console.log("authState details==>", authState);
+    if (authState.isAuthenticated) {
+      const token = authState.token; // Access token from authState.user.token
+      const userId = authState.user.id;
+      // Fetch member data
+      console.log("Dashboard Auth token", authState.user.id);
+      // Fetch user data from the backend
+      axios
+        .get(`http://localhost:5001/api/auth/user/${userId}`, {
+          // Replace with your API endpoint
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
+        })
+        .then((res) => {
+          setUserData(res.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          // Handle error, maybe show an error message
+        });
+      console.log("user Data", userData);
+      console.log("auth user role", authState.user.role);
+      axios
+        .get(`http://localhost:5001/api/auth/members/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            role: authState.user.role, // Send role in the request body
+          },
+        })
+        .then((res) => setMemberData(res.data))
+        .catch((error) => console.error("Error fetching member data", error));
+      // Fetch referral transactions
+      axios
+        .get(`http://localhost:5001/api/auth/transactions/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => setTransactions(res.data))
+        .catch((error) =>
+          console.error("Error fetching referral transactions", error)
+        );
+
+      console.log("user Data", memberData);
+      console.log("referral list", referralMembers);
+
+      // Fetch referral members
+      axios
+        .get(`http://localhost:5001/api/auth/referral-members/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => setReferralMembers(res.data))
+        .catch((error) =>
+          console.error("Error fetching referral members", error)
+        );
+
+      // Fetch commission details
+      axios
+        .get(`http://localhost:5001/api/auth/commission-details/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => setCommissionDetails(res.data))
+        .catch((error) =>
+          console.error("Error fetching commission details", error)
+        );
+    } else {
+      alert("Please log in to access the dashboard.");
+    }
+  }, [authState]);
+  
+  // to get the initials of first name and last name
+  const getInitials = (firstName, lastName) => {
+    const firstInitial = firstName?.charAt(0).toUpperCase() || "";
+    const lastInitial = lastName?.charAt(0).toUpperCase() || "";
+    return firstInitial + lastInitial;
+  };
+
+  return (
+    <div className="container mt-2 mb-5">
+
+      <div className=" d-flex flex-column  me-3">
+                <div className="user-avatar d-flex align-items-center justify-content-center">
+                  {/* Dynamically displaying the initials */}
+                  <h1>{getInitials(userData.firstName, userData.lastName)}</h1>
+                </div>
+              </div>
+
+    <h5 className="w-100 pb-3 border-bottom border-secondary">
+      Prime Member
+    </h5>
+
+  <div className="table-responsive data-table">
+    <table className="table">
+      <thead className="bg-lgreen text-white">
+        <tr>
+          <th scope="col">S.No</th>
+          <th scope="col">Member ID</th>
+          <th scope="col">Member Name</th>
+          <th scope="col">Mobile Number</th>
+          <th scope="col">Email</th>
+          <th scope="col">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {memberData &&
+          memberData.map((member, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{member.id}</td>
+              <td>{member.firstName + " " + member.lastName}</td>
+              <td>{member.mobile}</td>
+              <td>{member.email}</td>
+              <td>
+                <Link to="/memberdetails">
+                  <button className="btn btn-sm btn-info text-white">
+                    View List
+                  </button>
+                </Link>
+              </td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+);
 };
 
 export default MemberList;

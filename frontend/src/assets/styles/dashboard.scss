@@ -20,6 +20,9 @@
     }
   }
 }
+.tab-links button.active{
+  background-color: #47B749 !important;
+}
 .user-avatar {
   background-color: #47B749; /* Primary color for avatar */
   color: white;
@@ -46,3 +49,54 @@
   color: #17863F; /* Muted text color */
   margin: 0;
 }
+      .tab-links {
+          display: flex;
+          margin-bottom: 1rem;
+        }
+        .tab-links button {
+          padding: 10px 20px;
+          margin-right: 10px;
+          border: none;
+          background-color: #f1f1f1;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+        .tab-links button.active {
+          background-color: #007bff;
+          color: white;
+        }
+        .tab-links button:hover {
+          background-color: #ddd;
+        }
+        .tab-content {
+          border: 1px solid #ddd;
+          padding: 1rem;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+        }
+
+        .tab-links {
+          display: flex;
+          margin-bottom: 1rem;
+        }
+        .tab-links button {
+          padding: 10px 20px;
+          margin-right: 10px;
+          border: none;
+          background-color: #f1f1f1;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+        .tab-links button.active {
+          background-color: #007bff;
+          color: white;
+        }
+        .tab-links button:hover {
+          background-color: #ddd;
+        }
+        .tab-content {
+          border: 1px solid #ddd;
+          padding: 1rem;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+        }
