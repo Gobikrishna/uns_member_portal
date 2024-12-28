@@ -4,7 +4,6 @@ const db = require("../config/db");
 // (Registration, Login, Forgot Password):
 
 // Check if User Exists by Email or Mobile
-
 exports.checkUserExists = (req, res) => {
   const { email, mobile } = req.body;
 
@@ -24,7 +23,6 @@ exports.checkUserExists = (req, res) => {
 };
 
 // User Registration
-
 exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password, role, mobile, referredBy } =
     req.body;
@@ -292,6 +290,54 @@ exports.getMemberData = (req, res) => {
     // Return the member data
     res.json(result); // Return all matching members (not just the first)
   });
+};
+// Change Passwored Settings
+exports.changePassword = async (req, res) => {
+  const userId = req.params.userId; // Retrieve the user ID from the URL parameter
+  console.log("settings", userId);
+  const { oldPassword, newPassword } = req.body; // Extract old and new passwords from the request body
+
+  try {
+    // Fetch the user from the database using the provided user ID
+    const query = "SELECT * FROM users WHERE id = ?";
+    db.query(query, [userId], async (err, result) => {
+      if (err) {
+        console.error("Database error:", err); // Log database errors for debugging
+        return res.status(500).json({ error: "Server error" }); // Return a 500 response for server errors
+      }
+
+      if (result.length === 0) {
+        // If no user is found, respond with a 404 error
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const user = result[0];
+      const isMatch = await bcrypt.compare(oldPassword, user.password); // Compare the old password with the stored hash
+
+      if (!isMatch) {
+        // If the old password doesn't match, return a 400 error
+        return res.status(400).json({ error: "Old password is incorrect" });
+      }
+
+      // Hash the new password with a salt factor of 10
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // Update the user's password in the database
+      const updateQuery = "UPDATE users SET password = ? WHERE id = ?";
+      db.query(updateQuery, [hashedPassword, userId], (updateErr) => {
+        if (updateErr) {
+          console.error("Error updating password:", updateErr); // Log errors during the update process
+          return res.status(500).json({ error: "Server error" }); // Respond with a 500 error for update failures
+        }
+
+        // Respond with success when the password is successfully updated
+        res.status(200).json({ message: "Password updated successfully" });
+      });
+    });
+  } catch (error) {
+    console.error("Error processing password change:", error); // Catch and log unexpected errors
+    res.status(500).json({ error: "Server error" }); // Respond with a 500 error for unexpected failures
+  }
 };
 
 // Get Referral Members for a Primary Member

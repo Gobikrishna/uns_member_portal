@@ -11,6 +11,7 @@ const {
   getReferralTransactions,
   getReferralMembers,
   getCommissionDetails,
+  changePassword,
 } = require("../controllers/authController");
 
 // Route to check if a user exists by email or mobile
@@ -18,6 +19,9 @@ router.post("/check-user", checkUserExists);
 
 // Route to register a new user
 router.post("/register", registerUser);
+
+// Change Password
+router.put("/change-password/:userId", changePassword);
 
 // Route to log in a user
 router.post("/login", loginUser);
