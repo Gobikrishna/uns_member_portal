@@ -3,7 +3,11 @@ import axios from "axios";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 
-const Register = ({ initialRole = "primary", referralId = null }) => {
+const Register = ({
+  initialRole = "primary",
+  referralId = null,
+  pageTitle = null,
+}) => {
   // Default role is "primary"
   const [formData, setFormData] = useState({
     firstName: "",
@@ -87,7 +91,7 @@ const Register = ({ initialRole = "primary", referralId = null }) => {
             </Link>
           </div>
           <h5 className="card-title text-center mb-2 text-uppercase">
-            Register your account
+            {pageTitle || "Register your account"}
           </h5>
           {message && <p className="text-center text-danger">{message}</p>}
           <form onSubmit={handleSubmit}>

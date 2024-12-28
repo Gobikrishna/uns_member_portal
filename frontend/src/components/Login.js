@@ -13,10 +13,10 @@ const Login = () => {
   // Check if the user is already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userString = localStorage.getItem("user");
+    const userDetails = localStorage.getItem("user");
 
     // If the token and user exist, redirect to the dashboard
-    if (token && userString) {
+    if (token && userDetails) {
       // Token exists, so the user is already logged in
       navigate("/dashboard"); // Redirect to the dashboard or other authenticated page
     }
@@ -40,17 +40,13 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(res.data.user)); // Store user data as JSON string
 
       // Update context state with the user and authentication status
-      // setAuthState({ isAuthenticated: true, user: res.data.user });
-
-      // Update context state with the user and authentication status
       setAuthState({
         isAuthenticated: true,
+        token: res.data.token,
         user: res.data.user,
-        userId: res.data.user.id,
-        userRole: res.data.user.role,
       });
-      // Optionally, redirect to the dashboard after successful login
-      window.location.href = "/dashboard"; // Or use useNavigate() from react-router v6
+      // Navigate to the dashboard after successful login
+      navigate("/dashboard"); // Use navigate for React Router routing
     } catch (error) {
       console.error("Login error", error);
     }
@@ -68,7 +64,7 @@ const Login = () => {
               </Link>
             </div>
             <h5 className="card-title text-center mb-2 text-uppercase">
-              sign UP your account
+              Sign In to Your Account
             </h5>
             <form onSubmit={handleLogin}>
               <div className="mb-3">

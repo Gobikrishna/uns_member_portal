@@ -1,4 +1,3 @@
-// Global Auth Context
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -9,9 +8,8 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     isAuthenticated: false,
+    token: null,
     user: null,
-    userId: null,
-    userRole: null,
   });
   const navigate = useNavigate();
 
@@ -29,49 +27,40 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userString = localStorage.getItem("user");
+    const userDetails = localStorage.getItem("user");
 
-    console.log("Token from localStorage:", token);
-    console.log("User from localStorage:", userString);
-
-    if (token && userString) {
-      if (isTokenExpired(token)) {
-        // Token expired: clear localStorage, reset authState, and redirect to login
-        console.log("Token expired!");
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setAuthState({
-          isAuthenticated: false,
-          user: null,
-          userId: null,
-          userRole: null,
-        });
-        navigate("/login"); // Redirect to login page
-      } else {
-        // Token is valid: extract user info and set authState
-        console.log("Token still valid.");
-        const userObject = JSON.parse(userString); // Convert JSON string to object
-        console.log("userObject==>", userObject);
-        axios.defaults.headers["Authorization"] = `Bearer ${token}`;
-        setAuthState({
-          isAuthenticated: true,
-          user: { token },
-          userId: userObject.id,
-          userRole: userObject.role,
-        });
-      }
-    } else {
-      // Token or user data missing: reset authState and navigate to login
-      console.log("Token or user data not found in localStorage.");
+    // If there's no token or user, or if the token is expired, clear auth state
+    if (!token || !userDetails || isTokenExpired(token)) {
+      console.log("No token or token expired.");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setAuthState({
         isAuthenticated: false,
+        token: null,
         user: null,
-        userId: null,
-        userRole: null,
       });
-      navigate("/login"); // Redirect to login page
+
+      // Only navigate to login if we're not already on public routes
+      if (
+        window.location.pathname !== "/login" &&
+        window.location.pathname !== "/register"
+      ) {
+        // Delay navigation to prevent the warning
+        setTimeout(() => {
+          navigate("/login");
+        }, 0);
+      }
+    } else {
+      console.log("Token still valid.");
+      const userObject = JSON.parse(userDetails); // Convert JSON string to object
+      axios.defaults.headers["Authorization"] = `Bearer ${token}`;
+      setAuthState({
+        isAuthenticated: true,
+        token: token,
+        user: userObject,
+      });
     }
-  }, []); // Dependency array includes `navigate` for redirection
+  }, [navigate]); // Dependency array includes `navigate` for redirection
 
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>

@@ -28,16 +28,6 @@ const Dashboard = () => {
     mobileNumber: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSave = () => {
-    console.log("Saved Data:", formData);
-    setShowModal(false); // Close the modal
-  };
-
   const openModal = () => {
     setShowModal(true);
   };
@@ -48,12 +38,13 @@ const Dashboard = () => {
   useEffect(() => {
     console.log("authState details==>", authState);
     if (authState.isAuthenticated) {
-      const token = authState.user.token; // Access token from authState.user.token
+      const token = authState.token; // Access token from authState.user.token
+      const userId = authState.user.id;
       // Fetch member data
-
+      console.log("Dashboard Auth token", authState.user.id);
       // Fetch user data from the backend
       axios
-        .get(`http://localhost:5001/api/auth/user/${authState.userId}`, {
+        .get(`http://localhost:5001/api/auth/user/${userId}`, {
           // Replace with your API endpoint
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the header
@@ -67,26 +58,23 @@ const Dashboard = () => {
           // Handle error, maybe show an error message
         });
       console.log("user Data", userData);
-      console.log("auth user role", authState.userRole);
+      console.log("auth user role", authState.user.role);
       axios
-        .get(`http://localhost:5001/api/auth/members/${authState.userId}`, {
+        .get(`http://localhost:5001/api/auth/members/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
-            role: authState.userRole, // Send role in the request body
+            role: authState.user.role, // Send role in the request body
           },
         })
         .then((res) => setMemberData(res.data))
         .catch((error) => console.error("Error fetching member data", error));
       // Fetch referral transactions
       axios
-        .get(
-          `http://localhost:5001/api/auth/transactions/${authState.userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .get(`http://localhost:5001/api/auth/transactions/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((res) => setTransactions(res.data))
         .catch((error) =>
           console.error("Error fetching referral transactions", error)
@@ -95,35 +83,13 @@ const Dashboard = () => {
       console.log("user Data", memberData);
       console.log("referral list", referralMembers);
 
-      // Fetch referral members (updated to reflect new endpoint)
-      // axios
-      //   .get(
-      //     `http://localhost:5001/api/auth/referral-members/${authState.userId}`
-      //   )
-      //   .then((res) => setReferralMembers(res.data)) // Use referralMembers state here
-      //   .catch((error) =>
-      //     console.error("Error fetching referral members", error)
-      //   );
-
-      // // Fetch commission details
-      // axios
-      //   .get(
-      //     `http://localhost:5001/api/auth/commission-details/${authState.userId}`
-      //   )
-      //   .then((res) => setCommissionDetails(res.data))
-      //   .catch((error) =>
-      //     console.error("Error fetching commission details", error)
-      //   );
       // Fetch referral members
       axios
-        .get(
-          `http://localhost:5001/api/auth/referral-members/${authState.userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .get(`http://localhost:5001/api/auth/referral-members/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((res) => setReferralMembers(res.data))
         .catch((error) =>
           console.error("Error fetching referral members", error)
@@ -131,14 +97,11 @@ const Dashboard = () => {
 
       // Fetch commission details
       axios
-        .get(
-          `http://localhost:5001/api/auth/commission-details/${authState.userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .get(`http://localhost:5001/api/auth/commission-details/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((res) => setCommissionDetails(res.data))
         .catch((error) =>
           console.error("Error fetching commission details", error)
@@ -155,21 +118,6 @@ const Dashboard = () => {
     return firstInitial + lastInitial;
   };
 
-  // return (
-  //   <div>
-  //     <h1>Welcome, {memberData.firstName}</h1>
-  //     <h2>Referral Income</h2>
-  //     <ul>
-  //       {transactions.map((transaction) => (
-  //         <li key={transaction.id}>
-  //           {transaction.referralPerson} earned {transaction.referralIncome} on{" "}
-  //           {transaction.transactionDate}
-  //         </li>
-  //       ))}
-  //     </ul>
-  //     <div></div>
-  //   </div>
-  // );
   return (
     <div className="bg-light dashboard-cont">
       <Header />
@@ -258,6 +206,7 @@ const Dashboard = () => {
                         <Register
                           initialRole="secondary"
                           referralId={userData.id}
+                          pageTitle="Add New Member"
                         />
                       </Modal>
                     </div>

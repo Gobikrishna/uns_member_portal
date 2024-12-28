@@ -1,19 +1,39 @@
-import { Link } from "react-router-dom";
-import logo from "../assets/images/logo.png";
 import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/images/logo.png";
 import { AuthContext } from "../context/AuthContext";
 
 const Header = () => {
   const { authState, setAuthState } = useContext(AuthContext); // Access context here
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // For controlling dropdown visibility
+  const navigate = useNavigate(); // Hook to redirect after logout
 
+  // Toggle the dropdown visibility
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
+  // Logout the user and reset the auth state
   const onLogout = () => {
-    setAuthState({ isAuthenticated: false, user: null }); // Clear auth state
+    // Clear the authState in context
+    setAuthState({ isAuthenticated: false, token: null, user: null });
+
+    // Clear the user token and details from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Log the user out
     console.log("Logout clicked");
+
+    // Redirect the user to the login page after logout
+    navigate("/login");
+  };
+
+  // to get the initials of first name and last name
+  const getInitials = (firstName, lastName) => {
+    const firstInitial = firstName?.charAt(0).toUpperCase() || "";
+    const lastInitial = lastName?.charAt(0).toUpperCase() || "";
+    return firstInitial + lastInitial;
   };
 
   return (
@@ -26,7 +46,7 @@ const Header = () => {
             </Link>
             <div>
               {!authState.isAuthenticated ? (
-                // Show Login and Register Links
+                // If not authenticated, show login and register links
                 <div className="hd-links d-flex gap-2">
                   <div className="nav-item">
                     <Link className="nav-link home-link" to="/login">
@@ -41,7 +61,7 @@ const Header = () => {
                   </div>
                 </div>
               ) : (
-                // Show Dropdown for Logged-In Users
+                // If authenticated, show user dropdown
                 <div className={`dropdown ${isDropdownOpen ? "show" : ""}`}>
                   <button
                     className="btn btn-secondary dropdown-toggle"
@@ -50,9 +70,15 @@ const Header = () => {
                     aria-expanded={isDropdownOpen}
                     onClick={toggleDropdown}
                   >
-                    {authState.user?.initials || "KR"}
+                    {/* Dynamically displaying the initials */}
+                    {getInitials(
+                      authState.user.firstName,
+                      authState.user.lastName
+                    )}
                   </button>
-                  <span className="ps-2">{authState.user?.name || "User Name"}</span>
+                  <span className="ps-2">
+                    {authState.user?.firstName + " " + authState.user?.lastName}
+                  </span>
 
                   <ul
                     className={`dropdown-menu dropdown-menu-end ${
@@ -66,10 +92,7 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
-                      <button
-                        className="dropdown-item"
-                        onClick={onLogout}
-                      >
+                      <button className="dropdown-item" onClick={onLogout}>
                         <i className="fa fa-sign-out me-2"></i>Logout
                       </button>
                     </li>
