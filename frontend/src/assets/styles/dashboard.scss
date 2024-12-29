@@ -20,9 +20,17 @@
     }
   }
 }
-.tab-links button.active{
-  background-color: #47B749 !important;
-}
+
+.tab-links{
+  margin-bottom: 0 !important; 
+   button{
+     margin-right: 0 !important;
+     border-radius: 0 !important;
+     &.active{
+       background-color: #47B749 !important;
+     }
+   }
+ }
 .user-avatar {
   background-color: #47B749; /* Primary color for avatar */
   color: white;
@@ -73,6 +81,7 @@
           padding: 1rem;
           border-radius: 5px;
           background-color: #f9f9f9;
+          margin-bottom: 20px;
         }
 
         .tab-links {

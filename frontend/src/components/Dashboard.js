@@ -110,6 +110,7 @@ const Dashboard = () => {
       alert("Please log in to access the dashboard.");
     }
   }, [authState]);
+  console.log("Member being passed:", memberData);
 
   // to get the initials of first name and last name
   const getInitials = (firstName, lastName) => {
@@ -251,7 +252,7 @@ const Dashboard = () => {
                           </span>
                         </td>
                         <td>
-                          <Link to="/memberdetails">
+                          <Link to="/memberdetails" state={{ member }}>
                             <button className="btn btn-sm btn-info text-white">
                               Add Details / View
                             </button>

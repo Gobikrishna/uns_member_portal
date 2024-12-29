@@ -146,6 +146,7 @@ const Register = ({
                 className="form-control"
                 id="mobile"
                 name="mobile"
+                maxLength={10}
                 value={formData.mobile}
                 onChange={handleChange}
                 required

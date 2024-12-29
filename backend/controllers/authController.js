@@ -233,11 +233,46 @@ exports.getMemberData = (req, res) => {
   });
 };
 
+// Get User Details
+exports.getUserDetails = (req, res) => {
+  const id = req.params.userId; // Get user ID from the URL parameter
+
+  // Query to get only the user_details column
+  const query = "SELECT user_details FROM users WHERE id = ?";
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error fetching user details:", err);
+      return res.status(500).json({ error: "Server error" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Handle user_details
+    const userDetailsRaw = result[0].user_details;
+
+    try {
+      // Parse only if it's a string
+      const userDetails =
+        typeof userDetailsRaw === "string"
+          ? JSON.parse(userDetailsRaw)
+          : userDetailsRaw;
+      res.json({ user_details: userDetails });
+    } catch (err) {
+      console.error("Invalid JSON in user_details:", userDetailsRaw);
+      res.status(500).json({ error: "Invalid JSON in user_details" });
+    }
+  });
+};
+
 // Update User Details
 exports.updateUserDetails = (req, res) => {
   const userId = req.params.userId; // Get the user id from URL parameter
   const userDetails = req.body.user_details; // Get the user details from request body
 
+  console.log("userDetails", userDetails);
   if (!userDetails || typeof userDetails !== "object") {
     return res.status(400).json({ error: "Invalid user details format" });
   }

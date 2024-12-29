@@ -12,6 +12,8 @@ const {
   getReferralMembers,
   getCommissionDetails,
   changePassword,
+  updateUserDetails,
+  getUserDetails,
 } = require("../controllers/authController");
 
 // Route to check if a user exists by email or mobile
@@ -34,6 +36,12 @@ router.get("/user/:userId", authenticateJWT, getUserData);
 
 // Route to get member data by user ID (Protected route)
 router.get("/members/:userId", authenticateJWT, getMemberData);
+
+// Route to get user details (Protected route)
+router.get("/user-details/:userId", authenticateJWT, getUserDetails);
+
+// Route to update user details (Protected route)
+router.put("/update-details/:userId", authenticateJWT, updateUserDetails); // New route for updating user details
 
 // Route to get referral transactions by user ID (Protected route)
 router.get("/transactions/:userId", authenticateJWT, getReferralTransactions);
