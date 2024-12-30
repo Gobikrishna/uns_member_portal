@@ -205,7 +205,7 @@ const Dashboard = () => {
                       <Modal showModal={showModal} onClose={closeModal}>
                         {/* Pass "secondary" role to Register component in modal */}
                         <Register
-                          initialRole="secondary"
+                          // initialRole="secondary"
                           referralId={userData.id}
                           pageTitle="Add New Member"
                         />

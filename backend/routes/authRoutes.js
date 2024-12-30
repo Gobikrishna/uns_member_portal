@@ -14,6 +14,7 @@ const {
   changePassword,
   updateUserDetails,
   getUserDetails,
+  getPrimaryUserData,
 } = require("../controllers/authController");
 
 // Route to check if a user exists by email or mobile
@@ -33,6 +34,9 @@ router.post("/forgot-password", forgotPassword);
 
 // Route to get member data by user ID (Protected route)
 router.get("/user/:userId", authenticateJWT, getUserData);
+
+// Route to get primary member data for admin (Protected route)
+router.get("/primaryuser", authenticateJWT, getPrimaryUserData);
 
 // Route to get member data by user ID (Protected route)
 router.get("/members/:userId", authenticateJWT, getMemberData);

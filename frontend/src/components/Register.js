@@ -4,15 +4,33 @@ import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 const Register = ({
-  initialRole = "primary",
+  // initialRole = "primary",
   referralId = null,
   pageTitle = null,
 }) => {
   const { authState } = useContext(AuthContext);
+  const [memberRole, setMemberRole] = useState("");
+
+  // Set member role based on user role
   useEffect(() => {
-    if (authState.isAuthenticated) {
+    if (
+      authState.user &&
+      authState.user.role &&
+      (authState.user.role.toLowerCase() === "secondary" ||
+        authState.user.role.toLowerCase() === "direct referral")
+    ) {
+      setMemberRole("referred");
+    } else {
+      setMemberRole("primary");
     }
-  });
+  }, [authState.user]);
+
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      role: memberRole,
+    }));
+  }, [memberRole]);
 
   // Default role is "primary"
   console.log("authRole", authState.user && authState.user.role);
@@ -22,7 +40,8 @@ const Register = ({
     email: "",
     mobile: "",
     password: "",
-    role: initialRole, // Use the passed role or the default
+    role: memberRole, // Use the passed role or the default
+    // role: "",
   });
   const [message, setMessage] = useState("");
 
@@ -36,13 +55,14 @@ const Register = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("submitted data", formData);
 
     try {
       // Prepare form data
       const submitData = { ...formData };
 
       // If the user is a primary member, ensure referredBy is null
-      if (formData.role === "Primary") {
+      if (formData.role === "primary") {
         submitData.referredBy = null; // Ensure referredBy is null for primary members
       } else {
         // If it's a secondary member, include the passed referralId
@@ -74,7 +94,7 @@ const Register = ({
         email: "",
         mobile: "",
         password: "",
-        role: initialRole, // Reset the role to the initial value (e.g., "primary" or "secondary")
+        role: memberRole, // Reset the role to the initial value (e.g., "primary" or "secondary")
         referralId: referralId, // Make sure the referral ID is included here
       });
 
@@ -159,34 +179,46 @@ const Register = ({
                 required
               />
             </div>
-            <div
-              className="mb-3"
-              style={{
-                display:
-                  authState.user &&
-                  authState.user.role &&
-                  authState.user.role.toLowerCase() === "secondary"
-                    ? "none"
-                    : "block",
-              }}
-            >
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required={
-                  authState.user &&
-                  authState.user.role &&
-                  authState.user.role.toLowerCase() !== "secondary"
-                }
-              />
-            </div>
+            {authState?.user?.role?.toLowerCase() !== "secondary" &&
+              authState?.user?.role?.toLowerCase() !== "direct referral" && (
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              )}
+            {authState.user &&
+              authState?.user?.role?.toLowerCase() !== "secondary" &&
+              authState?.user?.role?.toLowerCase() !== "direct referral" && (
+                <div className="mb-3">
+                  <label htmlFor="role" className="form-label">
+                    Role
+                  </label>
+                  <select
+                    id="role"
+                    name="role"
+                    className="form-select"
+                    value={formData.role}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Role
+                    </option>
+                    <option value="direct referral">Direct referral</option>
+                    <option value="secondary">Secondary</option>
+                  </select>
+                </div>
+              )}
 
             <button type="submit" className="btn btn-primary w-100">
               Register

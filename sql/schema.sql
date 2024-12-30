@@ -8,7 +8,7 @@ CREATE TABLE users (
     lastName VARCHAR(50) NOT NULL,                     -- User's last name
     email VARCHAR(100) UNIQUE NOT NULL,                -- User's email (unique constraint)
     password VARCHAR(255) NOT NULL,                    -- User's hashed password
-    role ENUM('Primary', 'Secondary','Direct referral', 'Admin') DEFAULT 'Primary', -- Role (Primary, Secondary, Admin, etc.)
+    role ENUM('primary', 'secondary','direct referral', 'admin', 'referred') DEFAULT 'primary', -- Role (Primary, Secondary, Admin, etc.)
     mobile VARCHAR(15) UNIQUE,                         -- User's mobile number (unique constraint)
     referredBy INT,                                    -- References the ID of the referring Primary user
     user_details JSON,                                 -- User details column (placed after referredBy)
@@ -91,7 +91,7 @@ CREATE TABLE members (
     firstName VARCHAR(50) NOT NULL,                   -- Member's first name
     lastName VARCHAR(50) NOT NULL,                    -- Member's last name
     email VARCHAR(100) UNIQUE,                        -- Member's email (optional for tracking purposes)
-    role ENUM('Primary', 'Secondary', 'Direct referral', 'Referred') DEFAULT 'Secondary', -- Role (Primary, Secondary, Direct referral, Referred)
+    role ENUM('primary', 'secondary', 'direct referral', 'referred') DEFAULT 'secondary', -- Role (Primary, Secondary, Direct referral, Referred)
     mobile VARCHAR(15),                               -- Member's mobile number
     referralId INT,                                   -- Referring member's ID (can be primary or secondary)
     commission DECIMAL(10, 2) DEFAULT 0.00,           -- Commission earned by the member

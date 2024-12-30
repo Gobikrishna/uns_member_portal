@@ -26,19 +26,36 @@ exports.checkUserExists = (req, res) => {
 exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password, role, mobile, referredBy } =
     req.body;
+  console.log("request Body==>", req.body); // Add this line to log the request body
+
+  // Validate input
+  if (!firstName || !lastName || !email || !mobile || !role) {
+    return res.status(400).json({ error: "Missing required fields." });
+  }
 
   // Check if password is provided
-  if (!password || password.trim() === "") {
+  if (
+    (!password || password.trim() === "") &&
+    (role === "primary" || role === "secondary" || role === "direct referral")
+  ) {
     return res.status(400).json({ error: "Password is required." });
   }
 
   try {
     console.log("user set password", password);
+
+    // Hash password only for certain roles
+    // const hashedPassword =
+    //   role === "primary" || role === "secondary" || role === "direct referral"
+    //     ? await bcrypt.hash(password, 10)
+    //     : null;
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("referredBy", referredBy);
+
     // If the role is "Primary", ensure referredBy is null
-    const referralId = role === "Primary" ? null : referredBy;
+    const referralId = role === "primary" ? null : referredBy;
+
     console.log("referralId==>", referralId + " and role is " + role);
     // Start a transaction to ensure consistency between `users` and `members` tables
     db.beginTransaction(async (transactionError) => {
@@ -76,7 +93,7 @@ exports.registerUser = async (req, res) => {
             } else {
               // Insert member into the `members` table
               const userId = userResult.insertId; // Get the inserted user's ID
-              const memberQuery = `INSERT INTO members (userId, firstName, lastName, email, role, referralId) VALUES (?, ?, ?, ?, ?, ?)`;
+              const memberQuery = `INSERT INTO members (userId, firstName, lastName, email, role, mobile, referralId) VALUES (?, ?, ?, ?, ?, ?,?)`;
 
               db.query(
                 memberQuery,
@@ -86,6 +103,7 @@ exports.registerUser = async (req, res) => {
                   lastName,
                   email,
                   role === "Primary" ? "Secondary" : role, // Default to Secondary if role is Primary
+                  mobile,
                   referralId, // Use referralId here instead of referredBy
                 ],
                 (memberErr, memberResult) => {
@@ -351,6 +369,28 @@ exports.changePassword = async (req, res) => {
     console.error("Error processing password change:", error); // Catch and log unexpected errors
     res.status(500).json({ error: "Server error" }); // Respond with a 500 error for unexpected failures
   }
+};
+
+// Admin - Get all the primary User Data
+exports.getPrimaryUserData = (req, res) => {
+  const id = req.params.userId; // Get user id from the URL parameter
+
+  // Query to get the member's data
+  const query = "SELECT * FROM users WHERE role = 'primary'";
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error fetching user data:", err);
+      return res.status(500).json({ error: "Server error" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Return user data
+    res.json({ users: result }); // Assuming we want to return the first matching member
+  });
 };
 
 // Get Referral Members for a Primary Member
