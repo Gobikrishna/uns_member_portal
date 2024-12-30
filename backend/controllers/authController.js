@@ -27,7 +27,13 @@ exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password, role, mobile, referredBy } =
     req.body;
 
+  // Check if password is provided
+  if (!password || password.trim() === "") {
+    return res.status(400).json({ error: "Password is required." });
+  }
+
   try {
+    console.log("user set password", password);
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("referredBy", referredBy);

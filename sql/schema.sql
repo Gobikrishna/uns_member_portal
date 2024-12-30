@@ -8,49 +8,15 @@ CREATE TABLE users (
     lastName VARCHAR(50) NOT NULL,                     -- User's last name
     email VARCHAR(100) UNIQUE NOT NULL,                -- User's email (unique constraint)
     password VARCHAR(255) NOT NULL,                    -- User's hashed password
-    role ENUM('Primary', 'Secondary', 'Admin') DEFAULT 'Primary', -- Role (Primary, Secondary, Admin, etc.)
+    role ENUM('Primary', 'Secondary','Direct referral', 'Admin') DEFAULT 'Primary', -- Role (Primary, Secondary, Admin, etc.)
     mobile VARCHAR(15) UNIQUE,                         -- User's mobile number (unique constraint)
     referredBy INT,                                    -- References the ID of the referring Primary user
+    user_details JSON,                                 -- User details column (placed after referredBy)
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     -- Record creation timestamp
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last updated timestamp
     FOREIGN KEY (referredBy) REFERENCES users(id) ON DELETE SET NULL -- Self-referencing foreign key
 );
 
-
--- Members Table
-CREATE TABLE members (
-    id INT AUTO_INCREMENT PRIMARY KEY,                -- Unique ID for each member
-    userId INT NOT NULL,                              -- Links to the primary or secondary user in `users` table
-    firstName VARCHAR(50) NOT NULL,                   -- Member's first name
-    lastName VARCHAR(50) NOT NULL,                    -- Member's last name
-    email VARCHAR(100) UNIQUE,                        -- Member's email (optional for tracking purposes)
-    role ENUM('Primary', 'Secondary', 'Direct referral', 'Referred') DEFAULT 'Secondary', -- Role (Primary, Secondary or referred members and Direct referral)
-    referralId INT,                                   -- Referring member's ID (can be primary or secondary)
-    commission DECIMAL(10, 2) DEFAULT 0.00,           -- Commission earned by the member
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- Record creation timestamp
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last updated timestamp
-    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE, -- Links to `users` table
-    FOREIGN KEY (referralId) REFERENCES members(id) ON DELETE SET NULL -- Links to another `members` record
-);
-
-
--- Transactions Table (Referral Tracking)
-CREATE TABLE transactions (
-    id INT AUTO_INCREMENT PRIMARY KEY,                 -- Unique ID for each transaction
-    memberId INT NOT NULL,                             -- Links to the member in `members` table
-    referralPerson VARCHAR(100) NOT NULL,              -- Name of the referring person
-    referralIncome DECIMAL(10, 2) NOT NULL,            -- Income from the referral commission
-    product VARCHAR(100) NOT NULL,                     -- Name of the product purchased
-    price DECIMAL(10, 2) NOT NULL,                     -- Price of the product
-    commissionEarned DECIMAL(10, 2) NOT NULL,          -- Commission earned on the transaction
-    transactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the transaction occurred
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     -- Record creation timestamp
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last updated timestamp
-    FOREIGN KEY (memberId) REFERENCES members(id) ON DELETE CASCADE -- Links to `members` table
-);
-
-ALTER TABLE users
-ADD COLUMN user_details JSON AFTER referredBy;
 -- Updating the 'user_details' column with a JSON object that includes multiple fields
 UPDATE users
 SET user_details = JSON_OBJECT(
@@ -118,7 +84,38 @@ SET user_details = JSON_OBJECT(
   'outings', NULL
 );
 
+-- Members Table (Updated with `mobile` column)
+CREATE TABLE members (
+    id INT AUTO_INCREMENT PRIMARY KEY,                -- Unique ID for each member
+    userId INT NOT NULL,                              -- Links to the primary or secondary user in `users` table
+    firstName VARCHAR(50) NOT NULL,                   -- Member's first name
+    lastName VARCHAR(50) NOT NULL,                    -- Member's last name
+    email VARCHAR(100) UNIQUE,                        -- Member's email (optional for tracking purposes)
+    role ENUM('Primary', 'Secondary', 'Direct referral', 'Referred') DEFAULT 'Secondary', -- Role (Primary, Secondary, Direct referral, Referred)
+    mobile VARCHAR(15),                               -- Member's mobile number
+    referralId INT,                                   -- Referring member's ID (can be primary or secondary)
+    commission DECIMAL(10, 2) DEFAULT 0.00,           -- Commission earned by the member
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- Record creation timestamp
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last updated timestamp
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE, -- Links to `users` table
+    FOREIGN KEY (referralId) REFERENCES members(id) ON DELETE SET NULL -- Links to another `members` record
+);
 
+
+-- Transactions Table (Referral Tracking)
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,                 -- Unique ID for each transaction
+    memberId INT NOT NULL,                             -- Links to the member in `members` table
+    referralPerson VARCHAR(100) NOT NULL,              -- Name of the referring person
+    referralIncome DECIMAL(10, 2) NOT NULL,            -- Income from the referral commission
+    product VARCHAR(100) NOT NULL,                     -- Name of the product purchased
+    price DECIMAL(10, 2) NOT NULL,                     -- Price of the product
+    commissionEarned DECIMAL(10, 2) NOT NULL,          -- Commission earned on the transaction
+    transactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the transaction occurred
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     -- Record creation timestamp
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last updated timestamp
+    FOREIGN KEY (memberId) REFERENCES members(id) ON DELETE CASCADE -- Links to `members` table
+);
 
 -- insert data 
 -- Inserting primary members (admin and primary users)

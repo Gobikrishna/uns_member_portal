@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
-
+import { AuthContext } from "../context/AuthContext";
 const Register = ({
   initialRole = "primary",
   referralId = null,
   pageTitle = null,
 }) => {
+  const { authState } = useContext(AuthContext);
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+    }
+  });
+
   // Default role is "primary"
+  console.log("authRole", authState.user && authState.user.role);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -152,7 +159,17 @@ const Register = ({
                 required
               />
             </div>
-            <div className="mb-3">
+            <div
+              className="mb-3"
+              style={{
+                display:
+                  authState.user &&
+                  authState.user.role &&
+                  authState.user.role.toLowerCase() === "secondary"
+                    ? "none"
+                    : "block",
+              }}
+            >
               <label htmlFor="password" className="form-label">
                 Password
               </label>
@@ -163,7 +180,11 @@ const Register = ({
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                required
+                required={
+                  authState.user &&
+                  authState.user.role &&
+                  authState.user.role.toLowerCase() !== "secondary"
+                }
               />
             </div>
 
