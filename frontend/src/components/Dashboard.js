@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import Header from "./Header";
 import Footer from "./Footer";
 import Modal from "./Modal";
-import Pagination from "./Pagination";
+// import Pagination from "./Pagination";
 import Register from "./Register";
 import { Link } from "react-router-dom";
 import MemberList from "./MemberList";
@@ -50,80 +50,72 @@ const Dashboard = () => {
     }
   };
 
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 1;
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredMemberData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(filteredMemberData.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+  // Pagination logic ends here!
+
   useEffect(() => {
     console.log("authState details==>", authState);
     if (authState.isAuthenticated) {
-      const token = authState.token; // Access token from authState.user.token
-      const userId = authState.user.id;
       // Fetch member data
       console.log("Dashboard Auth token", authState.user.id);
-      // Fetch user data from the backend
-      axios
-        .get(`http://localhost:5001/api/auth/user/${userId}`, {
-          // Replace with your API endpoint
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the header
-          },
-        })
-        .then((res) => {
-          setUserData(res.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          // Handle error, maybe show an error message
-        });
-      console.log("user Data", userData);
-      console.log("auth user role", authState.user.role);
-      axios
-        .get(`http://localhost:5001/api/auth/members/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            role: authState.user.role, // Send role in the request body
-          },
-        })
-        .then((res) => {
-          setMemberData(res.data);
-          setFilteredMemberData(res.data); // Initialize filtered data
-        })
-        .catch((error) => console.error("Error fetching member data", error));
-      // Fetch referral transactions
-      axios
-        .get(`http://localhost:5001/api/auth/transactions/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => setTransactions(res.data))
-        .catch((error) =>
-          console.error("Error fetching referral transactions", error)
-        );
+      const fetchData = async () => {
+        try {
+          const { token, user } = authState; // Access token from authState.user.token
+          const userId = user.id;
+          const headers = { Authorization: `Bearer ${token}` };
+          // Parallel API calls
+          const [
+            userRes,
+            memberRes,
+            transactionRes,
+            referralRes,
+            commissionRes,
+          ] = await Promise.all([
+            axios.get(`http://localhost:5001/api/auth/user/${userId}`, {
+              headers,
+            }),
+            axios.get(`http://localhost:5001/api/auth/members/${userId}`, {
+              headers: {
+                ...headers, // Spread the default headers
+                Role: user.role, // Add role header only for the members API
+              },
+            }),
+            axios.get(`http://localhost:5001/api/auth/transactions/${userId}`, {
+              headers,
+            }),
+            axios.get(
+              `http://localhost:5001/api/auth/referral-members/${userId}`,
+              { headers }
+            ),
+            axios.get(
+              `http://localhost:5001/api/auth/commission-details/${userId}`,
+              { headers }
+            ),
+          ]);
 
-      console.log("user Data", memberData);
-      console.log("referral list", referralMembers);
-
-      // Fetch referral members
-      axios
-        .get(`http://localhost:5001/api/auth/referral-members/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => setReferralMembers(res.data))
-        .catch((error) =>
-          console.error("Error fetching referral members", error)
-        );
-
-      // Fetch commission details
-      axios
-        .get(`http://localhost:5001/api/auth/commission-details/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => setCommissionDetails(res.data))
-        .catch((error) =>
-          console.error("Error fetching commission details", error)
-        );
+          setUserData(userRes.data);
+          setMemberData(memberRes.data);
+          setFilteredMemberData(memberRes.data); // Initialize filtered data
+          setTransactions(transactionRes.data);
+          setReferralMembers(referralRes.data);
+          setCommissionDetails(commissionRes.data);
+        } catch (error) {
+          console.error("Error fetching dashboard data:", error);
+        }
+      };
+      fetchData();
     } else {
       alert("Please log in to access the dashboard.");
     }
@@ -252,10 +244,10 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredMemberData.length > 0 ? (
-                    filteredMemberData.map((member, index) => (
+                  {currentItems.length > 0 ? (
+                    currentItems.map((member, index) => (
                       <tr key={index}>
-                        <td>{index + 1}</td>
+                        <td>{indexOfFirstItem + index + 1}</td>
                         <td>{member.id}</td>
                         <td>{member.firstName + " " + member.lastName}</td>
                         <td>{member.mobile}</td>
@@ -292,7 +284,30 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <Pagination />
+          {/* <Pagination /> */}
+
+          {/* Pagination Controls */}
+          <div className="d-flex justify-content-center mt-3">
+            <nav>
+              <ul className="pagination">
+                {[...Array(totalPages)].map((_, pageIndex) => (
+                  <li
+                    key={pageIndex}
+                    className={`page-item ${
+                      currentPage === pageIndex + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(pageIndex + 1)}
+                    >
+                      {pageIndex + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
 
           {/* Commission Details */}
           <div className="container mb-5 mt-5">
