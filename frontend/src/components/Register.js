@@ -211,9 +211,7 @@ const Register = ({
                     onChange={handleChange}
                     required
                   >
-                    <option value="" disabled>
-                      Select Role
-                    </option>
+                    <option value="">Select Role</option>
                     <option value="direct referral">Direct referral</option>
                     <option value="secondary">Secondary</option>
                   </select>

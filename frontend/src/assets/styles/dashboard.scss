@@ -1,6 +1,18 @@
 @import "bootstrap/scss/bootstrap";
 @import "./main.scss";
-
+.dashboard-cont{
+  background: #d6d5d6 !important;
+  .md-box{
+    margin:20px auto;
+    border-radius: 10px;
+    box-shadow: 2px 2px 17px #8e8f91;
+  }
+  h5{
+    background: #cdefff;
+    padding: 10px;
+    border-bottom:1px solid #ccc;
+  }
+}
 .user-logo {
   background-color: #f8f9fa; /* Light background */
   padding: 20px;

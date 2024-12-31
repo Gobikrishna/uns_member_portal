@@ -146,48 +146,48 @@ const Dashboard = () => {
     <div className="bg-light dashboard-cont">
       <Header />
       {authState.user && authState.user.role.toLowerCase() !== "admin" ? (
-        <div className="container p-3 bg-white">
-          {userData && userData.firstName && userData.lastName ? (
-            <div className="d-flex align-items-center p-3 rounded">
-              <div className="d-flex flex-column align-items-center justify-content-center me-3">
-                <div className="user-avatar d-flex align-items-center justify-content-center">
-                  <h1>{getInitials(userData.firstName, userData.lastName)}</h1>
-                </div>
-              </div>
-              <div className="user-info">
-                <h3 className="user-name">{displayUserName}</h3>
-                <p className="user-role">{userData.role}</p>
-              </div>
-            </div>
-          ) : (
-            <p>Loading user data...</p>
-          )}
-
+        <div className="container p-3 bg-white md-box">
           <div className="mt-2 mb-5">
             <h5 className="w-100 pb-3 border-bottom border-secondary">
               Member Portal
             </h5>
-            <div className="table-responsive">
-              <table className="table">
-                <thead className="bg-light">
-                  <tr>
-                    <th scope="col">Member ID</th>
-                    <th scope="col">Role</th>
-                    <th scope="col">Full Name</th>
-                    <th scope="col">Phone Number</th>
-                    <th scope="col">Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{userData.id}</td>
-                    <td>{userData.role}</td>
-                    <td>{`${userData.firstName} ${userData.lastName}`}</td>
-                    <td>{userData.mobile}</td>
-                    <td>{userData.email}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="d-flex">
+              <div className="card">
+                <div className="card-header bg-light">
+                  <h6 className="mb-0">Member Information</h6>
+                </div>
+                <div className="card-body">
+                  <div className="mb-3">
+                    <strong>Member ID:</strong> {userData.id}
+                  </div>
+                  <div className="mb-3">
+                    <strong>Role:</strong> {userData.role}
+                  </div>
+                  <div className="mb-3">
+                    <strong>Full Name:</strong>{" "}
+                    {`${userData.firstName} ${userData.lastName}`}
+                  </div>
+                  <div className="mb-3">
+                    <strong>Phone Number:</strong> {userData.mobile}
+                  </div>
+                  <div className="mb-3">
+                    <strong>Email:</strong> {userData.email}
+                  </div>
+                </div>
+              </div>
+              <div className="card">
+                <div className="card-header bg-light">
+                  <h6 className="mb-0">Commission Details</h6>
+                </div>
+                <div className="card-body">
+                  <div className="mb-3">
+                    <strong>Day Earnings</strong> 1000
+                  </div>
+                  <div className="mb-3">
+                    <strong>Total Earnings</strong> 5000
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -290,30 +290,6 @@ const Dashboard = () => {
                 ))}
               </ul>
             </nav>
-          </div>
-
-          <div className="container mb-5 mt-5">
-            <h5 className="w-100 pb-3 border-bottom border-secondary mb-3">
-              Member Portal
-            </h5>
-            <div className="shadow p-3 mb-5 bg-white rounded">
-              <div className="row py-2 rounded">
-                <div className="col-4">
-                  <strong>Direct Member (10%)</strong>
-                </div>
-                <div className="col-4">
-                  <strong>Indirect Member (5%)</strong>
-                </div>
-                <div className="col-4">
-                  <strong>Total Referral Income</strong>
-                </div>
-              </div>
-              <div className="row py-2 rounded">
-                <div className="col-4">20900</div>
-                <div className="col-4">2000</div>
-                <div className="col-4">22900</div>
-              </div>
-            </div>
           </div>
         </div>
       ) : (
