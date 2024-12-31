@@ -13,8 +13,9 @@ const MemberDetails = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
-
+  const [isDisabled, setIsDisabled] = useState(true);
   const location = useLocation();
+  const [successMessage, setSuccessMessage] = useState("");
   const member = location.state?.member; // Access the passed member data
   console.log("Location state:", location.state);
 
@@ -112,6 +113,10 @@ const MemberDetails = () => {
   const openModal = () => {
     setShowModal(true);
   };
+  // edit button click
+  const handleEditClick = () => {
+    setIsDisabled(false); // Enable the form
+  };
 
   console.log("userDetails==>", JSON.stringify(formData));
 
@@ -134,7 +139,7 @@ const MemberDetails = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setIsDisabled(true); // Disabled the form
     const userId = authState.user.id; // Assuming the user ID is in authState.user.id
     const userDetails = formData;
     // Make PUT request to update user details using axios
@@ -145,10 +150,16 @@ const MemberDetails = () => {
       .then((response) => {
         console.log("User details updated:", response.data);
         // Optionally, redirect or show success message
+        setSuccessMessage("Details updated successfully!"); // Show success message
       })
       .catch((error) => {
         console.error("Error updating user details:", error);
+        setSuccessMessage("Failed to update details."); // Show error message
       });
+  };
+
+  const handleDismissMessage = () => {
+    setSuccessMessage(""); // Clear the message when user dismisses it
   };
 
   const memberDetails = {
@@ -229,7 +240,27 @@ const MemberDetails = () => {
             </button>
           </div>
 
+          <div className="d-flex">
+            <button onClick={handleEditClick} className="btn btn-primary">
+              Edit
+            </button>
+          </div>
+
           {/* Tab Content */}
+          {successMessage && (
+            <div
+              className="alert alert-success alert-dismissible fade show"
+              role="alert"
+            >
+              {successMessage}
+              <button
+                type="button"
+                className="btn-close"
+                aria-label="Close"
+                onClick={handleDismissMessage}
+              ></button>
+            </div>
+          )}
           <div className="tab-content">
             {activeTab === "referral" && (
               <div>
@@ -247,6 +278,7 @@ const MemberDetails = () => {
                         name="mental_age"
                         value={formData?.mental_age ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -259,6 +291,7 @@ const MemberDetails = () => {
                         name="family_values"
                         value={formData?.family_values ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -272,6 +305,7 @@ const MemberDetails = () => {
                         name="traditions_of_family"
                         value={formData?.traditions_of_family ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -284,6 +318,7 @@ const MemberDetails = () => {
                         name="family_member_details"
                         value={formData?.family_member_details ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -297,6 +332,7 @@ const MemberDetails = () => {
                         name="legacy_of_family"
                         value={formData?.legacy_of_family ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -307,6 +343,7 @@ const MemberDetails = () => {
                         name="emotional_range"
                         value={formData?.emotional_range ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -319,6 +356,7 @@ const MemberDetails = () => {
                         name="thoughts_about"
                         value={formData?.thoughts_about ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -329,6 +367,7 @@ const MemberDetails = () => {
                         name="conversation_style"
                         value={formData?.conversation_style ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -339,6 +378,7 @@ const MemberDetails = () => {
                         name="working_style"
                         value={formData?.working_style ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -349,6 +389,7 @@ const MemberDetails = () => {
                         name="spending_style"
                         value={formData?.spending_style ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -361,6 +402,7 @@ const MemberDetails = () => {
                         name="thoughts_on_lifestyle"
                         value={formData?.thoughts_on_lifestyle ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -373,6 +415,7 @@ const MemberDetails = () => {
                         name="past_vacations"
                         value={formData?.past_vacations ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -385,6 +428,7 @@ const MemberDetails = () => {
                         name="physical_looks"
                         value={formData?.physical_looks ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -395,6 +439,7 @@ const MemberDetails = () => {
                         name="disfigurements"
                         value={formData?.disfigurements ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -408,6 +453,7 @@ const MemberDetails = () => {
                         name="internal_organs_health"
                         value={formData?.internal_organs_health ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -418,6 +464,7 @@ const MemberDetails = () => {
                         name="personality"
                         value={formData?.personality ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -428,6 +475,7 @@ const MemberDetails = () => {
                         name="dressing"
                         value={formData?.dressing ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -440,6 +488,7 @@ const MemberDetails = () => {
                         name="behaviour_in_sg"
                         value={formData?.behaviour_in_sg ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -450,6 +499,7 @@ const MemberDetails = () => {
                         name="area_of_livig"
                         value={formData?.area_of_livig ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -460,6 +510,7 @@ const MemberDetails = () => {
                         name="how_many_transfer"
                         value={formData?.how_many_transfer ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -470,6 +521,7 @@ const MemberDetails = () => {
                         name="idea_of_settle"
                         value={formData?.idea_of_settle ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -480,6 +532,7 @@ const MemberDetails = () => {
                         name="areas_of_interest"
                         value={formData?.areas_of_interest ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -492,6 +545,7 @@ const MemberDetails = () => {
                         name="possession"
                         value={formData?.possession ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -504,6 +558,7 @@ const MemberDetails = () => {
                         name="future_travel"
                         value={formData?.future_travel ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -516,6 +571,7 @@ const MemberDetails = () => {
                         name="marks"
                         value={formData?.marks ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -528,6 +584,7 @@ const MemberDetails = () => {
                         name="courses_apart"
                         value={formData?.courses_apart ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -540,6 +597,7 @@ const MemberDetails = () => {
                         name="areas_of_success"
                         value={formData?.areas_of_success ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -553,6 +611,7 @@ const MemberDetails = () => {
                         name="activities_involved"
                         value={formData?.activities_involved ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -565,6 +624,7 @@ const MemberDetails = () => {
                         name="leadership_position"
                         value={formData?.leadership_position ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -575,6 +635,7 @@ const MemberDetails = () => {
                         name="typing_speed"
                         value={formData?.typing_speed ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -585,6 +646,7 @@ const MemberDetails = () => {
                         name="interesting_subjects"
                         value={formData?.interesting_subjects ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -595,6 +657,7 @@ const MemberDetails = () => {
                         name="current_occupation"
                         value={formData?.current_occupation ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -607,6 +670,7 @@ const MemberDetails = () => {
                         name="interest_in_occupation"
                         value={formData?.interest_in_occupation ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -620,6 +684,7 @@ const MemberDetails = () => {
                         name="work_designation"
                         value={formData?.work_designation ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -632,6 +697,7 @@ const MemberDetails = () => {
                         name="interact_with_coworkers"
                         value={formData?.interact_with_coworkers ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -644,6 +710,7 @@ const MemberDetails = () => {
                         name="nature_of_job"
                         value={formData?.nature_of_job ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -656,6 +723,7 @@ const MemberDetails = () => {
                         name="relation_with"
                         value={formData?.relation_with ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -668,6 +736,7 @@ const MemberDetails = () => {
                         name="issues_in_family"
                         value={formData?.issues_in_family ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -678,6 +747,7 @@ const MemberDetails = () => {
                         name="circle_of_frnds"
                         value={formData?.circle_of_frnds ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -690,6 +760,7 @@ const MemberDetails = () => {
                         name="number_of_partners"
                         value={formData?.number_of_partners ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -700,6 +771,7 @@ const MemberDetails = () => {
                         name="fluency_in_lang"
                         value={formData?.fluency_in_lang ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -712,6 +784,7 @@ const MemberDetails = () => {
                         name="interest_in_other_lang"
                         value={formData?.interest_in_other_lang ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -724,6 +797,7 @@ const MemberDetails = () => {
                         name="caste"
                         value={formData?.caste ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -737,6 +811,7 @@ const MemberDetails = () => {
                         name="faiths"
                         value={formData?.faiths ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -749,6 +824,7 @@ const MemberDetails = () => {
                         name="beliefs"
                         value={formData?.beliefs ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -761,6 +837,7 @@ const MemberDetails = () => {
                         name="no_of_cars"
                         value={formData?.no_of_cars ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -773,6 +850,7 @@ const MemberDetails = () => {
                         name="no_of_house"
                         value={formData?.no_of_house ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -783,6 +861,7 @@ const MemberDetails = () => {
                         name="financial_literacy"
                         value={formData?.financial_literacy ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -795,6 +874,7 @@ const MemberDetails = () => {
                         name="views_on_invest"
                         value={formData?.views_on_invest ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -807,6 +887,7 @@ const MemberDetails = () => {
                         name="How_many_debts"
                         value={formData?.How_many_debts ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -819,6 +900,7 @@ const MemberDetails = () => {
                         name="comfort_with_tech"
                         value={formData?.comfort_with_tech ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -831,6 +913,7 @@ const MemberDetails = () => {
                         name="electronic_devices"
                         value={formData?.electronic_devices ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -844,6 +927,7 @@ const MemberDetails = () => {
                         name="appliances_in_use"
                         value={formData?.appliances_in_use ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -856,6 +940,7 @@ const MemberDetails = () => {
                         name="technological_interests"
                         value={formData?.technological_interests ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -868,6 +953,7 @@ const MemberDetails = () => {
                         name="how_often_chge_devices"
                         value={formData?.how_often_chge_devices ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -880,6 +966,7 @@ const MemberDetails = () => {
                         name="traditional_items"
                         value={formData?.traditional_items ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -890,6 +977,7 @@ const MemberDetails = () => {
                         name="types_of_brands"
                         value={formData?.types_of_brands ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -900,6 +988,7 @@ const MemberDetails = () => {
                         name="volunteer_services"
                         value={formData?.volunteer_services ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -910,6 +999,7 @@ const MemberDetails = () => {
                         name="fears"
                         value={formData?.fears ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -922,6 +1012,7 @@ const MemberDetails = () => {
                         name="motivations_drawbacks"
                         value={formData?.motivations_drawbacks ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -934,6 +1025,7 @@ const MemberDetails = () => {
                         name="free_time"
                         value={formData?.free_time ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                     <div className="form-group">
@@ -946,6 +1038,7 @@ const MemberDetails = () => {
                         name="outings"
                         value={formData?.outings ?? ""}
                         onChange={handleInputChange}
+                        disabled={isDisabled} // Control the disabled state
                       />
                     </div>
                   </div>
