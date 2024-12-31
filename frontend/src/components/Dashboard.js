@@ -19,12 +19,6 @@ const Dashboard = () => {
   const [referralMembers, setReferralMembers] = useState([]);
   const [commissionDetails, setCommissionDetails] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    sNo: "",
-    memberId: "",
-    memberName: "",
-    mobileNumber: "",
-  });
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -34,10 +28,10 @@ const Dashboard = () => {
     setSearchQuery(query);
     setFilteredMemberData(
       query
-        ? memberData.filter((member) =>
-            member.mobile.toString().includes(query)
-          )
-        : memberData
+        ? memberData?.filter((member) =>
+            member.mobile?.toString().includes(query)
+          ) || []
+        : memberData || []
     );
   };
 
@@ -47,6 +41,7 @@ const Dashboard = () => {
   const paginateData = () => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    console.log("Paginating from:", indexOfFirstItem, "to:", indexOfLastItem);
     return filteredMemberData.slice(indexOfFirstItem, indexOfLastItem);
   };
 
@@ -58,63 +53,90 @@ const Dashboard = () => {
   );
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
-
   useEffect(() => {
     if (authState.isAuthenticated) {
-      const fetchData = async () => {
-        try {
-          const { token, user } = authState;
-          const userId = user.id;
-          const headers = { Authorization: `Bearer ${token}` };
-
-          const [
-            userRes,
-            memberRes,
-            transactionRes,
-            referralRes,
-            commissionRes,
-          ] = await Promise.all([
-            axios.get(`http://localhost:5001/api/auth/user/${userId}`, {
-              headers,
-            }),
-            axios.get(`http://localhost:5001/api/auth/members/${userId}`, {
-              headers: { ...headers, Role: user.role },
-            }),
-            axios.get(`http://localhost:5001/api/auth/transactions/${userId}`, {
-              headers,
-            }),
-            axios.get(
-              `http://localhost:5001/api/auth/referral-members/${userId}`,
-              { headers }
-            ),
-            axios.get(
-              `http://localhost:5001/api/auth/commission-details/${userId}`,
-              { headers }
-            ),
-          ]);
-
-          setUserData(userRes.data);
-          setMemberData(memberRes.data);
-          setFilteredMemberData(memberRes.data);
-          setTransactions(transactionRes.data);
-          setReferralMembers(referralRes.data);
-          setCommissionDetails(commissionRes.data);
-        } catch (error) {
-          console.error("Error fetching dashboard data:", error);
-        }
-      };
-      fetchData();
+      fetchData().catch((error) =>
+        console.error("Error fetching data in useEffect:", error)
+      );
     } else {
-      alert("Please log in to access the dashboard.");
+      console.warn("User is not authenticated.");
     }
   }, [authState]);
 
-  const getInitials = (firstName, lastName) => {
-    return `${firstName?.charAt(0)?.toUpperCase() || ""}${
-      lastName?.charAt(0)?.toUpperCase() || ""
-    }`;
+  const fetchData = async () => {
+    const { token, user } = authState;
+    const userId = user.id;
+    const headers = { Authorization: `Bearer ${token}` };
+
+    try {
+      const apiCalls = [
+        axios
+          .get(`http://localhost:5001/api/auth/user/${userId}`, {
+            headers,
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+            return { data: null };
+          }),
+
+        axios
+          .get(`http://localhost:5001/api/auth/members/${userId}`, {
+            headers: { ...headers, Role: user.role },
+          })
+          .catch((error) => {
+            console.error("Error fetching members data:", error);
+            return { data: [] };
+          }),
+
+        axios
+          .get(`http://localhost:5001/api/auth/transactions/${userId}`, {
+            headers,
+          })
+          .catch((error) => {
+            console.error("Error fetching transactions data:", error);
+            return { data: [] };
+          }),
+
+        axios
+          .get(`http://localhost:5001/api/auth/referral-members/${userId}`, {
+            headers,
+          })
+          .catch((error) => {
+            console.error("Error fetching referral members data:", error);
+            return { data: [] };
+          }),
+
+        axios
+          .get(`http://localhost:5001/api/auth/commission-details/${userId}`, {
+            headers,
+          })
+          .catch((error) => {
+            console.error("Error fetching commission details:", error);
+            return { data: [] };
+          }),
+      ];
+
+      const [userRes, memberRes, transactionRes, referralRes, commissionRes] =
+        await Promise.all(apiCalls);
+
+      // Handle the successful data
+      if (userRes?.data) setUserData(userRes.data);
+      if (memberRes?.data) {
+        setMemberData(memberRes.data);
+        setFilteredMemberData(memberRes.data);
+      }
+      if (transactionRes?.data) setTransactions(transactionRes.data);
+      if (referralRes?.data) setReferralMembers(referralRes.data);
+      if (commissionRes?.data) setCommissionDetails(commissionRes.data);
+    } catch (error) {
+      console.error("Error handling API calls in fetchData:", error);
+    }
   };
 
+  const getInitials = (firstName = "", lastName = "") =>
+    `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+
+  console.log("userData", userData);
   const displayUserName =
     userData?.firstName && userData?.lastName
       ? `${userData.firstName} ${userData.lastName}`
@@ -125,17 +147,21 @@ const Dashboard = () => {
       <Header />
       {authState.user && authState.user.role.toLowerCase() !== "admin" ? (
         <div className="container p-3 bg-white">
-          <div className="d-flex align-items-center p-3 rounded">
-            <div className="d-flex flex-column align-items-center justify-content-center me-3">
-              <div className="user-avatar d-flex align-items-center justify-content-center">
-                <h1>{getInitials(userData.firstName, userData.lastName)}</h1>
+          {userData && userData.firstName && userData.lastName ? (
+            <div className="d-flex align-items-center p-3 rounded">
+              <div className="d-flex flex-column align-items-center justify-content-center me-3">
+                <div className="user-avatar d-flex align-items-center justify-content-center">
+                  <h1>{getInitials(userData.firstName, userData.lastName)}</h1>
+                </div>
+              </div>
+              <div className="user-info">
+                <h3 className="user-name">{displayUserName}</h3>
+                <p className="user-role">{userData.role}</p>
               </div>
             </div>
-            <div className="user-info">
-              <h3 className="user-name">{displayUserName}</h3>
-              <p className="user-role">{userData.role}</p>
-            </div>
-          </div>
+          ) : (
+            <p>Loading user data...</p>
+          )}
 
           <div className="mt-2 mb-5">
             <h5 className="w-100 pb-3 border-bottom border-secondary">
