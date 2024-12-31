@@ -142,6 +142,14 @@ const Dashboard = () => {
       ? `${userData.firstName} ${userData.lastName}`
       : "Unknown User";
 
+  // check member
+  const member = memberData.length > 0 ? memberData[0] : null;
+  if (member) {
+    console.log("member", member);
+  } else {
+    console.log("No member data found.");
+  }
+
   return (
     <div className="bg-light dashboard-cont">
       <Header />
@@ -225,8 +233,9 @@ const Dashboard = () => {
                     <th scope="col">Member Name</th>
                     <th scope="col">Mobile Number</th>
                     <th scope="col">Email</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Details</th>
+                    {member && member.role !== "referred" && (
+                      <th scope="col">Details</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -238,24 +247,15 @@ const Dashboard = () => {
                         <td>{`${member.firstName} ${member.lastName}`}</td>
                         <td>{member.mobile}</td>
                         <td>{member.email}</td>
-                        <td>
-                          <span
-                            className={`badge ${
-                              member.status === "Active"
-                                ? "bg-success"
-                                : "bg-danger"
-                            }`}
-                          >
-                            {member.status}
-                          </span>
-                        </td>
-                        <td>
-                          <Link to="/memberdetails" state={{ member }}>
-                            <button className="btn btn-sm btn-info text-white">
-                              Add Details / View
-                            </button>
-                          </Link>
-                        </td>
+                        {member.role !== "referred" && (
+                          <td>
+                            <Link to="/memberdetails" state={{ member }}>
+                              <button className="btn btn-sm btn-info text-white">
+                                Add Details / View
+                              </button>
+                            </Link>
+                          </td>
+                        )}
                       </tr>
                     ))
                   ) : (

@@ -118,6 +118,14 @@ const MemberDetails = () => {
     setIsDisabled(false); // Enable the form
   };
 
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1); // Go back to the previous route
+    } else {
+      navigate("/defaultRoute"); // Redirect to a default route
+    }
+  };
+
   console.log("userDetails==>", JSON.stringify(formData));
 
   // to get the initials of first name and last name
@@ -219,7 +227,7 @@ const MemberDetails = () => {
           </div>
         </div>
 
-        <div className="my-4">
+        <div className="my-4" onClick={goBack}>
           <img src={Back} alt="back" /> Back to Member Portal
         </div>
 
