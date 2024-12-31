@@ -15,12 +15,14 @@ const Dashboard = () => {
   const { authState } = useContext(AuthContext);
   const [userData, setUserData] = useState({});
   const [memberData, setMemberData] = useState([]);
+  const [filteredMemberData, setFilteredMemberData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [transactions, setTransactions] = useState([]);
   // const [memberHierarchy, setMemberHierarchy] = useState([]);
   const [referralMembers, setReferralMembers] = useState([]); // Renamed to reflect referral members
   const [commissionDetails, setCommissionDetails] = useState([]);
-
   const [showModal, setShowModal] = useState(false);
+
   const [formData, setFormData] = useState({
     sNo: "",
     memberId: "",
@@ -33,6 +35,19 @@ const Dashboard = () => {
   };
   const closeModal = () => {
     setShowModal(false);
+  };
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query) {
+      const filtered = memberData.filter((member) =>
+        member.mobile.toString().includes(query)
+      );
+      setFilteredMemberData(filtered);
+    } else {
+      setFilteredMemberData(memberData); // Reset to all members if search is cleared
+    }
   };
 
   useEffect(() => {
@@ -66,7 +81,10 @@ const Dashboard = () => {
             role: authState.user.role, // Send role in the request body
           },
         })
-        .then((res) => setMemberData(res.data))
+        .then((res) => {
+          setMemberData(res.data);
+          setFilteredMemberData(res.data); // Initialize filtered data
+        })
         .catch((error) => console.error("Error fetching member data", error));
       // Fetch referral transactions
       axios
@@ -188,6 +206,8 @@ const Dashboard = () => {
                       type="text"
                       className="form-control"
                       placeholder="Search Mobile Number"
+                      value={searchQuery}
+                      onChange={handleSearch}
                     />
                     <span className="input-group-text">
                       <img src={search} alt="search icon" />
@@ -232,8 +252,8 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {memberData &&
-                    memberData.map((member, index) => (
+                  {filteredMemberData.length > 0 ? (
+                    filteredMemberData.map((member, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{member.id}</td>
@@ -259,7 +279,14 @@ const Dashboard = () => {
                           </Link>
                         </td>
                       </tr>
-                    ))}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="text-center">
+                        No results found.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
