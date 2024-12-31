@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import search from "../assets/images/search.png";
 import { AuthContext } from "../context/AuthContext";
@@ -36,34 +36,50 @@ const Dashboard = () => {
   const closeModal = () => {
     setShowModal(false);
   };
-  const handleSearch = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
 
+  // The handleSearch function is fine but could be optimized with debouncing to limit its execution for large datasets.
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+  const handleSearch = debounce((query) => {
     if (query) {
       const filtered = memberData.filter((member) =>
         member.mobile.toString().includes(query)
       );
       setFilteredMemberData(filtered);
     } else {
-      setFilteredMemberData(memberData); // Reset to all members if search is cleared
+      setFilteredMemberData(memberData);
     }
-  };
+  }, 300); // 300ms delay
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 1;
   // Pagination Logic
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredMemberData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
+  const paginateData = () => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    return filteredMemberData.slice(indexOfFirstItem, indexOfLastItem);
+  };
+
+  const currentItems = paginateData();
+
+  // Avoid recalculating totalPages on every render by memoizing it:
+  const totalPages = useMemo(
+    () => Math.ceil(filteredMemberData.length / itemsPerPage),
+    [filteredMemberData.length, itemsPerPage]
   );
-  const totalPages = Math.ceil(filteredMemberData.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
   // Pagination logic ends here!
+  useEffect(() => {
+    console.log("authState details:", authState); // For debugging only
+    return () => console.log("Cleanup on unmount or dependency change");
+  }, [authState]);
 
   useEffect(() => {
     console.log("authState details==>", authState);
@@ -128,6 +144,11 @@ const Dashboard = () => {
     const lastInitial = lastName?.charAt(0).toUpperCase() || "";
     return firstInitial + lastInitial;
   };
+  console.log("userdata", userData);
+  const displayUserName =
+    userData?.firstName && userData?.lastName
+      ? `${userData.firstName} ${userData.lastName}`
+      : "Unknown User";
 
   return (
     <div className="bg-light dashboard-cont">
@@ -146,9 +167,7 @@ const Dashboard = () => {
 
               {/* Text Column */}
               <div className="user-info">
-                <h3 className="user-name">
-                  {userData.firstName + " " + userData.lastName}
-                </h3>
+                <h3 className="user-name">{displayUserName}</h3>
                 <p className="user-role">{userData.role}</p>
               </div>
             </div>
@@ -247,7 +266,7 @@ const Dashboard = () => {
                   {currentItems.length > 0 ? (
                     currentItems.map((member, index) => (
                       <tr key={index}>
-                        <td>{indexOfFirstItem + index + 1}</td>
+                        <td>{index + 1}</td>
                         <td>{member.id}</td>
                         <td>{member.firstName + " " + member.lastName}</td>
                         <td>{member.mobile}</td>
