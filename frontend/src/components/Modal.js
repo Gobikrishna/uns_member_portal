@@ -5,11 +5,12 @@ const Modal = ({ title, showModal, onClose, children }) => {
 
   return (
     <div
-      className="modal fade show d-block"
       tabIndex="-1"
       role="dialog"
       aria-labelledby="modalLabel"
-      aria-hidden="true"
+      aria-hidden={showModal ? "false" : "true"} // Correct aria-hidden usage
+      className={`modal fade ${showModal ? "show d-block" : ""}`}
+      style={{ display: showModal ? "block" : "none" }}
     >
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
