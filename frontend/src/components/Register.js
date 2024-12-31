@@ -56,7 +56,10 @@ const Register = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("submitted data", formData);
-
+    if (!formData.role) {
+      setMessage("Please select a role.");
+      return;
+    }
     try {
       // Prepare form data
       const submitData = { ...formData };
