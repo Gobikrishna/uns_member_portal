@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 const MemberDetails = () => {
   const { authState } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
 
   const location = useLocation();
@@ -106,6 +107,11 @@ const MemberDetails = () => {
         });
     }
   }, [authState.isAuthenticated]);
+
+  // to open modal window
+  const openModal = () => {
+    setShowModal(true);
+  };
 
   console.log("userDetails==>", JSON.stringify(formData));
 
@@ -969,7 +975,12 @@ const MemberDetails = () => {
                   </p>
 
                   {/* Table */}
-                  <h2>Product Details</h2>
+                  <div className="d-flex">
+                    <h2>Product Details</h2>
+                    <button onClick={openModal} className="btn btn-primary">
+                      Add Product Detail
+                    </button>
+                  </div>
                   <table
                     style={{
                       width: "100%",
