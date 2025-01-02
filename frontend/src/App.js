@@ -11,6 +11,7 @@ import "../src/assets/styles/dashboard.scss";
 import Settings from "./components/Settings";
 import MemberList from "./components/MemberList";
 import MemberDetails from "./components/MemberDetails";
+import AdminDashboard from "./components/admin/AdminDashboard";
 
 function App() {
   const { authState, setAuthState } = useContext(AuthContext); // Access context here
@@ -59,6 +60,7 @@ function App() {
         path="/dashboard"
         element={<ProtectedRoute element={<Dashboard />} />}
       />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route
         path="/memberdetails"
         element={<ProtectedRoute element={<MemberDetails />} />}

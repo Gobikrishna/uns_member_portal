@@ -74,7 +74,10 @@ const MemberList = () => {
                       <td>{user.mobile}</td>
                       <td>{user.email}</td>
                       <td>
-                        <Link to="/dashboard" state={{ memberData: user }}>
+                        <Link
+                          to="/admin-dashboard"
+                          state={{ memberData: user }}
+                        >
                           <button className="btn btn-sm btn-primary">
                             View List
                           </button>

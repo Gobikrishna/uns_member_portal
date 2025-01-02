@@ -76,9 +76,9 @@ const Header = () => {
                       authState.user.lastName
                     )}
                   </button>
-                  <span className="ps-2">
+                  {/* <span className="ps-2">
                     {authState.user?.firstName + " " + authState.user?.lastName}
-                  </span>
+                  </span> */}
 
                   <ul
                     className={`dropdown-menu dropdown-menu-end ${

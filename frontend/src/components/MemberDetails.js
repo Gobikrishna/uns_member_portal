@@ -176,38 +176,18 @@ const MemberDetails = () => {
     role: "Secondary Member",
   };
 
-  const tableData = [
-    {
-      id: 1,
-      productName: "Product A",
-      date: "2024-01-01",
-      price: "$100",
-      commission: "$10",
-    },
-    {
-      id: 2,
-      productName: "Product B",
-      date: "2024-02-15",
-      price: "$150",
-      commission: "$15",
-    },
-    {
-      id: 3,
-      productName: "Product C",
-      date: "2024-03-20",
-      price: "$200",
-      commission: "$20",
-    },
-  ];
-
   return (
     <div className="bg-light member-details">
       {/* Navigation Bar */}
       <Header />
 
       {/* Hero Section */}
+
       <div className="container mt-4 bg-white md-box p-4">
         <div className="">
+          <div className=" my-2 cursor back-lnk" onClick={goBack}>
+            &larr; Back to dashborad
+          </div>
           <div className="d-flex align-items-center rounded">
             {/* Logo Column */}
             <div className=" d-flex flex-column align-items-center justify-content-center me-3">
@@ -226,9 +206,6 @@ const MemberDetails = () => {
             </div>
           </div>
         </div>
-        <div className=" my-2 cursor" onClick={goBack}>
-          <img src={Back} alt="back" /> Back to Member Portal
-        </div>
 
         <div>
           {/* Tab Links */}
@@ -243,7 +220,7 @@ const MemberDetails = () => {
               className={activeTab === "transaction" ? "active" : ""}
               onClick={() => setActiveTab("transaction")}
             >
-              All Transaction Details
+              Transaction History
             </button>
           </div>
 

@@ -177,7 +177,7 @@ header{
 .boxbg {
   position: relative; /* Establish a context for pseudo-element */
   overflow: hidden; /* Prevents overflow issues */
-  background: none;
+  background: $white;
 }
 
 .bg-overlay {
@@ -196,6 +196,11 @@ header{
 }
 .cursor{
   cursor: pointer;
+}
+.back-lnk{
+  margin-bottom: 30px !important;
+  color: #47B749;
+  display: inline-block;
 }
 /*=====================Signup & Register end================================*/
 

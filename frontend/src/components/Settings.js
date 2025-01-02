@@ -84,8 +84,7 @@ const Settings = () => {
       <Header />
       <div className="d-flex align-items-center justify-content-center vh-100 bg-dgrey">
         <div className="card shadow p-4 boxbg" style={{ width: "400px" }}>
-          <div className="bg-overlay"></div>
-          <div className="cont-int text-white">
+          <div className="cont-int">
             {/* <div className="text-center mb-2">
             <Link className="navbar-brand" to="/home">
               <img width="100" src={logo} alt="Logo" />

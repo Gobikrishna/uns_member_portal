@@ -302,7 +302,7 @@ const Dashboard = () => {
           </div>
         </div>
       ) : (
-        <MemberList />
+        <>welcome</>
       )}
       <Footer />
     </div>
