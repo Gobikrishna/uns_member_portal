@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 
 const Login = () => {
-  const { setAuthState } = useContext(AuthContext);
+  const { authState, setAuthState } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -46,7 +46,9 @@ const Login = () => {
         user: res.data.user,
       });
       // Navigate to the dashboard after successful login
-      navigate("/dashboard"); // Use navigate for React Router routing
+      authState.user && authState.user.role.toLowerCase() !== "admin"
+        ? navigate("/dashboard")
+        : navigate("/memberlist");
     } catch (error) {
       console.error("Login error", error);
     }
