@@ -8,6 +8,7 @@ import Modal from "./Modal";
 import Register from "./Register";
 import { Link } from "react-router-dom";
 import MemberList from "./MemberList";
+import MemberRegister from "./MemberRegister";
 
 const Dashboard = () => {
   const { authState } = useContext(AuthContext);
@@ -220,7 +221,11 @@ const Dashboard = () => {
                 </div>
               </div>
               <Modal showModal={showModal} onClose={closeModal}>
-                <Register referralId={userData.id} pageTitle="Add New Member" />
+                {/* <Register referralId={userData.id} pageTitle="Add New Member" /> */}
+                <MemberRegister
+                  referralId={userData.id}
+                  pageTitle="Add New Member"
+                />
               </Modal>
             </div>
           </div>
@@ -233,6 +238,7 @@ const Dashboard = () => {
                     <th scope="col">S.No</th>
                     <th scope="col">Member ID</th>
                     <th scope="col">Member Name</th>
+                    <th scope="col">Member Role</th>
                     <th scope="col">Mobile Number</th>
                     <th scope="col">Email</th>
                     {member && member.role !== "referred" && (
@@ -247,6 +253,7 @@ const Dashboard = () => {
                         <td>{index + 1}</td>
                         <td>{member.id}</td>
                         <td>{`${member.firstName} ${member.lastName}`}</td>
+                        <td>{member.role}</td>
                         <td>{member.mobile}</td>
                         <td>{member.email}</td>
                         {member.role !== "referred" && (

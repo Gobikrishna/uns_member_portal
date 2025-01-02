@@ -1,33 +1,70 @@
-import { useContext, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import logo from "../assets/images/logo.png";
-import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-const Register = () => {
+import { useNavigate } from "react-router-dom"; // For navigating after registration
+
+const MemberRegister = ({ pageTitle, referralId }) => {
   const { authState } = useContext(AuthContext);
+  const [memberRole, setMemberRole] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     mobile: "",
     password: "",
-    role: "primary",
+    role: memberRole,
   });
   const [message, setMessage] = useState("");
 
+  const navigate = useNavigate(); // useNavigate hook for page redirection
+
+  // Destructure the user role to avoid multiple calls to authState.user
+  const { role } = authState?.user || {};
+
+  // Set member role based on user role
+  useEffect(() => {
+    if (
+      authState.user &&
+      authState.user.role &&
+      (authState.user.role.toLowerCase() === "secondary" ||
+        authState.user.role.toLowerCase() === "direct referral")
+    ) {
+      setMemberRole("referred");
+    }
+  }, [authState.user]);
+
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      role: memberRole,
+    }));
+  }, [memberRole]);
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("submitted data", formData);
+
+    // Check if a role is selected
+    if (!formData.role) {
+      setMessage("Please select a role.");
+      return;
+    }
 
     try {
-      // Check if user exists
+      // Prepare form data for submission
+      const submitData = { ...formData, referredBy: referralId || null };
+
+      // Check if the user already exists
       const checkRes = await axios.post(
         "http://localhost:5001/api/auth/check-user",
         {
@@ -40,10 +77,11 @@ const Register = () => {
         setMessage("User already exists with this email or mobile number.");
         return; // Stop further execution if the user already exists
       }
+
       // Proceed to register the user if no conflict
       const res = await axios.post(
         "http://localhost:5001/api/auth/register",
-        formData
+        submitData
       );
 
       setMessage(res.data.message);
@@ -53,11 +91,12 @@ const Register = () => {
         email: "",
         mobile: "",
         password: "",
-        role: "primary",
+        role: memberRole, // Reset the role
       });
 
-      // Optionally redirect to login
-      window.location.href = "/login";
+      // Redirect to dashboard after successful registration
+      window.location.href = "/dashboard";
+      //   navigate("/dashboard"); // Use navigate instead of window.location.href
     } catch (error) {
       setMessage(
         error.response?.data?.error || "An error occurred during registration."
@@ -65,18 +104,19 @@ const Register = () => {
     }
   };
 
+  // Render form fields conditionally based on role
+  const isAdmin =
+    role &&
+    role.toLowerCase() !== "secondary" &&
+    role.toLowerCase() !== "direct referral";
+
   return (
     <div className="bg-image d-flex align-items-center justify-content-center vh-100 bg-light">
       <div className="card shadow p-4 boxbg" style={{ width: "500px" }}>
         <div className="bg-overlay"></div>
         <div className="cont-int text-white">
-          <div className="text-center mb-2">
-            <Link className="navbar-brand text-center" to="/home">
-              <img width="100" src={logo} alt="Logo" />
-            </Link>
-          </div>
           <h5 className="card-title text-center mb-2 text-uppercase">
-            Register your account
+            {pageTitle || "Add New Member"}
           </h5>
           {message && <p className="text-center text-danger">{message}</p>}
           <form onSubmit={handleSubmit}>
@@ -137,34 +177,52 @@ const Register = () => {
                 required
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+
+            {/* Conditionally render Password and Role fields based on user role */}
+            {isAdmin && (
+              <>
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="role" className="form-label">
+                    Role
+                  </label>
+                  <select
+                    id="role"
+                    name="role"
+                    className="form-select"
+                    value={formData.role}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select Role</option>
+                    <option value="direct referral">Direct referral</option>
+                    <option value="secondary">Secondary</option>
+                  </select>
+                </div>
+              </>
+            )}
+
             <button type="submit" className="btn btn-primary w-100">
-              Register
+              Add Member
             </button>
           </form>
-          <p className="text-center mt-3">
-            If you have an account?{" "}
-            <Link to="/login" className="text-decoration-none">
-              SIGNIN
-            </Link>
-          </p>
         </div>
       </div>
     </div>
   );
 };
 
-export default Register;
+export default MemberRegister;
