@@ -201,12 +201,12 @@ const MemberDetails = () => {
   ];
 
   return (
-    <div>
+    <div className="bg-light member-details">
       {/* Navigation Bar */}
       <Header />
 
       {/* Hero Section */}
-      <div className="container mt-4">
+      <div className="container mt-4 bg-white md-box p-4">
         <div className="">
           <div className="d-flex align-items-center rounded">
             {/* Logo Column */}
@@ -226,8 +226,7 @@ const MemberDetails = () => {
             </div>
           </div>
         </div>
-
-        <div className="my-4" onClick={goBack}>
+        <div className=" my-2 cursor" onClick={goBack}>
           <img src={Back} alt="back" /> Back to Member Portal
         </div>
 
@@ -248,11 +247,7 @@ const MemberDetails = () => {
             </button>
           </div>
 
-          <div className="d-flex">
-            <button onClick={handleEditClick} className="btn btn-primary">
-              Edit
-            </button>
-          </div>
+          <div className="d-flex"></div>
 
           {/* Tab Content */}
           {successMessage && (
@@ -272,7 +267,12 @@ const MemberDetails = () => {
           <div className="tab-content">
             {activeTab === "referral" && (
               <div>
-                <h2>Referral Details</h2>
+                <div className="d-flex justify-content-between mb-4 pb-2 border-bottom">
+                  <h4>Referral Details</h4>
+                  <button onClick={handleEditClick} className="btn btn-primary">
+                    Edit
+                  </button>
+                </div>
                 <form onSubmit={handleSubmit}>
                   {/* First Section */}
                   <div className="memberfillform grid align-items-center flex-wrap gap-4 mb-4">
@@ -1062,108 +1062,55 @@ const MemberDetails = () => {
             )}
             {activeTab === "transaction" && (
               <div>
-                <h2>All Transaction Details</h2>
+                <h4>Transaction History</h4>
                 <div>
                   {/* Member Details */}
-                  <p>
+                  <div>
                     <strong>Member ID:</strong> {member.id}
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <strong>Member Name:</strong> {member.firstName}
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <strong>Role:</strong> {member.role}
-                  </p>
+                  </div>
 
                   {/* Table */}
-                  <div className="d-flex">
-                    <h2>Product Details</h2>
+                  <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
+                    <h4>Product Details</h4>
                     <button onClick={openModal} className="btn btn-primary">
                       Add Product Detail
                     </button>
                   </div>
-                  <table
-                    style={{
-                      width: "100%",
-                      borderCollapse: "collapse",
-                      marginTop: "20px",
-                    }}
-                  >
+
+                  <table className="product-table product-table">
                     <thead>
                       <tr>
-                        <th
-                          style={{ border: "1px solid black", padding: "10px" }}
-                        >
-                          S.No
-                        </th>
-                        <th
-                          style={{ border: "1px solid black", padding: "10px" }}
-                        >
-                          Product Name
-                        </th>
-                        <th
-                          style={{ border: "1px solid black", padding: "10px" }}
-                        >
-                          Date
-                        </th>
-                        <th
-                          style={{ border: "1px solid black", padding: "10px" }}
-                        >
-                          Price
-                        </th>
-                        <th
-                          style={{ border: "1px solid black", padding: "10px" }}
-                        >
-                          Commission
-                        </th>
+                        <th>S.No</th>
+                        <th>Product Name</th>
+                        <th>Date</th>
+                        <th>Price</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {tableData.map((item) => (
-                        <tr key={item.id}>
-                          <td
-                            style={{
-                              border: "1px solid black",
-                              padding: "10px",
-                              textAlign: "center",
-                            }}
-                          >
-                            {item.id}
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid black",
-                              padding: "10px",
-                            }}
-                          >
-                            {item.productName}
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid black",
-                              padding: "10px",
-                            }}
-                          >
-                            {item.date}
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid black",
-                              padding: "10px",
-                            }}
-                          >
-                            {item.price}
-                          </td>
-                          <td
-                            style={{
-                              border: "1px solid black",
-                              padding: "10px",
-                            }}
-                          >
-                            {item.commission}
-                          </td>
-                        </tr>
-                      ))}
+                      <tr>
+                        <td>1</td>
+                        <td>Product A</td>
+                        <td>2024-01-01</td>
+                        <td>$100</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Product B</td>
+                        <td>2024-02-15</td>
+                        <td>$150</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Product C</td>
+                        <td>2024-03-20</td>
+                        <td>$200</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>

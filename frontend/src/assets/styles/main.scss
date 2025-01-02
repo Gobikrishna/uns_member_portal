@@ -7,9 +7,16 @@ $white: #ffffff;
 $black: #333333;
 $ddgreen: #0d3019;
 $hmbggreen: #4f730b;
+$dgrey: #d6d5d6;
 
+.bg-dgrey{
+  background: $dgrey;
+}
 .bg-lgreen{
 background: $brngreen;
+}
+.bg-dgreen{
+  background: $dgreen;
 }
 .txt-lgreen{
   color:$brngreen;
@@ -71,12 +78,40 @@ header{
   }
 /*======================Home Page End here===============================*/
 
-/*=====================Member Details===================================*/
+/*=====================Member Details & Member List===================================*/
 .memberfillform{
   display: grid;
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 }
-/*==================  Member Detail  s===================================*/
+.memberlist-cont{
+  background: #d6d5d6 !important;
+  h5{
+    background: #456509;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+  }
+ .md-box {
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 2px 2px 17px #8e8f91;
+  }
+}
+.member-details{
+  background: #d6d5d6 !important;
+  h5{
+    background: #456509;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+  }
+ .md-box {
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 2px 2px 17px #8e8f91;
+  }
+}
+/*==================  Member Details & Member List===================================*/
 
 /**/
 .dashboard-cont{
@@ -158,6 +193,9 @@ header{
 .cont-int{
   position: relative;
   z-index:2;
+}
+.cursor{
+  cursor: pointer;
 }
 /*=====================Signup & Register end================================*/
 

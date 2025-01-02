@@ -37,7 +37,7 @@ const Header = () => {
   };
 
   return (
-    <header className="text-white navbar-bg">
+    <header className="bg-light bg-gradient">
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light">
           <div className="container-fluid">

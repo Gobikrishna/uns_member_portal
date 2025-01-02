@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import axios from "axios";
+import Header from "./Header";
+import Footer from "./Footer";
 import { AuthContext } from "../context/AuthContext";
 
 const Settings = () => {
@@ -78,85 +80,89 @@ const Settings = () => {
   };
 
   return (
-    <div className="bg-image d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow p-4 boxbg" style={{ width: "400px" }}>
-        <div className="bg-overlay"></div>
-        <div className="cont-int text-white">
-          <div className="text-center mb-2">
+    <div>
+      <Header />
+      <div className="d-flex align-items-center justify-content-center vh-100 bg-dgrey">
+        <div className="card shadow p-4 boxbg" style={{ width: "400px" }}>
+          <div className="bg-overlay"></div>
+          <div className="cont-int text-white">
+            {/* <div className="text-center mb-2">
             <Link className="navbar-brand" to="/home">
               <img width="100" src={logo} alt="Logo" />
             </Link>
+          </div> */}
+            <h5 className="card-title text-center mb-2 text-uppercase">
+              Change your password
+            </h5>
+            <form onSubmit={handleSubmit}>
+              {/* Old Password */}
+              <div className="mb-3">
+                <label htmlFor="oldPassword" className="form-label">
+                  Old Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="oldPassword"
+                  name="oldPassword"
+                  value={formData.oldPassword}
+                  onChange={handleChange}
+                  required
+                  aria-describedby="oldPasswordHelp"
+                />
+              </div>
+
+              {/* New Password */}
+              <div className="mb-3">
+                <label htmlFor="newPassword" className="form-label">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="newPassword"
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Confirm Password */}
+              <div className="mb-3">
+                <label htmlFor="confirmPassword" className="form-label">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Error Message */}
+              {error && <div className="alert alert-danger">{error}</div>}
+
+              {/* Success Message */}
+              {successMessage && (
+                <div className="alert alert-success">{successMessage}</div>
+              )}
+
+              {/* Submit Button */}
+              <div className="text-center">
+                <button type="submit" className="btn btn-primary">
+                  Update Password
+                </button>
+              </div>
+            </form>
           </div>
-          <h5 className="card-title text-center mb-2 text-uppercase">
-            Change your password
-          </h5>
-          <form onSubmit={handleSubmit}>
-            {/* Old Password */}
-            <div className="mb-3">
-              <label htmlFor="oldPassword" className="form-label">
-                Old Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="oldPassword"
-                name="oldPassword"
-                value={formData.oldPassword}
-                onChange={handleChange}
-                required
-                aria-describedby="oldPasswordHelp"
-              />
-            </div>
-
-            {/* New Password */}
-            <div className="mb-3">
-              <label htmlFor="newPassword" className="form-label">
-                New Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="newPassword"
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Confirm Password */}
-            <div className="mb-3">
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Error Message */}
-            {error && <div className="alert alert-danger">{error}</div>}
-
-            {/* Success Message */}
-            {successMessage && (
-              <div className="alert alert-success">{successMessage}</div>
-            )}
-
-            {/* Submit Button */}
-            <div className="text-center">
-              <button type="submit" className="btn btn-primary">
-                Update Password
-              </button>
-            </div>
-          </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
