@@ -7,10 +7,20 @@
     border-radius: 10px;
     box-shadow: 2px 2px 17px #8e8f91;
   }
+  .card {
+    width: 100%;
+  }
+  .card-body{
+    background: #f5ffe1;
+  }
+  .card-header{
+    background: #c9ea86 !important;
+  }
   h5{
-    background: #cdefff;
+    background:#456509;
+    color:#fff;
     padding: 10px;
-    border-bottom:1px solid #ccc;
+    border-radius: 10px 10px 0 0;
   }
 }
 .user-logo {
@@ -32,7 +42,14 @@
     }
   }
 }
-
+.list-table{
+  background: #dde2dc;
+  tr{
+    th{
+      color:#333;
+    }
+  }
+}
 .tab-links{
   margin-bottom: 0 !important; 
    button{

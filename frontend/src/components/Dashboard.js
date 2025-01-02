@@ -156,15 +156,13 @@ const Dashboard = () => {
       {authState.user && authState.user.role.toLowerCase() !== "admin" ? (
         <div className="container p-3 bg-white md-box">
           <div className="mt-2 mb-5">
-            <h5 className="w-100 pb-3 border-bottom border-secondary">
-              Member Portal
-            </h5>
-            <div className="d-flex">
-              <div className="card">
-                <div className="card-header bg-light">
+            <h5 className="w-100 pb-3 border-secondary">Member Portal</h5>
+            <div className="d-flex gap-3 ">
+              <div className="card bg-light">
+                <div className="card-header">
                   <h6 className="mb-0">Member Information</h6>
                 </div>
-                <div className="card-body">
+                <div className="card-body ">
                   <div className="mb-3">
                     <strong>Member ID:</strong> {userData.id}
                   </div>
@@ -183,16 +181,16 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="card">
+              <div className="card ">
                 <div className="card-header bg-light">
                   <h6 className="mb-0">Commission Details</h6>
                 </div>
                 <div className="card-body">
                   <div className="mb-3">
-                    <strong>Day Earnings</strong> 1000
+                    <strong>Day Earnings:</strong> 1000
                   </div>
                   <div className="mb-3">
-                    <strong>Total Earnings</strong> 5000
+                    <strong>Total Earnings:</strong> 5000
                   </div>
                 </div>
               </div>
@@ -200,23 +198,27 @@ const Dashboard = () => {
           </div>
 
           <div className="mt-2">
-            <div className="row align-items-center mb-3 pb-3 border-bottom border-secondary">
+            <div className="mb-3 pb-3 border-secondary">
               <h5 className="m-0 pt-2">Referral Contact List</h5>
-              <div className="input-group flex-grow-2">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search Mobile Number"
-                  value={searchQuery}
-                  onChange={handleSearch}
-                />
-                <span className="input-group-text">
-                  <img src={search} alt="search icon" />
-                </span>
+              <div className="d-flex gap-3">
+                <div className="input-group flex-grow-2 mt-4">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Mobile Number"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                  />
+                  <span className="input-group-text">
+                    <img src={search} alt="search icon" />
+                  </span>
+                </div>
+                <div className="mt-4">
+                  <button onClick={openModal} className="btn btn-primary">
+                    Add New Member
+                  </button>
+                </div>
               </div>
-              <button onClick={openModal} className="btn btn-primary">
-                Add New Member
-              </button>
               <Modal showModal={showModal} onClose={closeModal}>
                 <Register referralId={userData.id} pageTitle="Add New Member" />
               </Modal>
@@ -226,7 +228,7 @@ const Dashboard = () => {
           <div className="mt-0">
             <div className="table-responsive data-table">
               <table className="table">
-                <thead className="bg-lgreen text-white">
+                <thead className="list-table">
                   <tr>
                     <th scope="col">S.No</th>
                     <th scope="col">Member ID</th>
@@ -250,7 +252,7 @@ const Dashboard = () => {
                         {member.role !== "referred" && (
                           <td>
                             <Link to="/memberdetails" state={{ member }}>
-                              <button className="btn btn-sm btn-info text-white">
+                              <button className="btn btn-sm btn-primary">
                                 Add Details / View
                               </button>
                             </Link>
