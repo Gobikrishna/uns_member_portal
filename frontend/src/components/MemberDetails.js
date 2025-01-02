@@ -92,22 +92,26 @@ const MemberDetails = () => {
   useEffect(() => {
     if (authState.isAuthenticated) {
       const token = authState.token;
-
-      // Fetch user details
-      axios
-        .get(`http://localhost:5001/api/auth/user-details/${member.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setFormData(res.data.user_details);
-        })
-        .catch((error) => {
-          console.error("Error fetching user details:", error);
-        });
+      if (!member) {
+        // Redirect to the dashboard if member data is null or undefined
+        navigate("/dashboard");
+      } else {
+        // Fetch user details
+        axios
+          .get(`http://localhost:5001/api/auth/user-details/${member?.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            setFormData(res.data.user_details);
+          })
+          .catch((error) => {
+            console.error("Error fetching user details:", error);
+          });
+      }
     }
-  }, [authState.isAuthenticated]);
+  }, [authState.isAuthenticated, member]);
 
   // to open modal window
   const openModal = () => {
@@ -170,12 +174,6 @@ const MemberDetails = () => {
     setSuccessMessage(""); // Clear the message when user dismisses it
   };
 
-  const memberDetails = {
-    memberId: "D1001",
-    memberName: "Gopi Krishna",
-    role: "Secondary Member",
-  };
-
   return (
     <div className="bg-light member-details">
       {/* Navigation Bar */}
@@ -193,16 +191,20 @@ const MemberDetails = () => {
             <div className=" d-flex flex-column align-items-center justify-content-center me-3">
               <div className="user-avatar d-flex align-items-center justify-content-center">
                 {/* Dynamically displaying the initials */}
-                <h1>{getInitials(member.firstName, member.lastName)}</h1>
+                <h1>
+                  {getInitials(member?.firstName || "", member?.lastName || "")}
+                </h1>
               </div>
             </div>
 
             {/* Text Column */}
             <div className="user-info">
               <h3 className="user-name">
-                {member.firstName + " " + member.lastName}
+                {member?.firstName && member?.lastName
+                  ? `${member.firstName} ${member.lastName}`
+                  : "No Name Provided"}
               </h3>
-              <p className="user-role">{member.role}</p>
+              <p className="user-role">{member?.role || "No Role Assigned"}</p>
             </div>
           </div>
         </div>
@@ -1043,13 +1045,13 @@ const MemberDetails = () => {
                 <div>
                   {/* Member Details */}
                   <div>
-                    <strong>Member ID:</strong> {member.id}
+                    <strong>Member ID:</strong> {member?.id}
                   </div>
                   <div>
-                    <strong>Member Name:</strong> {member.firstName}
+                    <strong>Member Name:</strong> {member?.firstName}
                   </div>
                   <div>
-                    <strong>Role:</strong> {member.role}
+                    <strong>Role:</strong> {member?.role}
                   </div>
 
                   {/* Table */}

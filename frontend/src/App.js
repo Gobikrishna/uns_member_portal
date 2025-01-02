@@ -13,6 +13,28 @@ import MemberList from "./components/MemberList";
 import MemberDetails from "./components/MemberDetails";
 import AdminDashboard from "./components/admin/AdminDashboard";
 
+// AdminRoute Component
+const AdminRoute = ({ element }) => {
+  const { authState } = useContext(AuthContext);
+
+  if (!authState.isAuthenticated || authState.user.role !== "admin") {
+    return <Navigate to="/dashboard" />;
+  }
+
+  return element;
+};
+
+// UserRoute Component for non-admin roles
+const UserRoute = ({ element }) => {
+  const { authState } = useContext(AuthContext);
+
+  if (!authState.isAuthenticated || authState.user.role === "admin") {
+    return <Navigate to="/admin-dashboard" />;
+  }
+
+  return element;
+};
+
 function App() {
   const { authState, setAuthState } = useContext(AuthContext); // Access context here
   const [loading, setLoading] = useState(true); // Loading state for initial auth check
@@ -50,25 +72,33 @@ function App() {
       {/* Home route, accessible by all users */}
       <Route path="/home" element={<Home />} />
 
-      {/* accessible by all users (public page) */}
+      {/* Login and Register routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Protected route for, only accessible by authenticated users */}
-      {/* ProtectedRoute checks if the user is authenticated before rendering the protected Components */}
+      {/* Protected route for Dashboard, only accessible by non-admin roles */}
       <Route
         path="/dashboard"
-        element={<ProtectedRoute element={<Dashboard />} />}
+        element={<UserRoute element={<Dashboard />} />}
       />
-      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
+      {/* Admin-only routes */}
       <Route
-        path="/memberdetails"
-        element={<ProtectedRoute element={<MemberDetails />} />}
+        path="/admin-dashboard"
+        element={<AdminRoute element={<AdminDashboard />} />}
       />
       <Route
         path="/memberlist"
-        element={<ProtectedRoute element={<MemberList />} />}
+        element={<AdminRoute element={<MemberList />} />}
       />
+
+      {/* Member Details - Protected route for authenticated users */}
+      <Route
+        path="/memberdetails"
+        element={<UserRoute element={<MemberDetails />} />}
+      />
+
+      {/* Settings route - Protected route, accessible by all authenticated users */}
       <Route
         path="/settings"
         element={<ProtectedRoute element={<Settings />} />}
