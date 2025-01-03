@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/images/logo.png";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -83,7 +83,7 @@ const Settings = () => {
     <div>
       <Header />
       <div className="d-flex align-items-center justify-content-center vh-100 bg-dgrey">
-        <div className="card shadow p-4 boxbg" style={{ width: "400px" }}>
+        <div className="card shadow p-4 boxbg-set" style={{ width: "400px" }}>
           <div className="cont-int">
             {/* <div className="text-center mb-2">
             <Link className="navbar-brand" to="/home">

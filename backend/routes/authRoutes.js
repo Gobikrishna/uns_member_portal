@@ -15,6 +15,7 @@ const {
   updateUserDetails,
   getUserDetails,
   getPrimaryUserData,
+  getPrimaryMemberTotalCommissions,
 } = require("../controllers/authController");
 
 // Route to check if a user exists by email or mobile
@@ -59,5 +60,8 @@ router.get(
   authenticateJWT,
   getCommissionDetails
 );
+
+// Route to get Primary Member's Total Commissions
+router.get("/primarymember-commissions", getPrimaryMemberTotalCommissions);
 
 module.exports = router;

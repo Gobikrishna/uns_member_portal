@@ -111,117 +111,114 @@ const MemberRegister = ({ pageTitle, referralId }) => {
     role.toLowerCase() !== "direct referral";
 
   return (
-    <div className="bg-image d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow p-4 boxbg" style={{ width: "500px" }}>
-        <div className="bg-overlay"></div>
-        <div className="cont-int text-white">
-          <h5 className="card-title text-center mb-2 text-uppercase">
-            {pageTitle || "Add New Member"}
-          </h5>
-          {message && <p className="text-center text-danger">{message}</p>}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">
-                First Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="mobile" className="form-label">
-                Mobile
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="mobile"
-                name="mobile"
-                maxLength={10}
-                value={formData.mobile}
-                onChange={handleChange}
-                required
-              />
-            </div>
+    <>
+      {/* <h4 className=" text-center mb-2">
+              {pageTitle || "Add New Member"}
+            </h4> */}
+      {message && <p className="text-center text-danger">{message}</p>}
+      <form onSubmit={handleSubmit}>
+        <div className="grid gd-sys gap-2">
+          <div className="mb-1">
+            <label htmlFor="firstName" className="form-label">
+              First Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-            {/* Conditionally render Password and Role fields based on user role */}
-            {isAdmin && (
-              <>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="role" className="form-label">
-                    Role
-                  </label>
-                  <select
-                    id="role"
-                    name="role"
-                    className="form-select"
-                    value={formData.role}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Select Role</option>
-                    <option value="direct referral">Direct referral</option>
-                    <option value="secondary">Secondary</option>
-                  </select>
-                </div>
-              </>
-            )}
+          <div className="mb-1">
+            <label htmlFor="lastName" className="form-label">
+              Last Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-1">
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-1">
+            <label htmlFor="mobile" className="form-label">
+              Mobile
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="mobile"
+              name="mobile"
+              maxLength={10}
+              value={formData.mobile}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-            <button type="submit" className="btn btn-primary w-100">
-              Add Member
-            </button>
-          </form>
+          {/* Conditionally render Password and Role fields based on user role */}
+          {isAdmin && (
+            <>
+              <div className="mb-1">
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label htmlFor="role" className="form-label">
+                  Role
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  className="form-select"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Role</option>
+                  <option value="direct referral">Direct referral</option>
+                  <option value="secondary">Secondary</option>
+                </select>
+              </div>
+            </>
+          )}
         </div>
-      </div>
-    </div>
+        <button type="submit" className="btn btn-primary w-100 mt-3">
+          Add Member
+        </button>
+      </form>
+    </>
   );
 };
 

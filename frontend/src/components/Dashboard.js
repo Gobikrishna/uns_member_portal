@@ -66,7 +66,8 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     const { token, user } = authState;
-    const userId = user.id;
+    const userId = user?.id;
+
     const headers = { Authorization: `Bearer ${token}` };
 
     try {
@@ -75,6 +76,18 @@ const Dashboard = () => {
           .get(`http://localhost:5001/api/auth/user/${userId}`, {
             headers,
           })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+            return { data: null };
+          }),
+
+        axios
+          .get(
+            `http://localhost:5001/api/auth/primarymember-commissions/${userId}`,
+            {
+              headers,
+            }
+          )
           .catch((error) => {
             console.error("Error fetching user data:", error);
             return { data: null };

@@ -115,52 +115,64 @@ header{
 
 /**/
 .dashboard-cont{
-.modal-content{
-  background: #e1f2ed;
-  height:530px;
-  .bg-image{
-    background-image: none;
-  }
-  .bg-overlay{
-    display: none;
-  }
-  .text-white{
-    color:$black !important;
-  }
-  .navbar-brand{
-    display: none !important;
-  }
-  p{
-    display: none;
-  }
-  .vh-100{
-    height: 56vh !important;
-  }
-  .card{
-    box-shadow: none !important;
-    border: none;
-    background: none;
-    padding: 0 !important;
-  }
-  .btn.btn-primary{
-    width: 100px !important;
-  }
-  form{
-    background: #e1f2ed;
-  }
-  .modal-header{
-    .btn-close{
-      position: relative;
-      z-index: 99;
+  .modal-content{
+    .modal-header{
+      padding: 0 20px;
+      h5{
+        background: none;
+        color:$black;
+      }
+    }
+    .modal-footer{
+      display: none;
     }
   }
-  .cont-int{
-    background: #e1f2ed;
-  }
-  .modal-footer{
-    display: none;
-  }
-}
+// .modal-content{
+//   background: #e1f2ed;
+//   height:530px;
+//   .bg-image{
+//     background-image: none;
+//   }
+//   .bg-overlay{
+//     display: none;
+//   }
+//   .text-white{
+//     color:$black !important;
+//   }
+//   .navbar-brand{
+//     display: none !important;
+//   }
+//   p{
+//     display: none;
+//   }
+//   .vh-100{
+//     height: 56vh !important;
+//   }
+//   .card{
+//     box-shadow: none !important;
+//     border: none;
+//     background: none;
+//     padding: 0 !important;
+//   }
+//   .btn.btn-primary{
+//     width: 100px !important;
+//   }
+//   form{
+//     background: #e1f2ed;
+//   }
+//   .modal-header{
+//     .btn-close{
+//       position: relative;
+//       z-index: 99;
+//     }
+//   }
+//   .cont-int{
+//     background: #e1f2ed;
+//   }
+//   .modal-footer{
+//     display: none;
+//   }
+// }
 
 }
 /**/
@@ -175,6 +187,12 @@ header{
   width: 100%; /* Ensures full width */
 }
 .boxbg {
+  position: relative; /* Establish a context for pseudo-element */
+  overflow: hidden; /* Prevents overflow issues */
+  background: transparent;
+}
+
+.boxbg-set {
   position: relative; /* Establish a context for pseudo-element */
   overflow: hidden; /* Prevents overflow issues */
   background: $white;

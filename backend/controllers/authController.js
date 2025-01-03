@@ -154,7 +154,7 @@ exports.loginUser = async (req, res) => {
 
   console.log("backend side--->" + email + password);
   const query = "SELECT * FROM users WHERE email = ?";
-  console.log("Login query", query);
+  // console.log("Login query", query);
   db.query(query, [email], async (err, result) => {
     console.log("entered");
     if (err) {
@@ -449,6 +449,46 @@ exports.forgotPassword = (req, res) => {
   res
     .status(200)
     .json({ msg: "Forgot Password feature is under construction" });
+};
+
+//  view details for a particular primary member Filter by a Specific Primary Member
+exports.getPrimaryMemberTotalCommissions = (req, res) => {
+  const userId = req.params.userId; // Get userId from the URL parameter
+  console.log(userId);
+  // Commission Query: Automates commission calculations based on your business rules.
+  const query = `
+  SELECT
+    CONCAT(m.firstName, ' ', m.lastName) AS PrimaryMember,
+    SUM(t.referralIncome) AS TotalPrimaryCommission,
+    COUNT(t.id) AS TotalTransactions
+FROM
+    transactions t
+JOIN
+    members m ON m.id = t.memberId
+WHERE
+    t.referralPerson IN (
+        SELECT CONCAT(firstName, ' ', lastName)
+        FROM members
+        WHERE referralId = ?  -- Replace '2' with the primary member's ID
+    )
+    OR t.referralPerson = (
+        SELECT CONCAT(firstName, ' ', lastName)
+        FROM members
+        WHERE id = ?  -- Replace '2' with the primary member's ID
+    )
+GROUP BY
+    PrimaryMember;
+
+  `;
+
+  db.query(query, [userId], (err, result) => {
+    if (err) {
+      console.error("Error fetching commission details:", err);
+      return res.status(500).json({ error: "Server error" });
+    }
+
+    res.json(result);
+  });
 };
 
 // Get Commission Details
