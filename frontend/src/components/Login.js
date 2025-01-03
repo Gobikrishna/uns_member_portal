@@ -48,7 +48,7 @@ const Login = () => {
       // Navigate to the dashboard after successful login
       authState.user && authState.user.role.toLowerCase() !== "admin"
         ? navigate("/dashboard")
-        : navigate("/memberlist");
+        : navigate("/admin-dashboard");
     } catch (error) {
       console.error("Login error", error);
     }

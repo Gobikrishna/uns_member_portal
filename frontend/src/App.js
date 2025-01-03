@@ -12,6 +12,7 @@ import Settings from "./components/Settings";
 import MemberList from "./components/MemberList";
 import MemberDetails from "./components/MemberDetails";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import MemberDashboard from "./components/admin/MemberDashboard";
 
 // AdminRoute Component
 const AdminRoute = ({ element }) => {
@@ -88,8 +89,8 @@ function App() {
         element={<AdminRoute element={<AdminDashboard />} />}
       />
       <Route
-        path="/memberlist"
-        element={<AdminRoute element={<MemberList />} />}
+        path="/member-dashboard"
+        element={<AdminRoute element={<MemberDashboard />} />}
       />
 
       {/* Member Details - Protected route for authenticated users */}
