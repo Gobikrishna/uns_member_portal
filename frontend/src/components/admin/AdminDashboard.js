@@ -60,6 +60,7 @@ const AdminDashboard = () => {
                   <th scope="col">S.No</th>
                   <th scope="col">Member ID</th>
                   <th scope="col">Member Name</th>
+                  <th scope="col">Member Role</th>
                   <th scope="col">Mobile Number</th>
                   <th scope="col">Email</th>
                   <th scope="col">Details</th>
@@ -72,6 +73,7 @@ const AdminDashboard = () => {
                       <td>{index + 1}</td>
                       <td>{user.id}</td>
                       <td>{user.firstName + " " + user.lastName}</td>
+                      <td>{user.role}</td>
                       <td>{user.mobile}</td>
                       <td>{user.email}</td>
                       <td>

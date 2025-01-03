@@ -7,11 +7,11 @@ import Modal from "../Modal";
 import { Link, useLocation } from "react-router-dom";
 import MemberRegister from "../MemberRegister";
 import { AuthContext } from "../../context/AuthContext";
-
+import { useNavigate } from "react-router-dom";
 const MemberDashboard = () => {
   const { authState } = useContext(AuthContext);
   const location = useLocation();
-
+  const navigate = useNavigate();
   // State variables
   const [userData, setUserData] = useState(null);
   const [memberData, setMemberData] = useState([]);
@@ -154,7 +154,13 @@ const MemberDashboard = () => {
       console.error("Error handling API calls in fetchData:", error);
     }
   };
-
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1); // Go back to the previous route
+    } else {
+      navigate("/defaultRoute"); // Redirect to a default route
+    }
+  };
   // Generate initials for display
   const getInitials = (firstName = "", lastName = "") =>
     `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
@@ -177,6 +183,9 @@ const MemberDashboard = () => {
       <Header />
       {authState.user && authState.user.role.toLowerCase() === "admin" ? (
         <div className="container p-3 bg-white md-box">
+          <div className=" my-2 cursor back-lnk" onClick={goBack}>
+            &larr; Back to dashborad
+          </div>
           <div className="mt-2 mb-5">
             <h5 className="w-100 pb-3 border-secondary">Member Portal</h5>
             <div className="d-flex gap-3 ">

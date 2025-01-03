@@ -91,7 +91,7 @@ CREATE TABLE members (
     firstName VARCHAR(50) NOT NULL,                   -- Member's first name
     lastName VARCHAR(50) NOT NULL,                    -- Member's last name
     email VARCHAR(100) UNIQUE,                        -- Member's email (optional for tracking purposes)
-    role ENUM('primary', 'secondary', 'direct referral', 'referred') DEFAULT 'secondary', -- Role (Primary, Secondary, Direct referral, Referred)
+    role ENUM('primary', 'secondary','direct referral', 'admin', 'referred') DEFAULT 'secondary', -- Role (Primary, Secondary, Direct referral, Referred)
     mobile VARCHAR(15),                               -- Member's mobile number
     referralId INT,                                   -- Referring member's ID (can be primary or secondary)
     commission DECIMAL(10, 2) DEFAULT 0.00,           -- Commission earned by the member

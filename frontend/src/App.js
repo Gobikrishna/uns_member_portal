@@ -13,6 +13,7 @@ import MemberList from "./components/MemberList";
 import MemberDetails from "./components/MemberDetails";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import MemberDashboard from "./components/admin/MemberDashboard";
+import MemberData from "./components/admin/MemberData";
 
 // AdminRoute Component
 const AdminRoute = ({ element }) => {
@@ -31,6 +32,17 @@ const UserRoute = ({ element }) => {
 
   if (!authState.isAuthenticated || authState.user.role === "admin") {
     return <Navigate to="/admin-dashboard" />;
+  }
+
+  return element;
+};
+
+// This component is for authenticated users only (both admin and non-admin)
+const ProtectedRouteForUsers = ({ element }) => {
+  const { authState } = useContext(AuthContext);
+
+  if (!authState.isAuthenticated) {
+    return <Navigate to="/login" />;
   }
 
   return element;
@@ -93,10 +105,21 @@ function App() {
         element={<AdminRoute element={<MemberDashboard />} />}
       />
 
-      {/* Member Details - Protected route for authenticated users */}
       <Route
+        path="/member-data"
+        element={<AdminRoute element={<MemberData />} />}
+      />
+
+      {/* Member Details - Protected route for authenticated users */}
+      {/* <Route
         path="/memberdetails"
         element={<UserRoute element={<MemberDetails />} />}
+      /> */}
+
+      {/* Member Details - Protected route for authenticated users (both admin and non-admin) */}
+      <Route
+        path="/memberdetails"
+        element={<ProtectedRouteForUsers element={<MemberDetails />} />}
       />
 
       {/* Settings route - Protected route, accessible by all authenticated users */}
