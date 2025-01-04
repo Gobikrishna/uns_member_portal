@@ -81,17 +81,17 @@ const Dashboard = () => {
             return { data: null };
           }),
 
-        axios
-          .get(
-            `http://localhost:5001/api/auth/primarymember-commissions/${userId}`,
-            {
-              headers,
-            }
-          )
-          .catch((error) => {
-            console.error("Error fetching user data:", error);
-            return { data: null };
-          }),
+        // axios
+        //   .get(
+        //     `http://localhost:5001/api/auth/primarymember-commissions/${userId}`,
+        //     {
+        //       headers,
+        //     }
+        //   )
+        //   .catch((error) => {
+        //     console.error("Error fetching user data:", error);
+        //     return { data: null };
+        //   }),
 
         axios
           .get(`http://localhost:5001/api/auth/members/${userId}`, {

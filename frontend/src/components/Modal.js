@@ -21,9 +21,7 @@ const Modal = ({ pageTitle, showModal, onClose, children }) => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">
-                <h4 className=" text-center mb-2">
-                  {pageTitle || "Add New Member"}
-                </h4>
+                {pageTitle || "Add New Member"}
               </h5>
               <button
                 type="button"
