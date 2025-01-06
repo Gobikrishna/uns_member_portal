@@ -8,7 +8,7 @@ CREATE TABLE users (
     lastName VARCHAR(50) NOT NULL,                     -- User's last name
     email VARCHAR(100) UNIQUE NOT NULL,                -- User's email (unique constraint)
     password VARCHAR(255) NOT NULL,                    -- User's hashed password
-    role ENUM('primary', 'secondary','direct referral', 'admin', 'referred') DEFAULT 'primary', -- Role (Primary, Secondary, Admin, etc.)
+    role ENUM('primary', 'secondary','direct referral', 'admin', 'indirect referral') DEFAULT 'primary', -- Role (Primary, Secondary, Admin, etc.)
     mobile VARCHAR(15) UNIQUE,                         -- User's mobile number (unique constraint)
     referredBy INT,                                    -- References the ID of the referring Primary user
     user_details JSON,                                 -- User details column (placed after referredBy)
@@ -91,7 +91,7 @@ CREATE TABLE members (
     firstName VARCHAR(50) NOT NULL,                   -- Member's first name
     lastName VARCHAR(50) NOT NULL,                    -- Member's last name
     email VARCHAR(100) UNIQUE,                        -- Member's email (optional for tracking purposes)
-    role ENUM('primary', 'secondary','direct referral', 'admin', 'referred') DEFAULT 'secondary', -- Role (Primary, Secondary, Direct referral, Referred)
+    role ENUM('primary', 'secondary','direct referral', 'admin', 'indirect referral') DEFAULT 'secondary', -- Role (Primary, Secondary, Direct referral, Referred)
     mobile VARCHAR(15),                               -- Member's mobile number
     referralId INT,                                   -- Referring member's ID (can be primary or secondary)
     commission DECIMAL(10, 2) DEFAULT 0.00,           -- Commission earned by the member
@@ -107,7 +107,6 @@ CREATE TABLE transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,                 -- Unique ID for each transaction
     memberId INT NOT NULL,                             -- Links to the member in `members` table
     referralPerson VARCHAR(100) NOT NULL,              -- Name of the referring person
-    referralIncome DECIMAL(10, 2) NOT NULL,            -- Income from the referral commission
     product VARCHAR(100) NOT NULL,                     -- Name of the product purchased
     price DECIMAL(10, 2) NOT NULL,                     -- Price of the product
     commissionEarned DECIMAL(10, 2) NOT NULL,          -- Commission earned on the transaction
@@ -116,6 +115,27 @@ CREATE TABLE transactions (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last updated timestamp
     FOREIGN KEY (memberId) REFERENCES members(id) ON DELETE CASCADE -- Links to `members` table
 );
+
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL, -- The user who made the transaction
+    referredBy INT, -- The user who referred the transaction initiator
+    productName VARCHAR(255) NOT NULL, -- Product name associated with the transaction
+    amount DECIMAL(10, 2) NOT NULL, -- Total amount of the transaction
+    commissionEarned DECIMAL(10, 2) NOT NULL, -- Commission earned for this transaction
+    commissionTo INT NOT NULL, -- The user who earned the commission
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Record creation time
+);
+
+
+{
+  "userId": 11,
+  "amount": 1000.00,
+  "productName": "Product A"
+}
+
+
+
 
 -- insert data 
 -- Inserting primary members (admin and primary users)

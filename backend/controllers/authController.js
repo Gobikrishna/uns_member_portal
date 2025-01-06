@@ -26,14 +26,13 @@ exports.checkUserExists = (req, res) => {
 exports.registerUser = async (req, res) => {
   const { firstName, lastName, email, password, role, mobile, referredBy } =
     req.body;
-  console.log("request Body==>", req.body); // Add this line to log the request body
 
   // Validate input
   if (!firstName || !lastName || !email || !mobile || !role) {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  // Check if password is provided
+  // Check if password is provided for specific roles
   if (
     (!password || password.trim() === "") &&
     (role === "primary" || role === "secondary" || role === "direct referral")
@@ -42,104 +41,121 @@ exports.registerUser = async (req, res) => {
   }
 
   try {
-    console.log("user set password", password);
-
-    // Hash password only for certain roles
-    // const hashedPassword =
-    //   role === "primary" || role === "secondary" || role === "direct referral"
-    //     ? await bcrypt.hash(password, 10)
-    //     : null;
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("referredBy", referredBy);
 
-    // If the role is "Primary", ensure referredBy is null
-    const referralId = role === "primary" ? null : referredBy;
+    // Function to handle user insertion
+    const insertUser = () => {
+      // If the role is "Primary", ensure referredBy is null
+      const referralId = role === "primary" ? null : referredBy;
 
-    console.log("referralId==>", referralId + " and role is " + role);
-    // Start a transaction to ensure consistency between `users` and `members` tables
-    db.beginTransaction(async (transactionError) => {
-      if (transactionError) {
-        console.error("Error starting transaction:", transactionError);
-        return res.status(500).json({ error: "Server error" });
-      }
+      db.beginTransaction((transactionError) => {
+        if (transactionError) {
+          console.error("Error starting transaction:", transactionError);
+          return res.status(500).json({ error: "Server error" });
+        }
 
-      try {
-        // Insert user into the `users` table
-        const userQuery = `INSERT INTO users (firstName, lastName, email, password, role, mobile, referredBy) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
-        db.query(
-          userQuery,
-          [
-            firstName,
-            lastName,
-            email,
-            hashedPassword,
-            role,
-            mobile,
-            referralId, // Use referralId here instead of referredBy
-          ],
-          (userErr, userResult) => {
-            if (userErr) {
-              db.rollback(() => {
-                if (userErr.code === "ER_DUP_ENTRY") {
-                  return res
-                    .status(400)
-                    .json({ error: "Email or mobile number already exists." });
-                }
-                console.error("Error inserting user:", userErr);
-                return res.status(500).json({ error: "Server error" });
-              });
-            } else {
-              // Insert member into the `members` table
-              const userId = userResult.insertId; // Get the inserted user's ID
-              const memberQuery = `INSERT INTO members (userId, firstName, lastName, email, role, mobile, referralId) VALUES (?, ?, ?, ?, ?, ?,?)`;
-
-              db.query(
-                memberQuery,
-                [
-                  userId,
-                  firstName,
-                  lastName,
-                  email,
-                  role === "Primary" ? "Secondary" : role, // Default to Secondary if role is Primary
-                  mobile,
-                  referralId, // Use referralId here instead of referredBy
-                ],
-                (memberErr, memberResult) => {
-                  if (memberErr) {
-                    db.rollback(() => {
-                      console.error("Error inserting member:", memberErr);
-                      return res.status(500).json({ error: "Server error" });
-                    });
-                  } else {
-                    // Commit the transaction if both inserts succeed
-                    db.commit((commitErr) => {
-                      if (commitErr) {
-                        console.error(
-                          "Error committing transaction:",
-                          commitErr
-                        );
-                        return res.status(500).json({ error: "Server error" });
-                      }
-                      res.status(201).json({
-                        message:
-                          "User registered and member record created successfully",
-                      });
+        try {
+          // Insert user into the users table
+          const userQuery = `INSERT INTO users (firstName, lastName, email, password, role, mobile, referredBy) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          db.query(
+            userQuery,
+            [
+              firstName,
+              lastName,
+              email,
+              hashedPassword,
+              role,
+              mobile,
+              referralId,
+            ],
+            (userErr, userResult) => {
+              if (userErr) {
+                db.rollback(() => {
+                  if (userErr.code === "ER_DUP_ENTRY") {
+                    return res.status(400).json({
+                      error: "Email or mobile number already exists.",
                     });
                   }
-                }
-              );
+                  console.error("Error inserting user:", userErr);
+                  return res.status(500).json({ error: "Server error" });
+                });
+              } else {
+                // Insert member into the members table
+                const userId = userResult.insertId; // Get the inserted user's ID
+                const memberQuery = `INSERT INTO members (userId, firstName, lastName, email, role, mobile, referralId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                db.query(
+                  memberQuery,
+                  [
+                    userId,
+                    firstName,
+                    lastName,
+                    email,
+                    role === "Primary" ? "Secondary" : role,
+                    mobile,
+                    referralId,
+                  ],
+                  (memberErr, memberResult) => {
+                    if (memberErr) {
+                      db.rollback(() => {
+                        console.error("Error inserting member:", memberErr);
+                        return res.status(500).json({ error: "Server error" });
+                      });
+                    } else {
+                      // Commit the transaction if both inserts succeed
+                      db.commit((commitErr) => {
+                        if (commitErr) {
+                          console.error(
+                            "Error committing transaction:",
+                            commitErr
+                          );
+                          return res
+                            .status(500)
+                            .json({ error: "Server error" });
+                        }
+                        res.status(201).json({
+                          message:
+                            "User registered and member record created successfully",
+                        });
+                      });
+                    }
+                  }
+                );
+              }
             }
-          }
-        );
-      } catch (error) {
-        db.rollback(() => {
-          console.error("Error during registration transaction:", error);
-          res.status(500).json({ error: "Server error" });
-        });
-      }
-    });
+          );
+        } catch (error) {
+          db.rollback(() => {
+            console.error("Error during registration transaction:", error);
+            res.status(500).json({ error: "Server error" });
+          });
+        }
+      });
+    };
+
+    // Check if the role is "direct referral" and validate the count
+    if (role === "direct referral") {
+      const countQuery = `SELECT COUNT(*) AS directReferralCount FROM users WHERE referredBy = ? AND role = 'direct referral'`;
+      db.query(countQuery, [referredBy], (countErr, countResult) => {
+        if (countErr) {
+          console.error("Error checking direct referral count:", countErr);
+          return res.status(500).json({ error: "Server error" });
+        }
+
+        const directReferralCount = countResult[0].directReferralCount;
+        if (directReferralCount >= 10) {
+          return res.status(400).json({
+            error: "Cannot register more than 10 direct referral members.",
+          });
+        }
+
+        // Proceed with user registration if the count is less than 10
+        insertUser();
+      });
+    } else {
+      // If the role is not "direct referral," proceed with user registration
+      insertUser();
+    }
   } catch (error) {
     console.error("Error hashing password:", error);
     res.status(500).json({ error: "Server error" });
@@ -430,7 +446,7 @@ exports.getReferralTransactions = (req, res) => {
   console.log(userId);
   // Query to get the referral transactions for the user
   const query = `
-    SELECT * FROM transactions WHERE memberId = ?
+    SELECT * FROM transactions WHERE referredBy = ?
   `;
 
   db.query(query, [userId], (err, result) => {
@@ -525,4 +541,70 @@ exports.getCommissionDetails = (req, res) => {
 
     res.json(result);
   });
+};
+
+// Insert Hierarchical Commission with Product Name
+exports.insertHierarchicalCommission = async (req, res) => {
+  console.log("insertHierarchicalCommission Entered!", req.body.formState);
+
+  const { userId, amount, productName } = req.body.formState;
+
+  console.log("userId", userId + "amount", amount + "productName", productName);
+  try {
+    // Step 1: Get the direct referrer
+    const [directReferrerResult] = await db
+      .promise()
+      .query("SELECT referredBy FROM users WHERE id = ?", [userId]);
+    const directReferrerId = directReferrerResult[0]?.referredBy;
+
+    if (!directReferrerId) {
+      return res.status(400).json({ error: "Direct referrer not found" });
+    }
+
+    // Step 2: Insert 10% commission for the direct referrer
+    const directCommission = amount * 0.1;
+    await db.promise().query(
+      `INSERT INTO transactions 
+      (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
+       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+      [
+        userId,
+        directReferrerId,
+        productName,
+        amount,
+        directCommission,
+        directReferrerId,
+      ]
+    );
+
+    // Step 3: Get the primary referrer
+    const [primaryReferrerResult] = await db
+      .promise()
+      .query("SELECT referredBy FROM users WHERE id = ?", [directReferrerId]);
+    const primaryReferrerId = primaryReferrerResult[0]?.referredBy;
+
+    // Step 4: If primary referrer exists, insert 5% commission
+    if (primaryReferrerId) {
+      const primaryCommission = amount * 0.05;
+      await db.promise().query(
+        `INSERT INTO transactions 
+        (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
+         VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+        [
+          userId,
+          primaryReferrerId,
+          productName,
+          amount,
+          primaryCommission,
+          primaryReferrerId,
+        ]
+      );
+    }
+
+    // Step 5: Return success response
+    res.status(201).json({ message: "Commission details added successfully" });
+  } catch (err) {
+    console.error("Error inserting hierarchical commission:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 };

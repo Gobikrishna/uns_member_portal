@@ -16,6 +16,7 @@ const {
   getUserDetails,
   getPrimaryUserData,
   getPrimaryMemberTotalCommissions,
+  insertHierarchicalCommission, // Import the new controller function
 } = require("../controllers/authController");
 
 // Route to check if a user exists by email or mobile
@@ -63,5 +64,8 @@ router.get(
 
 // Route to get Primary Member's Total Commissions
 router.get("/primarymember-commissions", getPrimaryMemberTotalCommissions);
+
+// Route to insert hierarchical commission with product name
+router.post("/hierarchical-commission", insertHierarchicalCommission);
 
 module.exports = router;

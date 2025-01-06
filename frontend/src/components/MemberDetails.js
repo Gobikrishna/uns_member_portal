@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Back from "../assets/images/back.png";
 import { AuthContext } from "../context/AuthContext";
@@ -7,6 +7,8 @@ import { AuthContext } from "../context/AuthContext";
 import Header from "./Header";
 import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
+import Modal from "./Modal";
+import MemberRegister from "./MemberRegister";
 
 const MemberDetails = () => {
   const { authState } = useContext(AuthContext);
@@ -16,12 +18,19 @@ const MemberDetails = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const location = useLocation();
   const [successMessage, setSuccessMessage] = useState("");
+  const [memberData, setMemberData] = useState([]);
+  const [filteredMemberData, setFilteredMemberData] = useState([]);
+
+  const [formState, setFormState] = useState({});
+  const [selectedMemberId, setSelectedMemberId] = useState(null);
+  const [errors, setErrors] = useState({});
+
   const member = location.state?.member; // Access the passed member data
   console.log("Location state:", location.state);
 
   console.log("member details", member);
   const [activeTab, setActiveTab] = useState("referral");
-
+  const [checked, setChecked] = useState(false);
   // State for the form data
   const [formData, setFormData] = useState({
     mental_age: "",
@@ -91,6 +100,7 @@ const MemberDetails = () => {
   // Get initial values if the user has pre-existing details
   useEffect(() => {
     if (authState.isAuthenticated) {
+      const userDetails = localStorage.getItem("user");
       const token = authState.token;
       if (!member) {
         // Redirect to the dashboard if member data is null or undefined
@@ -109,10 +119,26 @@ const MemberDetails = () => {
           .catch((error) => {
             console.error("Error fetching user details:", error);
           });
+        axios
+          .get(`http://localhost:5001/api/auth/members/${member.id}`, {
+            // headers: { ...headers, Role: user.role },
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Role: member.role,
+            },
+          })
+          .then((res) => {
+            setMemberData(res.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching members data:", error);
+            return { data: [] };
+          });
       }
     }
   }, [authState.isAuthenticated, member]);
 
+  console.log("memberlists==>", memberData);
   // to open modal window
   const openModal = () => {
     setShowModal(true);
@@ -146,6 +172,66 @@ const MemberDetails = () => {
       ...prevData,
       [name]: value,
     }));
+  };
+  const handleRefInputChange = (e, field) => {
+    const { value } = e.target;
+
+    setFormState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  const handleRadioChange = (e, memberId) => {
+    setSelectedMemberId(memberId);
+    setFormState({
+      userId: memberId, // Initialize formState with the selected memberId
+      productName: "",
+      amount: "",
+    });
+    setErrors({}); // Clear errors when a new member is selected
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formState.productName) {
+      errors.productName = "Product name is required.";
+    }
+    if (!formState.amount || isNaN(formState.amount) || formState.amount <= 0) {
+      errors.amount = "Valid amount is required.";
+    }
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleTransactionSubmit = (e) => {
+    e.preventDefault();
+
+    if (!selectedMemberId) {
+      setErrors({ general: "Please select a member." });
+      return;
+    }
+
+    if (!validateForm()) {
+      return;
+    }
+
+    console.log("Form State on Submit:", formState);
+
+    axios
+      .post(`http://localhost:5001/api/auth/hierarchical-commission`, {
+        formState,
+      })
+      .then((response) => {
+        console.log("User details updated:", response.data);
+        setSuccessMessage("Details updated successfully!");
+        setFormState({});
+        setSelectedMemberId(null);
+      })
+      .catch((error) => {
+        console.error("Error updating user details:", error);
+        setSuccessMessage("Failed to update details.");
+      });
   };
 
   // Handle form submission
@@ -222,7 +308,7 @@ const MemberDetails = () => {
               className={activeTab === "transaction" ? "active" : ""}
               onClick={() => setActiveTab("transaction")}
             >
-              Transaction History
+              Transaction
             </button>
           </div>
 
@@ -1041,7 +1127,7 @@ const MemberDetails = () => {
             )}
             {activeTab === "transaction" && (
               <div>
-                <h4>Transaction History</h4>
+                <h4>Transaction</h4>
                 <div>
                   {/* Member Details */}
                   <div>
@@ -1092,6 +1178,115 @@ const MemberDetails = () => {
                       </tr>
                     </tbody>
                   </table>
+                </div>
+
+                {/* admin panel */}
+                <div className="mt-2">
+                  <div className="mb-3 pb-3 border-secondary">
+                    <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
+                      <h4>Referral List</h4>
+                    </div>
+                  </div>
+                  <div className="mt-0">
+                    <div className="table-responsive data-table">
+                      <form onSubmit={handleTransactionSubmit}>
+                        <table className="table">
+                          <thead className="list-table">
+                            <tr>
+                              <th></th>
+                              <th scope="col">Member ID</th>
+                              <th scope="col">Member Name</th>
+                              <th scope="col">Mobile Number</th>
+                              <th scope="col">Product Name</th>
+                              <th scope="col">Price</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {memberData.length > 0 ? (
+                              memberData.map((member) => (
+                                <tr key={member.id}>
+                                  <td>
+                                    <input
+                                      type="radio"
+                                      name="selectedMember"
+                                      value={member.id}
+                                      checked={selectedMemberId === member.id}
+                                      onChange={(e) =>
+                                        handleRadioChange(e, member.id)
+                                      }
+                                    />
+                                  </td>
+                                  <td>{member.id}</td>
+                                  <td>{`${member.firstName} ${member.lastName}`}</td>
+                                  <td>{member.mobile}</td>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      value={
+                                        selectedMemberId === member.id
+                                          ? formState.productName || ""
+                                          : ""
+                                      }
+                                      onChange={(e) =>
+                                        handleRefInputChange(e, "productName")
+                                      }
+                                      disabled={selectedMemberId !== member.id}
+                                    />
+                                    {selectedMemberId === member.id &&
+                                      errors.productName && (
+                                        <span className="text-danger">
+                                          {errors.productName}
+                                        </span>
+                                      )}
+                                  </td>
+                                  <td>
+                                    <input
+                                      type="text"
+                                      value={
+                                        selectedMemberId === member.id
+                                          ? formState.amount || ""
+                                          : ""
+                                      }
+                                      onChange={(e) =>
+                                        handleRefInputChange(e, "amount")
+                                      }
+                                      disabled={selectedMemberId !== member.id}
+                                    />
+                                    {selectedMemberId === member.id &&
+                                      errors.amount && (
+                                        <span className="text-danger">
+                                          {errors.amount}
+                                        </span>
+                                      )}
+                                  </td>
+                                  <td>
+                                    {selectedMemberId === member.id && (
+                                      <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                      >
+                                        Submit
+                                      </button>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="7" className="text-center">
+                                  No results found.
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </form>
+                      {errors.general && (
+                        <div className="text-danger mt-3">{errors.general}</div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
