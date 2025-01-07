@@ -1165,22 +1165,25 @@ const MemberDetails = () => {
               </div>
             )}
             {activeTab === "transaction" && (
-              <div>
+              <div className="transaction-box">
                 <h4>Transaction</h4>
                 <div>
                   {/* Member Details */}
-
-                  <div>
-                    <strong>Member ID:</strong> {member?.id}
-                  </div>
-                  <div>
-                    <strong>Member Name:</strong> {member?.firstName}
-                  </div>
-                  <div>
-                    <strong>Role:</strong> {member?.role}
-                  </div>
-                  <div>
-                    <strong>Mobile:</strong> {member?.mobile}
+                  <div className="d-flex">
+                    <div className="border-end me-2 pe-4">
+                      <div>
+                        <strong>Member ID:</strong> {member?.id}
+                      </div>
+                      <div>
+                        <strong>Member Name:</strong> {member?.firstName}
+                      </div>
+                      <div>
+                        <strong>Role:</strong> {member?.role}
+                      </div>
+                      <div>
+                        <strong>Mobile:</strong> {member?.mobile}
+                      </div>
+                    </div>
                   </div>
                   {getUserData?.role && getUserData?.role === "admin" && (
                     <form onSubmit={handleTransactionSubmit}>
@@ -1189,35 +1192,37 @@ const MemberDetails = () => {
                         name="selectedMember"
                         value={transactionFormState.selectedMember}
                       />
-
-                      <label htmlFor="productName">Product Name:</label>
-                      <input
-                        type="text"
-                        id="productName"
-                        value={transactionFormState.productName}
-                        onChange={handleTransactionInputChange}
-                      />
-                      {errors.productName && (
-                        <span className="text-danger">
-                          {errors.productName}
-                        </span>
-                      )}
-
-                      <label htmlFor="amount">Price:</label>
-                      <input
-                        type="text"
-                        id="amount"
-                        value={transactionFormState.amount}
-                        onChange={handleTransactionInputChange}
-                      />
-                      {errors.amount && (
-                        <span className="text-danger">{errors.amount}</span>
-                      )}
-
-                      <button type="submit" className="btn btn-primary">
-                        Submit
-                      </button>
-
+                      <div className="mb-2">
+                        <label htmlFor="productName">Product Name:</label>
+                        <input
+                          type="text"
+                          id="productName"
+                          value={transactionFormState.productName}
+                          onChange={handleTransactionInputChange}
+                        />
+                        {errors.productName && (
+                          <span className="text-danger">
+                            {errors.productName}
+                          </span>
+                        )}
+                      </div>
+                      <div className="mb-2">
+                        <label htmlFor="amount">Price:</label>
+                        <input
+                          type="text"
+                          id="amount"
+                          value={transactionFormState.amount}
+                          onChange={handleTransactionInputChange}
+                        />
+                        {errors.amount && (
+                          <span className="text-danger">{errors.amount}</span>
+                        )}
+                      </div>
+                      <div>
+                        <button type="submit" className="btn btn-primary w-100">
+                          Submit
+                        </button>
+                      </div>
                       {successMessage && (
                         <div
                           className={`text-${
@@ -1234,9 +1239,6 @@ const MemberDetails = () => {
                   {/* Table */}
                   <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
                     <h4>Product Details</h4>
-                    <button onClick={openModal} className="btn btn-primary">
-                      Add Product Detail
-                    </button>
                   </div>
                   {transactionData.length > 0 ? (
                     <table>

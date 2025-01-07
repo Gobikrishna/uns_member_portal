@@ -115,7 +115,7 @@ const MemberRegister = ({ pageTitle, referralId }) => {
       {/* <h4 className=" text-center mb-2">
               {pageTitle || "Add New Member"}
             </h4> */}
-      {message && <p className="text-center text-danger">{message}</p>}
+      {message && <p className="text-center text-success">{message}</p>}
       <form onSubmit={handleSubmit}>
         <div className="grid gd-sys gap-2">
           <div className="mb-1">

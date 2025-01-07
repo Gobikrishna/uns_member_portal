@@ -63,23 +63,28 @@ const Header = () => {
               ) : (
                 // If authenticated, show user dropdown
                 <div className={`dropdown ${isDropdownOpen ? "show" : ""}`}>
-                  <button
-                    className="btn btn-secondary dropdown-toggle"
-                    type="button"
-                    id="dropdownMenuButton"
-                    aria-expanded={isDropdownOpen}
+                  <div
+                    className="cursor"
                     onClick={toggleDropdown}
+                    id="dropdownMenuButton"
                   >
-                    {/* Dynamically displaying the initials */}
-                    {getInitials(
-                      authState.user.firstName,
-                      authState.user.lastName
-                    )}
-                  </button>
-                  {/* <span className="ps-2">
+                    {`${authState?.user?.firstName}  ${authState?.user?.lastName}`}
+                    <button
+                      className="btn btn-secondary"
+                      type="button"
+                      aria-expanded={isDropdownOpen}
+                    >
+                      {/* Dynamically displaying the initials */}
+                      {getInitials(
+                        authState.user.firstName,
+                        authState.user.lastName
+                      )}
+                    </button>
+
+                    {/* <span className="ps-2">
                     {authState.user?.firstName + " " + authState.user?.lastName}
                   </span> */}
-
+                  </div>
                   <ul
                     className={`dropdown-menu dropdown-menu-end ${
                       isDropdownOpen ? "show" : ""
@@ -92,9 +97,9 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
-                      <button className="dropdown-item" onClick={onLogout}>
+                      <Link className="dropdown-item" onClick={onLogout}>
                         <i className="fa fa-sign-out me-2"></i>Logout
-                      </button>
+                      </Link>
                     </li>
                   </ul>
                 </div>

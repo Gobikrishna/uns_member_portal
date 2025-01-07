@@ -78,7 +78,7 @@ const Register = () => {
           <h5 className="card-title text-center mb-2 text-uppercase">
             Register your account
           </h5>
-          {message && <p className="text-center text-danger">{message}</p>}
+          {message && <p className="text-center text-success">{message}</p>}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="firstName" className="form-label">
