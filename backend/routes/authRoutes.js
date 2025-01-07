@@ -16,7 +16,8 @@ const {
   getUserDetails,
   getPrimaryUserData,
   getPrimaryMemberTotalCommissions,
-  insertHierarchicalCommission, // Import the new controller function
+  insertHierarchicalCommission,
+  getReferralTransactionDetails, // Import the new controller function
 } = require("../controllers/authController");
 
 // Route to check if a user exists by email or mobile
@@ -67,5 +68,12 @@ router.get("/primarymember-commissions", getPrimaryMemberTotalCommissions);
 
 // Route to insert hierarchical commission with product name
 router.post("/hierarchical-commission", insertHierarchicalCommission);
+
+// Route to get referral transaction details by user ID (Protected route)
+router.get(
+  "/referral-transactions/:userId",
+  authenticateJWT, // Ensure this route is protected
+  getReferralTransactionDetails
+);
 
 module.exports = router;

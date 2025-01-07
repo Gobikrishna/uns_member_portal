@@ -553,11 +553,9 @@ exports.insertHierarchicalCommission = async (req, res) => {
     ({ userId, amount, productName } = req.body.formState); // Destructuring if formState exists
   } else {
     // If neither state exists, return an error response
-    return res
-      .status(400)
-      .json({
-        message: "Both transactionFormState and formState are missing.",
-      });
+    return res.status(400).json({
+      message: "Both transactionFormState and formState are missing.",
+    });
   }
 
   console.log("insertHierarchicalCommission Entered!", req.body);
@@ -619,5 +617,37 @@ exports.insertHierarchicalCommission = async (req, res) => {
   } catch (err) {
     console.error("Error inserting hierarchical commission:", err);
     res.status(500).json({ error: "Server error" });
+  }
+};
+
+// Get Referral Transaction Details for a Specific User
+exports.getReferralTransactionDetails = async (req, res) => {
+  const { userId } = req.params; // Get userId from request params
+
+  try {
+    // Query to get all transactions related to the user
+    const [transactions] = await db.promise().query(
+      `
+      SELECT * 
+      FROM transactions 
+      WHERE userId = ? OR referredBy = ?
+      ORDER BY createdAt DESC
+      `,
+      [userId, userId]
+    );
+
+    if (transactions.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No transactions found for this user." });
+    }
+
+    res.status(200).json({
+      message: "Transactions retrieved successfully.",
+      transactions,
+    });
+  } catch (err) {
+    console.error("Error fetching referral transactions:", err);
+    res.status(500).json({ error: "Server error." });
   }
 };

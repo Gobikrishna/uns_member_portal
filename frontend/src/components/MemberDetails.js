@@ -16,6 +16,7 @@ const MemberDetails = () => {
   const navigate = useNavigate();
   // State for the form data
   const [formData, setFormData] = useState(formDataConfig); // Initialize with imported config
+  const [transactionData, setTransactionData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [isDisabled, setIsDisabled] = useState(true);
@@ -68,6 +69,23 @@ const MemberDetails = () => {
           .catch((error) => {
             console.error("Error fetching members data:", error);
             return { data: [] };
+          });
+
+        // Fetch referral transactions
+        axios
+          .get(
+            `http://localhost:5001/api/auth/referral-transactions/${member.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            setTransactionData(res.data.transactions); // Update state for transactions
+          })
+          .catch((error) => {
+            console.error("Error fetching referral transactions:", error);
           });
       }
     }
@@ -262,13 +280,30 @@ const MemberDetails = () => {
       });
   };
 
+  // Calculate total commission for each `commissionTo`
+  const totalCommissionByPerson = transactionData.reduce((acc, transaction) => {
+    const commissionTo = transaction.commissionTo;
+
+    // Ensure commissionEarned is treated as a number
+    const commissionEarned = Number(transaction.commissionEarned) || 0;
+
+    if (!acc[commissionTo]) {
+      acc[commissionTo] = 0; // Initialize if not already present
+    }
+
+    acc[commissionTo] += commissionEarned; // Add the commission earned
+    return acc;
+  }, {});
+
+  // Display total commissions
+  console.log(totalCommissionByPerson);
+
   // Admin Panel End!
 
   return (
     <div className="bg-light member-details">
       {/* Navigation Bar */}
       <Header />
-
       {/* Hero Section */}
 
       <div className="container mt-4 bg-white md-box p-4">
@@ -1203,7 +1238,42 @@ const MemberDetails = () => {
                       Add Product Detail
                     </button>
                   </div>
-
+                  {transactionData.length > 0 ? (
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>User ID</th>
+                          <th>Referred By</th>
+                          <th>Product Name</th>
+                          <th>Amount</th>
+                          <th>Commission Earned</th>
+                          <th>Commission To</th>
+                          <th>Created At</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {transactionData.map((transaction) => (
+                          <tr key={transaction.id}>
+                            <td>{transaction.id}</td>
+                            <td>{transaction.userId}</td>
+                            <td>{transaction.referredBy}</td>
+                            <td>{transaction.productName}</td>
+                            <td>{Number(transaction.amount).toFixed(2)}</td>
+                            <td>
+                              {Number(transaction.commissionEarned).toFixed(2)}
+                            </td>
+                            <td>{transaction.commissionTo}</td>
+                            <td>
+                              {new Date(transaction.createdAt).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p>No transactions found.</p>
+                  )}
                   <table className="product-table product-table">
                     <thead>
                       <tr>

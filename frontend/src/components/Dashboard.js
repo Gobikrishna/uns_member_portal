@@ -21,6 +21,8 @@ const Dashboard = () => {
   const [commissionDetails, setCommissionDetails] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
+  const [transactionData, setTransactionData] = useState([]);
+
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
@@ -63,7 +65,20 @@ const Dashboard = () => {
       console.warn("User is not authenticated.");
     }
   }, [authState]);
+  // Calculate total commission for each `commissionTo`
+  const totalCommissionByPerson = transactionData.reduce((acc, transaction) => {
+    const commissionTo = transaction.commissionTo;
 
+    // Ensure commissionEarned is treated as a number
+    const commissionEarned = Number(transaction.commissionEarned) || 0;
+
+    if (!acc[commissionTo]) {
+      acc[commissionTo] = 0; // Initialize if not already present
+    }
+
+    acc[commissionTo] += commissionEarned; // Add the commission earned
+    return acc;
+  }, {});
   const fetchData = async () => {
     const { token, user } = authState;
     const userId = user?.id;
@@ -127,6 +142,22 @@ const Dashboard = () => {
           .catch((error) => {
             console.error("Error fetching commission details:", error);
             return { data: [] };
+          }),
+        // Fetch referral transactions
+        axios
+          .get(
+            `http://localhost:5001/api/auth/referral-transactions/${userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            setTransactionData(res.data.transactions); // Update state for transactions
+          })
+          .catch((error) => {
+            console.error("Error fetching referral transactions:", error);
           }),
       ];
 
@@ -200,12 +231,73 @@ const Dashboard = () => {
                   <h6 className="mb-0">Commission Details</h6>
                 </div>
                 <div className="card-body">
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <strong>Day Earnings:</strong> 1000
                   </div>
                   <div className="mb-3">
                     <strong>Total Earnings:</strong> 5000
-                  </div>
+                  </div> */}
+                  <table>
+                    <thead>
+                      <tr>
+                        {/* <th>Commission To</th> */}
+                        <th>Total Commission</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(totalCommissionByPerson).map(
+                        ([personId, totalCommission]) => {
+                          console.log(
+                            "Person ID:",
+                            personId,
+                            "User ID:",
+                            userData?.id
+                          ); // Debug log
+                          return personId === String(userData?.id) ? (
+                            <tr key={personId}>
+                              {/* <td>{personId}</td> */}
+                              <td>{totalCommission.toFixed(2)}</td>
+                            </tr>
+                          ) : null;
+                        }
+                      )}
+                    </tbody>
+                  </table>
+
+                  {transactionData.length > 0 ? (
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>User ID</th>
+                          <th>Referred By</th>
+                          <th>Product Name</th>
+                          <th>Amount</th>
+                          <th>Commission Earned</th>
+                          <th>Commission To</th>
+                          <th>Created At</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {transactionData.map((transaction) => (
+                          <tr key={transaction.id}>
+                            <td>{transaction.userId}</td>
+                            <td>{transaction.referredBy}</td>
+                            <td>{transaction.productName}</td>
+                            <td>{Number(transaction.amount).toFixed(2)}</td>
+                            <td>
+                              {Number(transaction.commissionEarned).toFixed(2)}
+                            </td>
+                            <td>{transaction.commissionTo}</td>
+                            <td>
+                              {new Date(transaction.createdAt).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p>No transactions found.</p>
+                  )}
                 </div>
               </div>
             </div>
