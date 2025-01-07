@@ -1184,58 +1184,65 @@ const MemberDetails = () => {
                         <strong>Mobile:</strong> {member?.mobile}
                       </div>
                     </div>
-                  </div>
-                  {getUserData?.role && getUserData?.role === "admin" && (
-                    <form onSubmit={handleTransactionSubmit}>
-                      <input
-                        type="hidden"
-                        name="selectedMember"
-                        value={transactionFormState.selectedMember}
-                      />
-                      <div className="mb-2">
-                        <label htmlFor="productName">Product Name:</label>
-                        <input
-                          type="text"
-                          id="productName"
-                          value={transactionFormState.productName}
-                          onChange={handleTransactionInputChange}
-                        />
-                        {errors.productName && (
-                          <span className="text-danger">
-                            {errors.productName}
-                          </span>
-                        )}
-                      </div>
-                      <div className="mb-2">
-                        <label htmlFor="amount">Price:</label>
-                        <input
-                          type="text"
-                          id="amount"
-                          value={transactionFormState.amount}
-                          onChange={handleTransactionInputChange}
-                        />
-                        {errors.amount && (
-                          <span className="text-danger">{errors.amount}</span>
-                        )}
-                      </div>
-                      <div>
-                        <button type="submit" className="btn btn-primary w-100">
-                          Submit
-                        </button>
-                      </div>
-                      {successMessage && (
-                        <div
-                          className={`text-${
-                            successMessage.includes("successfully")
-                              ? "success"
-                              : "danger"
-                          } mt-3`}
-                        >
-                          {successMessage}
-                        </div>
+                    <div>
+                      {getUserData?.role && getUserData?.role === "admin" && (
+                        <form onSubmit={handleTransactionSubmit}>
+                          <input
+                            type="hidden"
+                            name="selectedMember"
+                            value={transactionFormState.selectedMember}
+                          />
+                          <div className="mb-2">
+                            <label htmlFor="productName">Product Name:</label>
+                            <input
+                              type="text"
+                              id="productName"
+                              value={transactionFormState.productName}
+                              onChange={handleTransactionInputChange}
+                            />
+                            {errors.productName && (
+                              <span className="text-danger">
+                                {errors.productName}
+                              </span>
+                            )}
+                          </div>
+                          <div className="mb-2">
+                            <label htmlFor="amount">Price:</label>
+                            <input
+                              type="text"
+                              id="amount"
+                              value={transactionFormState.amount}
+                              onChange={handleTransactionInputChange}
+                            />
+                            {errors.amount && (
+                              <span className="text-danger">
+                                {errors.amount}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <button
+                              type="submit"
+                              className="btn btn-primary w-100"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                          {successMessage && (
+                            <div
+                              className={`text-${
+                                successMessage.includes("successfully")
+                                  ? "success"
+                                  : "danger"
+                              } mt-3`}
+                            >
+                              {successMessage}
+                            </div>
+                          )}
+                        </form>
                       )}
-                    </form>
-                  )}
+                    </div>
+                  </div>
                   {/* Table */}
                   <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
                     <h4>Product Details</h4>
