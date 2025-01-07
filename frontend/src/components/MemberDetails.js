@@ -9,10 +9,13 @@ import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
 import Modal from "./Modal";
 import MemberRegister from "./MemberRegister";
+import formDataConfig from "./config/formDataConfig";
 
 const MemberDetails = () => {
   const { authState } = useContext(AuthContext);
   const navigate = useNavigate();
+  // State for the form data
+  const [formData, setFormData] = useState(formDataConfig); // Initialize with imported config
   const [showModal, setShowModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [isDisabled, setIsDisabled] = useState(true);
@@ -30,76 +33,9 @@ const MemberDetails = () => {
   const [errors, setErrors] = useState({});
   // Admin Panel End!
 
-  // State for the form data
-  const [formData, setFormData] = useState({
-    mental_age: "",
-    family_values: "",
-    traditions_of_family: "",
-    family_member_details: "",
-    legacy_of_family: "",
-    emotional_range: "",
-    thoughts_about: "",
-    conversation_style: "",
-    working_style: "",
-    spending_style: "",
-    thoughts_on_lifestyle: "",
-    past_vacations: "",
-    physical_looks: "",
-    disfigurements: "",
-    internal_organs_health: "",
-    personality: "",
-    dressing: "",
-    behaviour_in_sg: "",
-    area_of_livig: "",
-    how_many_transfer: "",
-    idea_of_settle: "",
-    areas_of_interest: "",
-    possession: "",
-    future_travel: "",
-    marks: "",
-    courses_apart: "",
-    areas_of_success: "",
-    activities_involved: "",
-    leadership_position: "",
-    typing_speed: "",
-    interesting_subjects: "",
-    current_occupation: "",
-    interest_in_occupation: "",
-    work_designation: "",
-    interact_with_coworkers: "",
-    nature_of_job: "",
-    relation_with: "",
-    issues_in_family: "",
-    circle_of_frnds: "",
-    number_of_partners: "",
-    fluency_in_lang: "",
-    interest_in_other_lang: "",
-    caste: "",
-    faiths: "",
-    beliefs: "",
-    no_of_cars: "",
-    no_of_house: "",
-    financial_literacy: "",
-    views_on_invest: "",
-    How_many_debts: "",
-    comfort_with_tech: "",
-    electronic_devices: "",
-    appliances_in_use: "",
-    technological_interests: "",
-    how_often_chge_devices: "",
-    traditional_items: "",
-    types_of_brands: "",
-    volunteer_services: "",
-    fears: "",
-    motivations_drawbacks: "",
-    free_time: "",
-    outings: "",
-  });
-
   // Get initial values if the user has pre-existing details
   useEffect(() => {
     if (authState.isAuthenticated) {
-      const userDetails = localStorage.getItem("user");
       const token = authState.token;
       if (!member) {
         // Redirect to the dashboard if member data is null or undefined
@@ -198,9 +134,71 @@ const MemberDetails = () => {
   };
 
   // Admin panel
-  // Handle form input change
+  // Admin panel
+  const getUserData = JSON.parse(localStorage.getItem("user"));
+  console.log("localdata", getUserData?.role);
+  // For transaction submission
+  const [transactionFormState, setTransactionFormState] = useState({
+    userId: member.id || "",
+    productName: "",
+    amount: "",
+  });
 
+  const handleTransactionInputChange = (e) => {
+    const { id, value } = e.target;
+
+    setTransactionFormState((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!transactionFormState.productName) {
+      newErrors.productName = "Product name is required.";
+    }
+    if (
+      !transactionFormState.amount ||
+      isNaN(transactionFormState.amount) ||
+      transactionFormState.amount <= 0
+    ) {
+      newErrors.amount = "Valid price is required.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleTransactionSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    axios
+      .post("http://localhost:5001/api/auth/hierarchical-commission", {
+        transactionFormState,
+      })
+      .then((response) => {
+        console.log("Transaction submitted:", response.data);
+        setSuccessMessage("Transaction submitted successfully!");
+        setTransactionFormState({
+          userId: member.id,
+          productName: "",
+          amount: "",
+        });
+        setErrors({});
+      })
+      .catch((error) => {
+        console.error("Error submitting transaction:", error);
+        setSuccessMessage("Failed to submit transaction.");
+      });
+  };
+
+  // Handle Referral Transaction Submission Flow
   const handleRefInputChange = (e, field) => {
+    if (getUserData?.role !== "admin") return; // Check the role
     const { value } = e.target;
 
     setFormState((prevState) => ({
@@ -210,6 +208,7 @@ const MemberDetails = () => {
   };
 
   const handleRadioChange = (e, memberId) => {
+    if (getUserData?.role !== "admin") return; // Check the role
     setSelectedMemberId(memberId);
     setFormState({
       userId: memberId, // Initialize formState with the selected memberId
@@ -219,7 +218,8 @@ const MemberDetails = () => {
     setErrors({}); // Clear errors when a new member is selected
   };
 
-  const validateForm = () => {
+  const validateReferralForm = () => {
+    if (getUserData?.role !== "admin") return false; // Check the role
     const errors = {};
     if (!formState.productName) {
       errors.productName = "Product name is required.";
@@ -231,15 +231,16 @@ const MemberDetails = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleTransactionSubmit = (e) => {
+  const handleReferralTransactionSubmit = (e) => {
     e.preventDefault();
+    if (getUserData?.role !== "admin") return; // Check the role
 
     if (!selectedMemberId) {
       setErrors({ general: "Please select a member." });
       return;
     }
 
-    if (!validateForm()) {
+    if (!validateReferralForm()) {
       return;
     }
 
@@ -260,6 +261,7 @@ const MemberDetails = () => {
         setSuccessMessage("Failed to update details.");
       });
   };
+
   // Admin Panel End!
 
   return (
@@ -1132,6 +1134,7 @@ const MemberDetails = () => {
                 <h4>Transaction</h4>
                 <div>
                   {/* Member Details */}
+
                   <div>
                     <strong>Member ID:</strong> {member?.id}
                   </div>
@@ -1141,7 +1144,58 @@ const MemberDetails = () => {
                   <div>
                     <strong>Role:</strong> {member?.role}
                   </div>
+                  <div>
+                    <strong>Mobile:</strong> {member?.mobile}
+                  </div>
+                  {getUserData?.role && getUserData?.role === "admin" && (
+                    <form onSubmit={handleTransactionSubmit}>
+                      <input
+                        type="hidden"
+                        name="selectedMember"
+                        value={transactionFormState.selectedMember}
+                      />
 
+                      <label htmlFor="productName">Product Name:</label>
+                      <input
+                        type="text"
+                        id="productName"
+                        value={transactionFormState.productName}
+                        onChange={handleTransactionInputChange}
+                      />
+                      {errors.productName && (
+                        <span className="text-danger">
+                          {errors.productName}
+                        </span>
+                      )}
+
+                      <label htmlFor="amount">Price:</label>
+                      <input
+                        type="text"
+                        id="amount"
+                        value={transactionFormState.amount}
+                        onChange={handleTransactionInputChange}
+                      />
+                      {errors.amount && (
+                        <span className="text-danger">{errors.amount}</span>
+                      )}
+
+                      <button type="submit" className="btn btn-primary">
+                        Submit
+                      </button>
+
+                      {successMessage && (
+                        <div
+                          className={`text-${
+                            successMessage.includes("successfully")
+                              ? "success"
+                              : "danger"
+                          } mt-3`}
+                        >
+                          {successMessage}
+                        </div>
+                      )}
+                    </form>
+                  )}
                   {/* Table */}
                   <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
                     <h4>Product Details</h4>
@@ -1183,113 +1237,135 @@ const MemberDetails = () => {
                 </div>
 
                 {/* admin panel */}
-                <div className="mt-2">
-                  <div className="mb-3 pb-3 border-secondary">
-                    <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
-                      <h4>Referral List</h4>
-                    </div>
-                  </div>
-                  <div className="mt-0">
-                    <div className="table-responsive data-table">
-                      <form onSubmit={handleTransactionSubmit}>
-                        <table className="table">
-                          <thead className="list-table">
-                            <tr>
-                              <th></th>
-                              <th scope="col">Member ID</th>
-                              <th scope="col">Member Name</th>
-                              <th scope="col">Mobile Number</th>
-                              <th scope="col">Product Name</th>
-                              <th scope="col">Price</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {memberData.length > 0 ? (
-                              memberData.map((member) => (
-                                <tr key={member.id}>
-                                  <td>
-                                    <input
-                                      type="radio"
-                                      name="selectedMember"
-                                      value={member.id}
-                                      checked={selectedMemberId === member.id}
-                                      onChange={(e) =>
-                                        handleRadioChange(e, member.id)
-                                      }
-                                    />
-                                  </td>
-                                  <td>{member.id}</td>
-                                  <td>{`${member.firstName} ${member.lastName}`}</td>
-                                  <td>{member.mobile}</td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      value={
-                                        selectedMemberId === member.id
-                                          ? formState.productName || ""
-                                          : ""
-                                      }
-                                      onChange={(e) =>
-                                        handleRefInputChange(e, "productName")
-                                      }
-                                      disabled={selectedMemberId !== member.id}
-                                    />
-                                    {selectedMemberId === member.id &&
-                                      errors.productName && (
-                                        <span className="text-danger">
-                                          {errors.productName}
-                                        </span>
-                                      )}
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      value={
-                                        selectedMemberId === member.id
-                                          ? formState.amount || ""
-                                          : ""
-                                      }
-                                      onChange={(e) =>
-                                        handleRefInputChange(e, "amount")
-                                      }
-                                      disabled={selectedMemberId !== member.id}
-                                    />
-                                    {selectedMemberId === member.id &&
-                                      errors.amount && (
-                                        <span className="text-danger">
-                                          {errors.amount}
-                                        </span>
-                                      )}
-                                  </td>
-                                  <td>
-                                    {selectedMemberId === member.id && (
-                                      <button
-                                        type="submit"
-                                        className="btn btn-primary"
-                                      >
-                                        Submit
-                                      </button>
-                                    )}
-                                  </td>
-                                </tr>
-                              ))
-                            ) : (
-                              <tr>
-                                <td colSpan="7" className="text-center">
-                                  No results found.
-                                </td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </table>
-                      </form>
-                      {errors.general && (
-                        <div className="text-danger mt-3">{errors.general}</div>
+                {getUserData?.role && getUserData?.role === "admin" && (
+                  <div className="mt-2">
+                    <div className="mb-3 pb-3 border-secondary">
+                      <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
+                        <h4>Referral List</h4>
+                      </div>
+                      {successMessage && (
+                        <div
+                          className="alert alert-success alert-dismissible fade show"
+                          role="alert"
+                        >
+                          {successMessage}
+                          <button
+                            type="button"
+                            className="btn-close"
+                            aria-label="Close"
+                            onClick={handleDismissMessage}
+                          ></button>
+                        </div>
                       )}
                     </div>
+                    <div className="mt-0">
+                      <div className="table-responsive data-table">
+                        <form onSubmit={handleReferralTransactionSubmit}>
+                          <table className="table">
+                            <thead className="list-table">
+                              <tr>
+                                <th></th>
+                                <th scope="col">Member ID</th>
+                                <th scope="col">Member Name</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Price</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {memberData.length > 0 ? (
+                                memberData.map((member) => (
+                                  <tr key={member.id}>
+                                    <td>
+                                      <input
+                                        type="radio"
+                                        name="selectedMember"
+                                        value={member.id}
+                                        checked={selectedMemberId === member.id}
+                                        onChange={(e) =>
+                                          handleRadioChange(e, member.id)
+                                        }
+                                      />
+                                    </td>
+                                    <td>{member.id}</td>
+                                    <td>{`${member.firstName} ${member.lastName}`}</td>
+                                    <td>{member.mobile}</td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        value={
+                                          selectedMemberId === member.id
+                                            ? formState.productName || ""
+                                            : ""
+                                        }
+                                        onChange={(e) =>
+                                          handleRefInputChange(e, "productName")
+                                        }
+                                        disabled={
+                                          selectedMemberId !== member.id
+                                        }
+                                      />
+                                      {selectedMemberId === member.id &&
+                                        errors.productName && (
+                                          <span className="text-danger">
+                                            {errors.productName}
+                                          </span>
+                                        )}
+                                    </td>
+                                    <td>
+                                      <input
+                                        type="text"
+                                        value={
+                                          selectedMemberId === member.id
+                                            ? formState.amount || ""
+                                            : ""
+                                        }
+                                        onChange={(e) =>
+                                          handleRefInputChange(e, "amount")
+                                        }
+                                        disabled={
+                                          selectedMemberId !== member.id
+                                        }
+                                      />
+                                      {selectedMemberId === member.id &&
+                                        errors.amount && (
+                                          <span className="text-danger">
+                                            {errors.amount}
+                                          </span>
+                                        )}
+                                    </td>
+                                    <td>
+                                      {selectedMemberId === member.id && (
+                                        <button
+                                          type="submit"
+                                          className="btn btn-primary"
+                                        >
+                                          Submit
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))
+                              ) : (
+                                <tr>
+                                  <td colSpan="7" className="text-center">
+                                    No results found.
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </form>
+                        {errors.general && (
+                          <div className="text-danger mt-3">
+                            {errors.general}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>

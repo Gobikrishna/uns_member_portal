@@ -545,11 +545,24 @@ exports.getCommissionDetails = (req, res) => {
 
 // Insert Hierarchical Commission with Product Name
 exports.insertHierarchicalCommission = async (req, res) => {
-  console.log("insertHierarchicalCommission Entered!", req.body.formState);
+  let userId, amount, productName;
 
-  const { userId, amount, productName } = req.body.formState;
+  if (req.body.transactionFormState) {
+    ({ userId, amount, productName } = req.body.transactionFormState); // Destructuring if transactionFormState exists
+  } else if (req.body.formState) {
+    ({ userId, amount, productName } = req.body.formState); // Destructuring if formState exists
+  } else {
+    // If neither state exists, return an error response
+    return res
+      .status(400)
+      .json({
+        message: "Both transactionFormState and formState are missing.",
+      });
+  }
 
-  console.log("userId", userId + "amount", amount + "productName", productName);
+  console.log("insertHierarchicalCommission Entered!", req.body);
+  console.log("userId", userId, "amount", amount, "productName", productName);
+
   try {
     // Step 1: Get the direct referrer
     const [directReferrerResult] = await db
