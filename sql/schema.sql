@@ -119,7 +119,7 @@ CREATE TABLE transactions (
   "productName": "Product A"
 }
 
-
+SELECT SUM(commissionEarned)  FROM transactions  WHERE referredBy = 2;
 
 
 -- insert data 

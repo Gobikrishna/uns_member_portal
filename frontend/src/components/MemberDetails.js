@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Back from "../assets/images/back.png";
+import search from "../assets/images/search.png";
 import { AuthContext } from "../context/AuthContext";
 // import FileUpload from "./FileUpload";
 import Header from "./Header";
@@ -24,7 +25,11 @@ const MemberDetails = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [memberData, setMemberData] = useState([]);
   const [activeTab, setActiveTab] = useState("referral");
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [filteredMemberData, setFilteredMemberData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2;
   const member = location.state?.member; // Access the passed member data
   console.log("Location state:", location.state);
 
@@ -33,6 +38,34 @@ const MemberDetails = () => {
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const [errors, setErrors] = useState({});
   // Admin Panel End!
+
+  // Search functionality
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    setFilteredMemberData(
+      query
+        ? memberData?.filter((member) =>
+            member.mobile?.toString().includes(query)
+          ) || []
+        : memberData || []
+    );
+  };
+
+  // Pagination logic
+  const paginateData = () => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    return filteredMemberData.slice(indexOfFirstItem, indexOfLastItem);
+  };
+
+  const currentItems = paginateData();
+  const totalPages = useMemo(
+    () => Math.ceil(filteredMemberData.length / itemsPerPage),
+    [filteredMemberData.length, itemsPerPage]
+  );
+
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   // Get initial values if the user has pre-existing details
   useEffect(() => {
@@ -65,6 +98,7 @@ const MemberDetails = () => {
           })
           .then((res) => {
             setMemberData(res.data);
+            setFilteredMemberData(res.data);
           })
           .catch((error) => {
             console.error("Error fetching members data:", error);
@@ -1251,20 +1285,17 @@ const MemberDetails = () => {
                     <table>
                       <thead>
                         <tr>
-                          <th>ID</th>
                           <th>User ID</th>
                           <th>Referred By</th>
                           <th>Product Name</th>
                           <th>Amount</th>
                           <th>Commission Earned</th>
-                          <th>Commission To</th>
                           <th>Created At</th>
                         </tr>
                       </thead>
                       <tbody>
                         {transactionData.map((transaction) => (
                           <tr key={transaction.id}>
-                            <td>{transaction.id}</td>
                             <td>{transaction.userId}</td>
                             <td>{transaction.referredBy}</td>
                             <td>{transaction.productName}</td>
@@ -1272,7 +1303,7 @@ const MemberDetails = () => {
                             <td>
                               {Number(transaction.commissionEarned).toFixed(2)}
                             </td>
-                            <td>{transaction.commissionTo}</td>
+
                             <td>
                               {new Date(transaction.createdAt).toLocaleString()}
                             </td>
@@ -1336,6 +1367,18 @@ const MemberDetails = () => {
                           ></button>
                         </div>
                       )}
+                      <div className="input-group flex-grow-2 mt-4">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search Mobile Number"
+                          value={searchQuery}
+                          onChange={handleSearch}
+                        />
+                        <span className="input-group-text">
+                          <img src={search} alt="search icon" />
+                        </span>
+                      </div>
                     </div>
                     <div className="mt-0">
                       <div className="table-responsive data-table">
@@ -1353,8 +1396,8 @@ const MemberDetails = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              {memberData.length > 0 ? (
-                                memberData.map((member) => (
+                              {currentItems.length > 0 ? (
+                                currentItems.map((member) => (
                                   <tr key={member.id}>
                                     <td>
                                       <input
@@ -1441,6 +1484,29 @@ const MemberDetails = () => {
                             {errors.general}
                           </div>
                         )}
+                      </div>
+                      <div className="d-flex justify-content-center mt-3">
+                        <nav>
+                          <ul className="pagination">
+                            {[...Array(totalPages)].map((_, pageIndex) => (
+                              <li
+                                key={pageIndex}
+                                className={`page-item ${
+                                  currentPage === pageIndex + 1 ? "active" : ""
+                                }`}
+                              >
+                                <button
+                                  className="page-link"
+                                  onClick={() =>
+                                    handlePageChange(pageIndex + 1)
+                                  }
+                                >
+                                  {pageIndex + 1}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </nav>
                       </div>
                     </div>
                   </div>

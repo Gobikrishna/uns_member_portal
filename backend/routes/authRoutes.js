@@ -10,12 +10,12 @@ const {
   getMemberData,
   getReferralTransactions,
   getReferralMembers,
-  getCommissionDetails,
+  // getCommissionDetails,
   changePassword,
   updateUserDetails,
   getUserDetails,
   getPrimaryUserData,
-  getPrimaryMemberTotalCommissions,
+  // getPrimaryMemberTotalCommissions,
   insertHierarchicalCommission,
   getReferralTransactionDetails, // Import the new controller function
 } = require("../controllers/authController");
@@ -57,14 +57,14 @@ router.get("/transactions/:userId", authenticateJWT, getReferralTransactions);
 router.get("/referral-members/:userId", authenticateJWT, getReferralMembers);
 
 // Route to get commission details by user ID (Protected route)
-router.get(
-  "/commission-details/:userId",
-  authenticateJWT,
-  getCommissionDetails
-);
+// router.get(
+//   "/commission-details/:userId",
+//   authenticateJWT,
+//   getCommissionDetails
+// );
 
 // Route to get Primary Member's Total Commissions
-router.get("/primarymember-commissions", getPrimaryMemberTotalCommissions);
+// router.get("/primarymember-commissions", getPrimaryMemberTotalCommissions);
 
 // Route to insert hierarchical commission with product name
 router.post("/hierarchical-commission", insertHierarchicalCommission);

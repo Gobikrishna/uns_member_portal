@@ -96,18 +96,6 @@ const Dashboard = () => {
             return { data: null };
           }),
 
-        // axios
-        //   .get(
-        //     `http://localhost:5001/api/auth/primarymember-commissions/${userId}`,
-        //     {
-        //       headers,
-        //     }
-        //   )
-        //   .catch((error) => {
-        //     console.error("Error fetching user data:", error);
-        //     return { data: null };
-        //   }),
-
         axios
           .get(`http://localhost:5001/api/auth/members/${userId}`, {
             headers: { ...headers, Role: user.role },
@@ -135,14 +123,14 @@ const Dashboard = () => {
             return { data: [] };
           }),
 
-        axios
-          .get(`http://localhost:5001/api/auth/commission-details/${userId}`, {
-            headers,
-          })
-          .catch((error) => {
-            console.error("Error fetching commission details:", error);
-            return { data: [] };
-          }),
+        // axios
+        //   .get(`http://localhost:5001/api/auth/commission-details/${userId}`, {
+        //     headers,
+        //   })
+        //   .catch((error) => {
+        //     console.error("Error fetching commission details:", error);
+        //     return { data: [] };
+        //   }),
         // Fetch referral transactions
         axios
           .get(
@@ -273,7 +261,7 @@ const Dashboard = () => {
                           <th>Product Name</th>
                           <th>Amount</th>
                           <th>Commission Earned</th>
-                          <th>Commission To</th>
+
                           <th>Created At</th>
                         </tr>
                       </thead>
@@ -287,7 +275,6 @@ const Dashboard = () => {
                             <td>
                               {Number(transaction.commissionEarned).toFixed(2)}
                             </td>
-                            <td>{transaction.commissionTo}</td>
                             <td>
                               {new Date(transaction.createdAt).toLocaleString()}
                             </td>

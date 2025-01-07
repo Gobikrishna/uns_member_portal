@@ -467,81 +467,81 @@ exports.forgotPassword = (req, res) => {
     .json({ msg: "Forgot Password feature is under construction" });
 };
 
-//  view details for a particular primary member Filter by a Specific Primary Member
-exports.getPrimaryMemberTotalCommissions = (req, res) => {
-  const userId = req.params.userId; // Get userId from the URL parameter
-  console.log(userId);
-  // Commission Query: Automates commission calculations based on your business rules.
-  const query = `
-  SELECT
-    CONCAT(m.firstName, ' ', m.lastName) AS PrimaryMember,
-    SUM(t.referralIncome) AS TotalPrimaryCommission,
-    COUNT(t.id) AS TotalTransactions
-FROM
-    transactions t
-JOIN
-    members m ON m.id = t.memberId
-WHERE
-    t.referralPerson IN (
-        SELECT CONCAT(firstName, ' ', lastName)
-        FROM members
-        WHERE referralId = ?  -- Replace '2' with the primary member's ID
-    )
-    OR t.referralPerson = (
-        SELECT CONCAT(firstName, ' ', lastName)
-        FROM members
-        WHERE id = ?  -- Replace '2' with the primary member's ID
-    )
-GROUP BY
-    PrimaryMember;
+// //  view details for a particular primary member Filter by a Specific Primary Member
+// exports.getPrimaryMemberTotalCommissions = (req, res) => {
+//   const userId = req.params.userId; // Get userId from the URL parameter
+//   console.log(userId);
+//   // Commission Query: Automates commission calculations based on your business rules.
+//   const query = `
+//   SELECT
+//     CONCAT(m.firstName, ' ', m.lastName) AS PrimaryMember,
+//     SUM(t.referralIncome) AS TotalPrimaryCommission,
+//     COUNT(t.id) AS TotalTransactions
+// FROM
+//     transactions t
+// JOIN
+//     members m ON m.id = t.memberId
+// WHERE
+//     t.referralPerson IN (
+//         SELECT CONCAT(firstName, ' ', lastName)
+//         FROM members
+//         WHERE referralId = ?  -- Replace '2' with the primary member's ID
+//     )
+//     OR t.referralPerson = (
+//         SELECT CONCAT(firstName, ' ', lastName)
+//         FROM members
+//         WHERE id = ?  -- Replace '2' with the primary member's ID
+//     )
+// GROUP BY
+//     PrimaryMember;
 
-  `;
+//   `;
 
-  db.query(query, [userId], (err, result) => {
-    if (err) {
-      console.error("Error fetching commission details:", err);
-      return res.status(500).json({ error: "Server error" });
-    }
+//   db.query(query, [userId], (err, result) => {
+//     if (err) {
+//       console.error("Error fetching commission details:", err);
+//       return res.status(500).json({ error: "Server error" });
+//     }
 
-    res.json(result);
-  });
-};
+//     res.json(result);
+//   });
+// };
 
-// Get Commission Details
-exports.getCommissionDetails = (req, res) => {
-  const userId = req.params.userId;
-  // Commission Query: Automates commission calculations based on your business rules.
-  const query = `
-    SELECT 
-        u1.firstName AS PrimaryMember,
-        u2.firstName AS SecondaryMember,
-        t.product AS Product,
-        t.price AS ProductPrice,
-        CASE 
-            WHEN u1.role = 'primary' AND u2.role = 'secondary' THEN t.price * 0.10
-            WHEN u2.role = 'secondary' AND EXISTS (
-                SELECT 1 FROM members m WHERE m.userId = u1.id AND m.id IN (
-                    SELECT memberId FROM transactions WHERE memberId = t.memberId
-                )
-            ) THEN t.price * 0.05
-        END AS Commission
-    FROM transactions t
-    JOIN members m1 ON t.memberId = m1.id
-    JOIN members m2 ON m1.referralId = m2.referralId
-    JOIN users u1 ON m2.userId = u1.id
-    JOIN users u2 ON m1.userId = u2.id
-    WHERE u1.id = ?;
-  `;
+// // Get Commission Details
+// exports.getCommissionDetails = (req, res) => {
+//   const userId = req.params.userId;
+//   // Commission Query: Automates commission calculations based on your business rules.
+//   const query = `
+//     SELECT
+//         u1.firstName AS PrimaryMember,
+//         u2.firstName AS SecondaryMember,
+//         t.product AS Product,
+//         t.price AS ProductPrice,
+//         CASE
+//             WHEN u1.role = 'primary' AND u2.role = 'secondary' THEN t.price * 0.10
+//             WHEN u2.role = 'secondary' AND EXISTS (
+//                 SELECT 1 FROM members m WHERE m.userId = u1.id AND m.id IN (
+//                     SELECT memberId FROM transactions WHERE memberId = t.memberId
+//                 )
+//             ) THEN t.price * 0.05
+//         END AS Commission
+//     FROM transactions t
+//     JOIN members m1 ON t.memberId = m1.id
+//     JOIN members m2 ON m1.referralId = m2.referralId
+//     JOIN users u1 ON m2.userId = u1.id
+//     JOIN users u2 ON m1.userId = u2.id
+//     WHERE u1.id = ?;
+//   `;
 
-  db.query(query, [userId], (err, result) => {
-    if (err) {
-      console.error("Error fetching commission details:", err);
-      return res.status(500).json({ error: "Server error" });
-    }
+//   db.query(query, [userId], (err, result) => {
+//     if (err) {
+//       console.error("Error fetching commission details:", err);
+//       return res.status(500).json({ error: "Server error" });
+//     }
 
-    res.json(result);
-  });
-};
+//     res.json(result);
+//   });
+// };
 
 // Insert Hierarchical Commission with Product Name
 exports.insertHierarchicalCommission = async (req, res) => {
