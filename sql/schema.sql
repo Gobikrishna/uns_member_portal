@@ -101,21 +101,6 @@ CREATE TABLE members (
     FOREIGN KEY (referralId) REFERENCES members(id) ON DELETE SET NULL -- Links to another `members` record
 );
 
-
--- Transactions Table (Referral Tracking)
-CREATE TABLE transactions (
-    id INT AUTO_INCREMENT PRIMARY KEY,                 -- Unique ID for each transaction
-    memberId INT NOT NULL,                             -- Links to the member in `members` table
-    referralPerson VARCHAR(100) NOT NULL,              -- Name of the referring person
-    product VARCHAR(100) NOT NULL,                     -- Name of the product purchased
-    price DECIMAL(10, 2) NOT NULL,                     -- Price of the product
-    commissionEarned DECIMAL(10, 2) NOT NULL,          -- Commission earned on the transaction
-    transactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp when the transaction occurred
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     -- Record creation timestamp
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last updated timestamp
-    FOREIGN KEY (memberId) REFERENCES members(id) ON DELETE CASCADE -- Links to `members` table
-);
-
 CREATE TABLE transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL, -- The user who made the transaction

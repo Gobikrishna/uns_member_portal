@@ -29,7 +29,7 @@ const MemberRegister = ({ pageTitle, referralId }) => {
       (authState.user.role.toLowerCase() === "secondary" ||
         authState.user.role.toLowerCase() === "direct referral")
     ) {
-      setMemberRole("referred");
+      setMemberRole("indirect referral");
     }
   }, [authState.user]);
 

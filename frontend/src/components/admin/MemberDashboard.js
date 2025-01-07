@@ -269,7 +269,7 @@ const MemberDashboard = () => {
                     <th scope="col">Member Role</th>
                     <th scope="col">Mobile Number</th>
                     <th scope="col">Email</th>
-                    {member && member.role !== "referred" && (
+                    {member && member.role !== "indirect referral" && (
                       <th scope="col">Details</th>
                     )}
                   </tr>
@@ -284,7 +284,7 @@ const MemberDashboard = () => {
                         <td>{member?.role}</td>
                         <td>{member?.mobile}</td>
                         <td>{member?.email}</td>
-                        {member.role !== "referred" && (
+                        {member.role !== "indirect referral" && (
                           <td>
                             <Link to="/memberdetails" state={{ member }}>
                               <button className="btn btn-sm btn-primary">

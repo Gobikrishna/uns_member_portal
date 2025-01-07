@@ -548,11 +548,10 @@ exports.insertHierarchicalCommission = async (req, res) => {
   let userId, amount, productName;
 
   if (req.body.transactionFormState) {
-    ({ userId, amount, productName } = req.body.transactionFormState); // Destructuring if transactionFormState exists
+    ({ userId, amount, productName } = req.body.transactionFormState);
   } else if (req.body.formState) {
-    ({ userId, amount, productName } = req.body.formState); // Destructuring if formState exists
+    ({ userId, amount, productName } = req.body.formState);
   } else {
-    // If neither state exists, return an error response
     return res.status(400).json({
       message: "Both transactionFormState and formState are missing.",
     });
@@ -562,57 +561,144 @@ exports.insertHierarchicalCommission = async (req, res) => {
   console.log("userId", userId, "amount", amount, "productName", productName);
 
   try {
-    // Step 1: Get the direct referrer
+    // Step 1: Get the direct referrer and their role
     const [directReferrerResult] = await db
       .promise()
-      .query("SELECT referredBy FROM users WHERE id = ?", [userId]);
+      .query("SELECT referredBy, role FROM users WHERE id = ?", [userId]);
     const directReferrerId = directReferrerResult[0]?.referredBy;
+    const userRole = directReferrerResult[0]?.role;
 
     if (!directReferrerId) {
       return res.status(400).json({ error: "Direct referrer not found" });
     }
 
-    // Step 2: Insert 10% commission for the direct referrer
-    const directCommission = amount * 0.1;
-    await db.promise().query(
-      `INSERT INTO transactions 
-      (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
-       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
-      [
-        userId,
-        directReferrerId,
-        productName,
-        amount,
-        directCommission,
-        directReferrerId,
-      ]
-    );
-
-    // Step 3: Get the primary referrer
-    const [primaryReferrerResult] = await db
+    // Step 2: Check the role of the direct referrer
+    const [directReferrerRoleResult] = await db
       .promise()
-      .query("SELECT referredBy FROM users WHERE id = ?", [directReferrerId]);
-    const primaryReferrerId = primaryReferrerResult[0]?.referredBy;
+      .query("SELECT role FROM users WHERE id = ?", [directReferrerId]);
+    const directReferrerRole = directReferrerRoleResult[0]?.role;
 
-    // Step 4: If primary referrer exists, insert 5% commission
-    if (primaryReferrerId) {
-      const primaryCommission = amount * 0.05;
+    if (
+      userRole === "indirect referral" &&
+      directReferrerRole === "secondary"
+    ) {
+      // Case 1: Indirect referral referred by secondary
+      // Secondary gets 10%, Primary gets no commission
+      const secondaryCommission = amount * 0.1;
       await db.promise().query(
         `INSERT INTO transactions 
         (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
          VALUES (?, ?, ?, ?, ?, ?, NOW())`,
         [
           userId,
-          primaryReferrerId,
+          directReferrerId,
           productName,
           amount,
-          primaryCommission,
-          primaryReferrerId,
+          secondaryCommission,
+          directReferrerId,
         ]
       );
+
+      // End process here since the primary gets no commission
+      return res
+        .status(201)
+        .json({ message: "Commission added for secondary only." });
     }
 
-    // Step 5: Return success response
+    // Step 3: Handle other roles and commissions
+    if (
+      userRole === "indirect referral" &&
+      directReferrerRole === "direct referral"
+    ) {
+      // Case 2: Indirect referral referred by direct referral
+      // Direct referral gets 10%, Primary gets 5%
+      const directCommission = amount * 0.1;
+      await db.promise().query(
+        `INSERT INTO transactions 
+        (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
+         VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+        [
+          userId,
+          directReferrerId,
+          productName,
+          amount,
+          directCommission,
+          directReferrerId,
+        ]
+      );
+
+      const [primaryReferrerResult] = await db
+        .promise()
+        .query("SELECT referredBy FROM users WHERE id = ?", [directReferrerId]);
+      const primaryReferrerId = primaryReferrerResult[0]?.referredBy;
+
+      if (primaryReferrerId) {
+        const primaryCommission = amount * 0.05;
+        await db.promise().query(
+          `INSERT INTO transactions 
+          (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
+           VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+          [
+            userId,
+            primaryReferrerId,
+            productName,
+            amount,
+            primaryCommission,
+            primaryReferrerId,
+          ]
+        );
+      }
+    } else if (userRole === "direct referral") {
+      // Case 3: Direct referral purchase
+      // Primary gets 10%
+      const [primaryReferrerResult] = await db
+        .promise()
+        .query("SELECT referredBy FROM users WHERE id = ?", [userId]);
+      const primaryReferrerId = primaryReferrerResult[0]?.referredBy;
+
+      if (primaryReferrerId) {
+        const primaryCommission = amount * 0.1;
+        await db.promise().query(
+          `INSERT INTO transactions 
+          (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
+           VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+          [
+            userId,
+            primaryReferrerId,
+            productName,
+            amount,
+            primaryCommission,
+            primaryReferrerId,
+          ]
+        );
+      }
+    } else if (userRole === "secondary") {
+      // Case 4: Secondary purchase
+      // Primary gets 10%
+      const [primaryReferrerResult] = await db
+        .promise()
+        .query("SELECT referredBy FROM users WHERE id = ?", [userId]);
+      const primaryReferrerId = primaryReferrerResult[0]?.referredBy;
+
+      if (primaryReferrerId) {
+        const primaryCommission = amount * 0.1;
+        await db.promise().query(
+          `INSERT INTO transactions 
+          (userId, referredBy, productName, amount, commissionEarned, commissionTo, createdAt) 
+           VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+          [
+            userId,
+            primaryReferrerId,
+            productName,
+            amount,
+            primaryCommission,
+            primaryReferrerId,
+          ]
+        );
+      }
+    }
+
+    // Return success response
     res.status(201).json({ message: "Commission details added successfully" });
   } catch (err) {
     console.error("Error inserting hierarchical commission:", err);
