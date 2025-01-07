@@ -19,18 +19,17 @@ const MemberDetails = () => {
   const location = useLocation();
   const [successMessage, setSuccessMessage] = useState("");
   const [memberData, setMemberData] = useState([]);
+  const [activeTab, setActiveTab] = useState("referral");
   const [filteredMemberData, setFilteredMemberData] = useState([]);
-
-  const [formState, setFormState] = useState({});
-  const [selectedMemberId, setSelectedMemberId] = useState(null);
-  const [errors, setErrors] = useState({});
-
   const member = location.state?.member; // Access the passed member data
   console.log("Location state:", location.state);
 
-  console.log("member details", member);
-  const [activeTab, setActiveTab] = useState("referral");
-  const [checked, setChecked] = useState(false);
+  // For Admin Panel
+  const [formState, setFormState] = useState({});
+  const [selectedMemberId, setSelectedMemberId] = useState(null);
+  const [errors, setErrors] = useState({});
+  // Admin Panel End!
+
   // State for the form data
   const [formData, setFormData] = useState({
     mental_age: "",
@@ -165,7 +164,7 @@ const MemberDetails = () => {
     return firstInitial + lastInitial;
   };
 
-  // Handle form input change
+  // Handle form submission
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -173,6 +172,34 @@ const MemberDetails = () => {
       [name]: value,
     }));
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsDisabled(true); // Disabled the form
+    const userId = authState.user.id; // Assuming the user ID is in authState.user.id
+    const userDetails = formData;
+    // Make PUT request to update user details using axios
+    axios
+      .put(`http://localhost:5001/api/auth/update-details/${member.id}`, {
+        user_details: userDetails,
+      })
+      .then((response) => {
+        console.log("User details updated:", response.data);
+        // Optionally, redirect or show success message
+        setSuccessMessage("Details updated successfully!"); // Show success message
+      })
+      .catch((error) => {
+        console.error("Error updating user details:", error);
+        setSuccessMessage("Failed to update details."); // Show error message
+      });
+  };
+
+  const handleDismissMessage = () => {
+    setSuccessMessage(""); // Clear the message when user dismisses it
+  };
+
+  // Admin panel
+  // Handle form input change
+
   const handleRefInputChange = (e, field) => {
     const { value } = e.target;
 
@@ -233,32 +260,7 @@ const MemberDetails = () => {
         setSuccessMessage("Failed to update details.");
       });
   };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsDisabled(true); // Disabled the form
-    const userId = authState.user.id; // Assuming the user ID is in authState.user.id
-    const userDetails = formData;
-    // Make PUT request to update user details using axios
-    axios
-      .put(`http://localhost:5001/api/auth/update-details/${member.id}`, {
-        user_details: userDetails,
-      })
-      .then((response) => {
-        console.log("User details updated:", response.data);
-        // Optionally, redirect or show success message
-        setSuccessMessage("Details updated successfully!"); // Show success message
-      })
-      .catch((error) => {
-        console.error("Error updating user details:", error);
-        setSuccessMessage("Failed to update details."); // Show error message
-      });
-  };
-
-  const handleDismissMessage = () => {
-    setSuccessMessage(""); // Clear the message when user dismisses it
-  };
+  // Admin Panel End!
 
   return (
     <div className="bg-light member-details">
