@@ -79,6 +79,14 @@ const Settings = () => {
     }
   };
 
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1); // Go back to the previous route
+    } else {
+      navigate("/defaultRoute"); // Redirect to a default route
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -153,6 +161,9 @@ const Settings = () => {
 
               {/* Submit Button */}
               <div className="text-center">
+                <button type="rest" onClick={goBack}>
+                  Cancel
+                </button>
                 <button type="submit" className="btn btn-primary">
                   Update Password
                 </button>
