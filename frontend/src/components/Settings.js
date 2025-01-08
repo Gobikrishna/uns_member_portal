@@ -160,8 +160,12 @@ const Settings = () => {
               )}
 
               {/* Submit Button */}
-              <div className="text-center">
-                <button type="rest" onClick={goBack}>
+              <div className="text-center gap-4 d-flex justify-content-center">
+                <button
+                  className="btn btn-secondary"
+                  type="rest"
+                  onClick={goBack}
+                >
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
