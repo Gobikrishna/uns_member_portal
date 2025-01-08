@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import Modal from "./Modal";
 import MemberRegister from "./MemberRegister";
 import formDataConfig from "./config/formDataConfig";
+import ReferralDetails from "./ReferralDetails";
 
 const MemberDetails = () => {
   const { authState } = useContext(AuthContext);
@@ -26,7 +27,14 @@ const MemberDetails = () => {
   const [memberData, setMemberData] = useState([]);
   const [activeTab, setActiveTab] = useState("referral");
 
-  const closeModal = () => setShowModal(false);
+  const closeModal = () => {
+    setShowModal(false);
+    if (window.history.length > 1) {
+      navigate(-1); // Go back to the previous route
+    } else {
+      navigate("/defaultRoute"); // Redirect to a default route
+    }
+  };
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredMemberData, setFilteredMemberData] = useState([]);
@@ -129,7 +137,8 @@ const MemberDetails = () => {
 
   console.log("memberlists==>", memberData);
   // to open modal window
-  const openModal = () => {
+  const openModal = (id) => {
+    setSelectedMemberId(id);
     setShowModal(true);
   };
   // edit button click
@@ -1445,7 +1454,7 @@ const MemberDetails = () => {
                                     </td>
                                     <td>
                                       <span
-                                        onClick={openModal}
+                                        onClick={() => openModal(member.id)}
                                         className="btn btn-primary"
                                       >
                                         view details
@@ -1454,9 +1463,8 @@ const MemberDetails = () => {
                                         showModal={showModal}
                                         onClose={closeModal}
                                       >
-                                        <MemberRegister
-                                          // referralId={userData.id}
-                                          pageTitle="Add New Member"
+                                        <ReferralDetails
+                                          referralId={selectedMemberId}
                                         />
                                       </Modal>
                                     </td>
