@@ -191,7 +191,7 @@ const MemberDetails = () => {
   console.log("localdata", getUserData?.role);
   // For transaction submission
   const [transactionFormState, setTransactionFormState] = useState({
-    userId: member.id || "",
+    userId: member?.id || "",
     productName: "",
     amount: "",
   });
