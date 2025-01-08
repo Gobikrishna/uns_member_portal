@@ -248,7 +248,7 @@ const MemberDashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-6 col-lg-4">
+              <div className="col-12 col-md-6 col-lg-8">
                 <div className="card h-100">
                   <div className="card-header bg-light">
                     <h6 className="mb-0">Commission Details</h6>

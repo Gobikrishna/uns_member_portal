@@ -26,6 +26,8 @@ const MemberDetails = () => {
   const [memberData, setMemberData] = useState([]);
   const [activeTab, setActiveTab] = useState("referral");
 
+  const closeModal = () => setShowModal(false);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredMemberData, setFilteredMemberData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -1195,7 +1197,11 @@ const MemberDetails = () => {
 
                   {/* Submit Button */}
                   <div className="text-center my-4">
-                    <button type="submit" className="btn btn-primary">
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={getUserData?.role === "admin"}
+                    >
                       Submit
                     </button>
                   </div>
@@ -1242,9 +1248,9 @@ const MemberDetails = () => {
                                 onChange={handleTransactionInputChange}
                               />
                               {errors.productName && (
-                                <span className="text-danger">
+                                <div className="text-danger">
                                   {errors.productName}
-                                </span>
+                                </div>
                               )}
                             </div>
                             <div className="mb-2">
@@ -1258,9 +1264,9 @@ const MemberDetails = () => {
                                 onChange={handleTransactionInputChange}
                               />
                               {errors.amount && (
-                                <span className="text-danger">
+                                <div className="text-danger">
                                   {errors.amount}
-                                </span>
+                                </div>
                               )}
                             </div>
                             <div>
@@ -1371,6 +1377,7 @@ const MemberDetails = () => {
                                 <th scope="col">Mobile Number</th>
                                 <th scope="col">Product Name</th>
                                 <th scope="col">Price</th>
+                                <th scope="col">Details</th>
                                 <th></th>
                               </tr>
                             </thead>
@@ -1409,9 +1416,9 @@ const MemberDetails = () => {
                                       />
                                       {selectedMemberId === member.id &&
                                         errors.productName && (
-                                          <span className="text-danger">
+                                          <div className="text-danger">
                                             {errors.productName}
-                                          </span>
+                                          </div>
                                         )}
                                     </td>
                                     <td>
@@ -1431,10 +1438,27 @@ const MemberDetails = () => {
                                       />
                                       {selectedMemberId === member.id &&
                                         errors.amount && (
-                                          <span className="text-danger">
+                                          <div className="text-danger">
                                             {errors.amount}
-                                          </span>
+                                          </div>
                                         )}
+                                    </td>
+                                    <td>
+                                      <span
+                                        onClick={openModal}
+                                        className="btn btn-primary"
+                                      >
+                                        view details
+                                      </span>
+                                      <Modal
+                                        showModal={showModal}
+                                        onClose={closeModal}
+                                      >
+                                        <MemberRegister
+                                          // referralId={userData.id}
+                                          pageTitle="Add New Member"
+                                        />
+                                      </Modal>
                                     </td>
                                     <td>
                                       {selectedMemberId === member.id && (

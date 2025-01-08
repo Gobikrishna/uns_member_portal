@@ -190,87 +190,94 @@ const Dashboard = () => {
         <div className="container p-3 bg-white md-box">
           <div className="mt-2 mb-5">
             <h5 className="w-100 pb-3 border-secondary">Member Portal</h5>
-            <div className="d-flex gap-3 ">
-              <div className="card bg-light">
-                <div className="card-header">
-                  <h6 className="mb-0">Member Information</h6>
-                </div>
-                <div className="card-body ">
-                  <div className="mb-3">
-                    <strong>Member ID:</strong> {userData.id}
+            <div className="row g-3">
+              <div className="col-12 col-md-6 col-lg-4">
+                <div className="card bg-light h-100">
+                  <div className="card-header">
+                    <h6 className="mb-0">Member Information</h6>
                   </div>
-                  <div className="mb-3">
-                    <strong>Role:</strong> {userData.role}
-                  </div>
-                  <div className="mb-3">
-                    <strong>Full Name:</strong>{" "}
-                    {`${userData.firstName} ${userData.lastName}`}
-                  </div>
-                  <div className="mb-3">
-                    <strong>Phone Number:</strong> {userData.mobile}
-                  </div>
-                  <div className="mb-3">
-                    <strong>Email:</strong> {userData.email}
+                  <div className="card-body ">
+                    <div className="mb-3">
+                      <strong>Member ID:</strong> {userData.id}
+                    </div>
+                    <div className="mb-3">
+                      <strong>Role:</strong> {userData.role}
+                    </div>
+                    <div className="mb-3">
+                      <strong>Full Name:</strong>{" "}
+                      {`${userData.firstName} ${userData.lastName}`}
+                    </div>
+                    <div className="mb-3">
+                      <strong>Phone Number:</strong> {userData.mobile}
+                    </div>
+                    <div className="mb-3">
+                      <strong>Email:</strong> {userData.email}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="card ">
-                <div className="card-header bg-light">
-                  <h6 className="mb-0">Commission Details</h6>
-                </div>
-                <div className="card-body">
-                  <div className="mb-3">
-                    {Object.entries(totalCommissionByPerson).map(
-                      ([personId, totalCommission]) => {
-                        return personId === String(userData?.id) ? (
-                          <strong key={personId}>
-                            Total Earnings:{" "}
-                            <span>{totalCommission.toFixed(2)}</span>
-                          </strong>
-                        ) : null;
-                      }
+              <div className="col-12 col-md-6 col-lg-8">
+                <div className="card h-100">
+                  <div className="card-header bg-light">
+                    <h6 className="mb-0">Commission Details</h6>
+                  </div>
+                  <div className="card-body">
+                    <div className="mb-3">
+                      {Object.entries(totalCommissionByPerson).map(
+                        ([personId, totalCommission]) => {
+                          return personId === String(userData?.id) ? (
+                            <strong key={personId}>
+                              Total Earnings:{" "}
+                              <span>{totalCommission.toFixed(2)}</span>
+                            </strong>
+                          ) : null;
+                        }
+                      )}
+                    </div>
+
+                    {transactionData.length > 0 ? (
+                      <div className="table-responsive">
+                        <table className="table table-bordered table-striped">
+                          <thead>
+                            <tr>
+                              <th>User ID</th>
+                              <th>Referred By</th>
+                              <th>Product Name</th>
+                              <th>Amount</th>
+                              <th>Commission Earned</th>
+                              <th>Created At</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {transactionData.map((transaction) => (
+                              <tr key={transaction.id}>
+                                <td>{transaction.userId}</td>
+                                <td>{transaction.referredBy}</td>
+                                <td>{transaction.productName}</td>
+                                <td>{Number(transaction.amount).toFixed(2)}</td>
+                                <td>
+                                  {Number(transaction.commissionEarned).toFixed(
+                                    2
+                                  )}
+                                </td>
+                                <td>
+                                  {new Date(
+                                    transaction.createdAt
+                                  ).toLocaleDateString("en-GB")}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p>No transactions found.</p>
                     )}
                   </div>
-
-                  {transactionData.length > 0 ? (
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>User ID</th>
-                          <th>Referred By</th>
-                          <th>Product Name</th>
-                          <th>Amount</th>
-                          <th>Commission Earned</th>
-                          <th>Created At</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {transactionData.map((transaction) => (
-                          <tr key={transaction.id}>
-                            <td>{transaction.userId}</td>
-                            <td>{transaction.referredBy}</td>
-                            <td>{transaction.productName}</td>
-                            <td>{Number(transaction.amount).toFixed(2)}</td>
-                            <td>
-                              {Number(transaction.commissionEarned).toFixed(2)}
-                            </td>
-                            <td>
-                              {new Date(
-                                transaction.createdAt
-                              ).toLocaleDateString("en-GB")}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p>No transactions found.</p>
-                  )}
                 </div>
               </div>
             </div>
           </div>
-
           <div className="mt-2">
             <div className="mb-3 pb-3 border-secondary">
               <h5 className="m-0 pt-2">Referral Contact List</h5>
@@ -327,15 +334,15 @@ const Dashboard = () => {
                         <td>{member.role}</td>
                         <td>{member.mobile}</td>
                         <td>{member.email}</td>
-                        {member.role !== "indirect referral" && (
-                          <td>
-                            <Link to="/memberdetails" state={{ member }}>
-                              <button className="btn btn-sm btn-primary">
-                                Add Details / View
-                              </button>
-                            </Link>
-                          </td>
-                        )}
+                        {/* {member.role !== "indirect referral" && ( */}
+                        <td>
+                          <Link to="/memberdetails" state={{ member }}>
+                            <button className="btn btn-sm btn-primary">
+                              Add Details / View
+                            </button>
+                          </Link>
+                        </td>
+                        {/* )} */}
                       </tr>
                     ))
                   ) : (
