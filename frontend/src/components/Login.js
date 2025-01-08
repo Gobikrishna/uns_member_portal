@@ -8,6 +8,7 @@ const Login = () => {
   const { authState, setAuthState } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State to store error messages
   const navigate = useNavigate();
 
   // Check if the user is already logged in
@@ -17,14 +18,13 @@ const Login = () => {
 
     // If the token and user exist, redirect to the dashboard
     if (token && userDetails) {
-      // Token exists, so the user is already logged in
       navigate("/dashboard"); // Redirect to the dashboard or other authenticated page
     }
   }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(email + password);
+    setErrorMessage(""); // Clear any previous error message
 
     try {
       // Send the login request to the backend
@@ -45,11 +45,22 @@ const Login = () => {
         token: res.data.token,
         user: res.data.user,
       });
+
       // Navigate to the dashboard after successful login
       authState.user && authState.user.role.toLowerCase() !== "admin"
         ? navigate("/dashboard")
         : navigate("/admin-dashboard");
     } catch (error) {
+      // Handle error and set error message from backend response
+      if (error.response && error.response.status === 400) {
+        // Backend error response
+        setErrorMessage(
+          error.response.data.msg || "Invalid username or password"
+        );
+      } else {
+        // Other errors (network issues, server down, etc.)
+        setErrorMessage("An error occurred. Please try again later.");
+      }
       console.error("Login error", error);
     }
   };
@@ -68,6 +79,14 @@ const Login = () => {
             <h5 className="card-title text-center mb-2 text-uppercase">
               Sign In to Your Account
             </h5>
+
+            {/* Show error message if it exists */}
+            {errorMessage && (
+              <div className="alert alert-danger" role="alert">
+                {errorMessage}
+              </div>
+            )}
+
             <form onSubmit={handleLogin}>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">

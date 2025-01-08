@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       ) {
         // Delay navigation to prevent the warning
         setTimeout(() => {
-          navigate("/login");
+          navigate("/home");
         }, 0);
       }
     } else {
