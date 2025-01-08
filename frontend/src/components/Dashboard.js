@@ -276,7 +276,9 @@ const Dashboard = () => {
                               {Number(transaction.commissionEarned).toFixed(2)}
                             </td>
                             <td>
-                              {new Date(transaction.createdAt).toLocaleString()}
+                              {new Date(
+                                transaction.createdAt
+                              ).toLocaleDateString("en-GB")}
                             </td>
                           </tr>
                         ))}

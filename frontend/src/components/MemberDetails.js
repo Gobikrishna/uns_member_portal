@@ -1204,7 +1204,7 @@ const MemberDetails = () => {
                 <div>
                   {/* Member Details */}
                   <div className="d-flex">
-                    <div className="border-end me-2 pe-4">
+                    <div className="me-2 pe-4 shadwo p-4 bg-white">
                       <div>
                         <strong>Member ID:</strong> {member?.id}
                       </div>
@@ -1218,7 +1218,7 @@ const MemberDetails = () => {
                         <strong>Mobile:</strong> {member?.mobile}
                       </div>
                     </div>
-                    <div>
+                    <div className="pe-4 shadow p-4 bg-white">
                       {getUserData?.role && getUserData?.role === "admin" && (
                         <form onSubmit={handleTransactionSubmit}>
                           <input
@@ -1282,7 +1282,7 @@ const MemberDetails = () => {
                     <h4>Product Details</h4>
                   </div>
                   {transactionData.length > 0 ? (
-                    <table>
+                    <table className="product-table product-table">
                       <thead>
                         <tr>
                           <th>User ID</th>
@@ -1305,7 +1305,9 @@ const MemberDetails = () => {
                             </td>
 
                             <td>
-                              {new Date(transaction.createdAt).toLocaleString()}
+                              {new Date(
+                                transaction.createdAt
+                              ).toLocaleDateString("en-GB")}
                             </td>
                           </tr>
                         ))}
@@ -1314,36 +1316,6 @@ const MemberDetails = () => {
                   ) : (
                     <p>No transactions found.</p>
                   )}
-                  <table className="product-table product-table">
-                    <thead>
-                      <tr>
-                        <th>S.No</th>
-                        <th>Product Name</th>
-                        <th>Date</th>
-                        <th>Price</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Product A</td>
-                        <td>2024-01-01</td>
-                        <td>$100</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Product B</td>
-                        <td>2024-02-15</td>
-                        <td>$150</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Product C</td>
-                        <td>2024-03-20</td>
-                        <td>$200</td>
-                      </tr>
-                    </tbody>
-                  </table>
                 </div>
 
                 {/* admin panel */}

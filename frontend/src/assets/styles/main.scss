@@ -58,7 +58,7 @@ header{
   }
 }
 .home-link{
-  color: $white;
+  color: $black;
   font-weight: 500;
 }
 .navbar-bg {
@@ -115,7 +115,26 @@ header{
     border-radius: 10px;
     box-shadow: 2px 2px 17px #8e8f91;
   }
-}
+  .rdbtn{
+    input{
+      width: 20px;
+      height:20px;
+    }
+  }
+  .data-table{
+    table{
+      tr{
+        td{
+          min-height: 100px;
+           input[type="radio"]:checked{
+              color:#28A745;
+              background: #28A745;
+            }
+          }
+        }
+      }
+    }
+  }
 /*==================  Member Details & Member List===================================*/
 
 /**/
@@ -132,53 +151,6 @@ header{
       display: none;
     }
   }
-// .modal-content{
-//   background: #e1f2ed;
-//   height:530px;
-//   .bg-image{
-//     background-image: none;
-//   }
-//   .bg-overlay{
-//     display: none;
-//   }
-//   .text-white{
-//     color:$black !important;
-//   }
-//   .navbar-brand{
-//     display: none !important;
-//   }
-//   p{
-//     display: none;
-//   }
-//   .vh-100{
-//     height: 56vh !important;
-//   }
-//   .card{
-//     box-shadow: none !important;
-//     border: none;
-//     background: none;
-//     padding: 0 !important;
-//   }
-//   .btn.btn-primary{
-//     width: 100px !important;
-//   }
-//   form{
-//     background: #e1f2ed;
-//   }
-//   .modal-header{
-//     .btn-close{
-//       position: relative;
-//       z-index: 99;
-//     }
-//   }
-//   .cont-int{
-//     background: #e1f2ed;
-//   }
-//   .modal-footer{
-//     display: none;
-//   }
-// }
-
 }
 /**/
 
