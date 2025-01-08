@@ -407,7 +407,11 @@ const MemberDetails = () => {
               <div>
                 <div className="d-flex justify-content-between mb-4 pb-2 border-bottom">
                   <h4>Referral Details</h4>
-                  <button onClick={handleEditClick} className="btn btn-primary">
+                  <button
+                    onClick={handleEditClick}
+                    className="btn btn-primary"
+                    disabled={getUserData?.role === "admin"}
+                  >
                     Edit
                   </button>
                 </div>
@@ -1204,77 +1208,80 @@ const MemberDetails = () => {
                 <div>
                   {/* Member Details */}
                   <div className="d-flex">
-                    <div className="me-2 pe-4 shadwo p-4 bg-white">
-                      <div>
-                        <strong>Member ID:</strong> {member?.id}
+                    <div className="pe-4 shadow p-4 bg-white gap-5  d-flex w-100">
+                      <div className="">
+                        <div className="pb-3">
+                          <strong>Member ID:</strong> {member?.id}
+                        </div>
+                        <div className="pb-3">
+                          <strong>Member Name:</strong> {member?.firstName}
+                        </div>
+                        <div className="pb-3">
+                          <strong>Role:</strong> {member?.role}
+                        </div>
+                        <div className="pb-3">
+                          <strong>Mobile:</strong> {member?.mobile}
+                        </div>
                       </div>
                       <div>
-                        <strong>Member Name:</strong> {member?.firstName}
-                      </div>
-                      <div>
-                        <strong>Role:</strong> {member?.role}
-                      </div>
-                      <div>
-                        <strong>Mobile:</strong> {member?.mobile}
-                      </div>
-                    </div>
-                    <div className="pe-4 shadow p-4 bg-white">
-                      {getUserData?.role && getUserData?.role === "admin" && (
-                        <form onSubmit={handleTransactionSubmit}>
-                          <input
-                            type="hidden"
-                            name="selectedMember"
-                            value={transactionFormState.selectedMember}
-                          />
-                          <div className="mb-2">
-                            <label htmlFor="productName">Product Name:</label>
+                        {getUserData?.role && getUserData?.role === "admin" && (
+                          <form onSubmit={handleTransactionSubmit}>
                             <input
-                              type="text"
-                              id="productName"
-                              value={transactionFormState.productName}
-                              onChange={handleTransactionInputChange}
+                              type="hidden"
+                              name="selectedMember"
+                              value={transactionFormState.selectedMember}
                             />
-                            {errors.productName && (
-                              <span className="text-danger">
-                                {errors.productName}
-                              </span>
-                            )}
-                          </div>
-                          <div className="mb-2">
-                            <label htmlFor="amount">Price:</label>
-                            <input
-                              type="text"
-                              id="amount"
-                              value={transactionFormState.amount}
-                              onChange={handleTransactionInputChange}
-                            />
-                            {errors.amount && (
-                              <span className="text-danger">
-                                {errors.amount}
-                              </span>
-                            )}
-                          </div>
-                          <div>
-                            <button
-                              type="submit"
-                              className="btn btn-primary w-100"
-                            >
-                              Submit
-                            </button>
-                          </div>
-                          {successMessage && (
-                            <div
-                              className={`text-${
-                                successMessage.includes("successfully")
-                                  ? "success"
-                                  : "danger"
-                              } mt-3`}
-                            >
-                              {successMessage}
+                            <div className="mb-2">
+                              <label htmlFor="productName">
+                                <strong>Product Name:</strong>
+                              </label>
+                              <input
+                                type="text"
+                                id="productName"
+                                value={transactionFormState.productName}
+                                onChange={handleTransactionInputChange}
+                              />
+                              {errors.productName && (
+                                <span className="text-danger">
+                                  {errors.productName}
+                                </span>
+                              )}
                             </div>
-                          )}
-                        </form>
-                      )}
+                            <div className="mb-2">
+                              <label htmlFor="amount">
+                                <strong>Price:</strong>
+                              </label>
+                              <input
+                                type="text"
+                                id="amount"
+                                value={transactionFormState.amount}
+                                onChange={handleTransactionInputChange}
+                              />
+                              {errors.amount && (
+                                <span className="text-danger">
+                                  {errors.amount}
+                                </span>
+                              )}
+                            </div>
+                            <div>
+                              <button type="submit" className="btn btn-primary">
+                                Submit
+                              </button>
+                            </div>
+                            {successMessage && (
+                              <div
+                                className={`text-${
+                                  successMessage.includes("successfully")
+                                    ? "success"
+                                    : "danger"
+                                } mt-3`}
+                              >
+                                {successMessage}
+                              </div>
+                            )}
+                          </form>
+                        )}
+                      </div>
                     </div>
                   </div>
                   {/* Table */}
@@ -1371,7 +1378,7 @@ const MemberDetails = () => {
                               {currentItems.length > 0 ? (
                                 currentItems.map((member) => (
                                   <tr key={member.id}>
-                                    <td>
+                                    <td className="rdbtn">
                                       <input
                                         type="radio"
                                         name="selectedMember"

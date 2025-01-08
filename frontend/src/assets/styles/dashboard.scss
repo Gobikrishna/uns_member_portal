@@ -51,6 +51,7 @@
   }
 }
 .page-item{
+  margin-right:10px;
   &.active{
     .page-link{
       border-radius: 300px;
@@ -58,6 +59,11 @@
       height: 40px;
       background: #456509; 
       color:$white;
+    }
+  }
+  &:first-child, &:last-child{
+    .page-link{
+      border-radius: 30px;
     }
   }
   .page-link{

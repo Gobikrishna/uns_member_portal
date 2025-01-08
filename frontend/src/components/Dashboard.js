@@ -219,38 +219,18 @@ const Dashboard = () => {
                   <h6 className="mb-0">Commission Details</h6>
                 </div>
                 <div className="card-body">
-                  {/* <div className="mb-3">
-                    <strong>Day Earnings:</strong> 1000
-                  </div>
                   <div className="mb-3">
-                    <strong>Total Earnings:</strong> 5000
-                  </div> */}
-                  <table>
-                    <thead>
-                      <tr>
-                        {/* <th>Commission To</th> */}
-                        <th>Total Commission</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(totalCommissionByPerson).map(
-                        ([personId, totalCommission]) => {
-                          console.log(
-                            "Person ID:",
-                            personId,
-                            "User ID:",
-                            userData?.id
-                          ); // Debug log
-                          return personId === String(userData?.id) ? (
-                            <tr key={personId}>
-                              {/* <td>{personId}</td> */}
-                              <td>{totalCommission.toFixed(2)}</td>
-                            </tr>
-                          ) : null;
-                        }
-                      )}
-                    </tbody>
-                  </table>
+                    {Object.entries(totalCommissionByPerson).map(
+                      ([personId, totalCommission]) => {
+                        return personId === String(userData?.id) ? (
+                          <strong key={personId}>
+                            Total Earnings:{" "}
+                            <span>{totalCommission.toFixed(2)}</span>
+                          </strong>
+                        ) : null;
+                      }
+                    )}
+                  </div>
 
                   {transactionData.length > 0 ? (
                     <table>
@@ -261,7 +241,6 @@ const Dashboard = () => {
                           <th>Product Name</th>
                           <th>Amount</th>
                           <th>Commission Earned</th>
-
                           <th>Created At</th>
                         </tr>
                       </thead>
@@ -334,9 +313,9 @@ const Dashboard = () => {
                     <th scope="col">Member Role</th>
                     <th scope="col">Mobile Number</th>
                     <th scope="col">Email</th>
-                    {member && member.role !== "indirect referral" && (
-                      <th scope="col">Details</th>
-                    )}
+                    {/* {member && member.role !== "indirect referral" && ( */}
+                    <th scope="col">Details</th>
+                    {/* )} */}
                   </tr>
                 </thead>
                 <tbody>
