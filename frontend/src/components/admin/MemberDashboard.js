@@ -347,7 +347,6 @@ const MemberDashboard = () => {
               <table className="table">
                 <thead className="list-table">
                   <tr>
-                    <th scope="col">S.No</th>
                     <th scope="col">Member ID</th>
                     <th scope="col">Member Name</th>
                     <th scope="col">Member Role</th>
@@ -362,7 +361,6 @@ const MemberDashboard = () => {
                   {currentItems.length > 0 ? (
                     currentItems.map((member, index) => (
                       <tr key={index}>
-                        <td>{index + 1}</td>
                         <td>{member.id}</td>
                         <td>{`${member?.firstName} ${member?.lastName}`}</td>
                         <td>{member?.role}</td>
