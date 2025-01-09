@@ -1222,66 +1222,74 @@ const MemberDetails = () => {
                 <h4>Transaction</h4>
                 <div>
                   {/* Member Details */}
-                  <div className="d-flex">
-                    <div className="pe-4 shadow p-4 bg-white gap-5  d-flex w-100">
+                  <div className="d-flex responsive-box-container">
+                    <div className="responsive-box shadow">
                       <div className="">
-                        <div className="pb-3">
+                        <div className="detail-item">
                           <strong>Member ID:</strong> {member?.id}
                         </div>
-                        <div className="pb-3">
+                        <div className="detail-item">
                           <strong>Member Name:</strong> {member?.firstName}
                         </div>
-                        <div className="pb-3">
+                        <div className="detail-item">
                           <strong>Role:</strong> {member?.role}
                         </div>
-                        <div className="pb-3">
+                        <div className="detail-item">
                           <strong>Mobile:</strong> {member?.mobile}
                         </div>
                       </div>
-                      <div>
-                        {getUserData?.role && getUserData?.role === "admin" && (
+
+                      {getUserData?.role && getUserData?.role === "admin" && (
+                        <div className="transaction-form-container">
                           <form onSubmit={handleTransactionSubmit}>
                             <input
                               type="hidden"
                               name="selectedMember"
                               value={transactionFormState.selectedMember}
                             />
-                            <div className="mb-2">
-                              <label htmlFor="productName">
-                                <strong>Product Name:</strong>
-                              </label>
-                              <input
-                                type="text"
-                                id="productName"
-                                value={transactionFormState.productName}
-                                onChange={handleTransactionInputChange}
-                              />
-                              {referrErrors.productName && (
-                                <div className="text-danger">
-                                  {referrErrors.productName}
-                                </div>
-                              )}
-                            </div>
-                            <div className="mb-2">
-                              <label htmlFor="amount">
-                                <strong>Price:</strong>
-                              </label>
-                              <input
-                                type="text"
-                                id="amount"
-                                value={transactionFormState.amount}
-                                onChange={handleTransactionInputChange}
-                              />
-                              {referrErrors.amount && (
-                                <div className="text-danger">
-                                  {referrErrors.amount}
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <button type="submit" className="btn btn-primary">
-                                Submit
-                              </button>
+                            <div className="d-flex flex-wrap gap-3">
+                              <div className="form-group flex-fill">
+                                <label htmlFor="productName">
+                                  <strong>Product Name:</strong>
+                                </label>
+                                <input
+                                  type="text"
+                                  id="productName"
+                                  value={transactionFormState.productName}
+                                  onChange={handleTransactionInputChange}
+                                  className="form-control"
+                                />
+                                {referrErrors.productName && (
+                                  <div className="text-danger">
+                                    {referrErrors.productName}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="form-group flex-fill">
+                                <label htmlFor="amount">
+                                  <strong>Price:</strong>
+                                </label>
+                                <input
+                                  type="text"
+                                  id="amount"
+                                  value={transactionFormState.amount}
+                                  onChange={handleTransactionInputChange}
+                                  className="form-control"
+                                />
+                                {referrErrors.amount && (
+                                  <div className="text-danger">
+                                    {referrErrors.amount}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="form-group d-flex align-items-end flex-fill">
+                                <button
+                                  type="submit"
+                                  className="btn btn-sm btn-primary w-100"
+                                >
+                                  Submit
+                                </button>
+                              </div>
                             </div>
                             {/* {successMessage && (
                               <div
@@ -1295,8 +1303,8 @@ const MemberDetails = () => {
                               </div>
                             )} */}
                           </form>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                   {/* Table */}
@@ -1304,37 +1312,40 @@ const MemberDetails = () => {
                     <h4>Transaction Details</h4>
                   </div>
                   {transactionData.length > 0 ? (
-                    <table className="product-table product-table">
-                      <thead>
-                        <tr>
-                          <th>User ID</th>
-                          <th>Referred By</th>
-                          <th>Product Name</th>
-                          <th>Amount</th>
-                          <th>Commission Earned</th>
-                          <th>Created At</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {transactionData.map((transaction) => (
-                          <tr key={transaction?.id}>
-                            <td>{transaction.userId}</td>
-                            <td>{transaction.referredBy}</td>
-                            <td>{transaction.productName}</td>
-                            <td>{Number(transaction.amount).toFixed(2)}</td>
-                            <td>
-                              {Number(transaction.commissionEarned).toFixed(2)}
-                            </td>
-
-                            <td>
-                              {new Date(
-                                transaction.createdAt
-                              ).toLocaleDateString("en-GB")}
-                            </td>
+                    <div className="table-responsive mem-portal-table">
+                      <table className="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>User ID</th>
+                            <th>Referred By</th>
+                            <th>Product Name</th>
+                            <th>Amount</th>
+                            <th>Commission Earned</th>
+                            <th>Created At</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {transactionData.map((transaction) => (
+                            <tr key={transaction?.id}>
+                              <td>{transaction.userId}</td>
+                              <td>{transaction.referredBy}</td>
+                              <td>{transaction.productName}</td>
+                              <td>{Number(transaction.amount).toFixed(2)}</td>
+                              <td>
+                                {Number(transaction.commissionEarned).toFixed(
+                                  2
+                                )}
+                              </td>
+                              <td>
+                                {new Date(
+                                  transaction.createdAt
+                                ).toLocaleDateString("en-GB")}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   ) : (
                     <p>No transactions found.</p>
                   )}

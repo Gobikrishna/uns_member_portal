@@ -166,3 +166,22 @@
     background-color: #f2f2f2;
   }
 }
+.mem-portal-table{
+  overflow-x: scroll;
+  tbody{
+  display: block;
+  max-height: 207px;
+  overflow-y: scroll;
+  width: 100%;
+  tr{
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+  }
+  thead{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+}

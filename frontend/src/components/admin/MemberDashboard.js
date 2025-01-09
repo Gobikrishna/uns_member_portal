@@ -224,7 +224,7 @@ const MemberDashboard = () => {
           <div className="mt-2 mb-5">
             <h5 className="w-100 pb-3 border-secondary">Member Portal</h5>
             <div className="row g-3">
-              <div className="col-12 col-md-6 col-lg-4">
+              <div className="col-12 col-md-12 col-lg-4">
                 <div className="card bg-light h-100">
                   <div className="card-header">
                     <h6 className="mb-0">Member Information</h6>
@@ -248,7 +248,7 @@ const MemberDashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-6 col-lg-8">
+              <div className="col-12 col-md-12 col-lg-8">
                 <div className="card h-100">
                   <div className="card-header bg-light">
                     <h6 className="mb-0">Commission Details</h6>
@@ -268,7 +268,7 @@ const MemberDashboard = () => {
                     </div>
 
                     {transactionData.length > 0 ? (
-                      <div className="table-responsive">
+                      <div className="table-responsive mem-portal-table">
                         <table className="table table-bordered table-striped">
                           <thead>
                             <tr>

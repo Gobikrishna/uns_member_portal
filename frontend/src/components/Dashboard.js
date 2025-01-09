@@ -236,7 +236,7 @@ const Dashboard = () => {
                     </div>
 
                     {transactionData.length > 0 ? (
-                      <div className="table-responsive">
+                      <div className="table-responsive mem-portal-table">
                         <table className="table table-bordered table-striped">
                           <thead>
                             <tr>
@@ -283,6 +283,9 @@ const Dashboard = () => {
               <h5 className="m-0 pt-2">Referral Contact List</h5>
               <div className="d-flex gap-3">
                 <div className="input-group flex-grow-2 mt-4">
+                  <span className="input-group-text">
+                    <img src={search} alt="search icon" />
+                  </span>
                   <input
                     type="text"
                     className="form-control"
@@ -290,9 +293,6 @@ const Dashboard = () => {
                     value={searchQuery}
                     onChange={handleSearch}
                   />
-                  <span className="input-group-text">
-                    <img src={search} alt="search icon" />
-                  </span>
                 </div>
                 <div className="mt-4">
                   <button onClick={openModal} className="btn btn-primary">
