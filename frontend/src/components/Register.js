@@ -158,7 +158,7 @@ const Register = () => {
           <p className="text-center mt-3">
             If you have an account?{" "}
             <Link to="/login" className="text-decoration-none">
-              SIGNIN
+              Sign in
             </Link>
           </p>
         </div>
