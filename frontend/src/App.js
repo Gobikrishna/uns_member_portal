@@ -14,6 +14,7 @@ import MemberDetails from "./components/MemberDetails";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import MemberDashboard from "./components/admin/MemberDashboard";
 import MemberData from "./components/admin/MemberData";
+import ReferralDetails from "./components/ReferralDetails";
 
 // AdminRoute Component
 const AdminRoute = ({ element }) => {
@@ -108,6 +109,11 @@ function App() {
       <Route
         path="/member-data"
         element={<AdminRoute element={<MemberData />} />}
+      />
+
+      <Route
+        path="/referral-details"
+        element={<AdminRoute element={<ReferralDetails />} />}
       />
 
       {/* Member Details - Protected route for authenticated users */}
