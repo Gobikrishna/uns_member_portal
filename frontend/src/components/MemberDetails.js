@@ -11,7 +11,6 @@ import { useLocation } from "react-router-dom";
 import Modal from "./Modal";
 import MemberRegister from "./MemberRegister";
 import formDataConfig from "./config/formDataConfig";
-import ReferralDetails from "./ReferralDetails";
 
 const MemberDetails = () => {
   const { authState } = useContext(AuthContext);
@@ -1300,8 +1299,8 @@ const MemberDetails = () => {
                     </div>
                   </div>
                   {/* Table */}
-                  <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
-                    <h4>Product Details</h4>
+                  <div className="d-flex justify-content-between mt-4 pb-2 border-bottom">
+                    <h4>Transaction Details</h4>
                   </div>
                   {transactionData.length > 0 ? (
                     <table className="product-table product-table">
@@ -1468,7 +1467,7 @@ const MemberDetails = () => {
                                       {selectedMemberId === member.id && (
                                         <button
                                           type="submit"
-                                          className="btn btn-primary"
+                                          className="btn btn-sm btn-primary"
                                         >
                                           Submit
                                         </button>

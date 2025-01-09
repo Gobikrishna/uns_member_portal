@@ -121,6 +121,18 @@ header{
       height:20px;
     }
   }
+  .referal-details{
+    input{
+      border:none;
+      background: none;
+      font-weight: bold;
+      padding:0;
+      &:focus{
+        border:none;
+        box-shadow: none;
+      }
+    }
+  }
   .data-table{
     table{
       tr{
@@ -196,6 +208,10 @@ header{
   margin-bottom: 30px !important;
   color: #364E3F;
   display: inline-block;
+  border: 2px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #ccc;
 }
 /*=====================Signup & Register end================================*/
 

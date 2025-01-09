@@ -14,7 +14,7 @@ import MemberDetails from "./components/MemberDetails";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import MemberDashboard from "./components/admin/MemberDashboard";
 import MemberData from "./components/admin/MemberData";
-import ReferralDetails from "./components/ReferralDetails";
+import ReferralDetails from "./components/admin/ReferralDetails";
 
 // AdminRoute Component
 const AdminRoute = ({ element }) => {

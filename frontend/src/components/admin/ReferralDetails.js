@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-import formDataConfig from "./config/formDataConfig";
-import Header from "./Header";
-import Footer from "./Footer";
+import formDataConfig from "../config/formDataConfig";
+import Header from "../Header";
+import Footer from "../Footer";
 
 const ReferralDetails = () => {
   const location = useLocation();
@@ -66,7 +66,7 @@ const ReferralDetails = () => {
       {/* Hero Section */}
 
       <div className="container mt-4 bg-white md-box p-4">
-        <div className="">
+        <div className="--">
           <div className=" my-2 cursor back-lnk" onClick={goBack}>
             &larr; Back to dashborad
           </div>
@@ -76,7 +76,7 @@ const ReferralDetails = () => {
           {/* Tab Links */}
 
           <div className="tab-content">
-            <div>
+            <div className="referal-details">
               <div className="d-flex justify-content-between mb-4 pb-2 border-bottom">
                 <h4>Referral Details</h4>
               </div>
@@ -91,7 +91,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="mental_age"
-                      defaultValue={formData?.mental_age ?? ""}
+                      defaultValue={formData?.mental_age ?? "--"}
                       readOnly
                     />
                   </div>
@@ -103,7 +103,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="family_defaultValues"
-                      defaultValue={formData?.family_defaultValues ?? ""}
+                      defaultValue={formData?.family_defaultValues ?? "--"}
                       readOnly
                     />
                   </div>
@@ -116,7 +116,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="traditions_of_family"
-                      defaultValue={formData?.traditions_of_family ?? ""}
+                      defaultValue={formData?.traditions_of_family ?? "--"}
                       readOnly
                     />
                   </div>
@@ -128,7 +128,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="family_member_details"
-                      defaultValue={formData?.family_member_details ?? ""}
+                      defaultValue={formData?.family_member_details ?? "--"}
                       readOnly
                     />
                   </div>
@@ -141,7 +141,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="legacy_of_family"
-                      defaultValue={formData?.legacy_of_family ?? ""}
+                      defaultValue={formData?.legacy_of_family ?? "--"}
                       readOnly
                     />
                   </div>
@@ -151,7 +151,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="emotional_range"
-                      defaultValue={formData?.emotional_range ?? ""}
+                      defaultValue={formData?.emotional_range ?? "--"}
                       readOnly
                     />
                   </div>
@@ -161,7 +161,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="thoughts_about"
-                      defaultValue={formData?.thoughts_about ?? ""}
+                      defaultValue={formData?.thoughts_about ?? "--"}
                       readOnly
                     />
                   </div>
@@ -171,7 +171,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="conversation_style"
-                      defaultValue={formData?.conversation_style ?? ""}
+                      defaultValue={formData?.conversation_style ?? "--"}
                       readOnly
                     />
                   </div>
@@ -181,7 +181,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="working_style"
-                      defaultValue={formData?.working_style ?? ""}
+                      defaultValue={formData?.working_style ?? "--"}
                       readOnly
                     />
                   </div>
@@ -191,7 +191,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="spending_style"
-                      defaultValue={formData?.spending_style ?? ""}
+                      defaultValue={formData?.spending_style ?? "--"}
                       readOnly
                     />
                   </div>
@@ -201,7 +201,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="thoughts_on_lifestyle"
-                      defaultValue={formData?.thoughts_on_lifestyle ?? ""}
+                      defaultValue={formData?.thoughts_on_lifestyle ?? "--"}
                       readOnly
                     />
                   </div>
@@ -213,7 +213,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="past_vacations"
-                      defaultValue={formData?.past_vacations ?? ""}
+                      defaultValue={formData?.past_vacations ?? "--"}
                       readOnly
                     />
                   </div>
@@ -225,7 +225,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="physical_looks"
-                      defaultValue={formData?.physical_looks ?? ""}
+                      defaultValue={formData?.physical_looks ?? "--"}
                       readOnly
                     />
                   </div>
@@ -235,7 +235,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="disfigurements"
-                      defaultValue={formData?.disfigurements ?? ""}
+                      defaultValue={formData?.disfigurements ?? "--"}
                       readOnly
                     />
                   </div>
@@ -248,7 +248,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="internal_organs_health"
-                      defaultValue={formData?.internal_organs_health ?? ""}
+                      defaultValue={formData?.internal_organs_health ?? "--"}
                       readOnly
                     />
                   </div>
@@ -258,7 +258,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="personality"
-                      defaultValue={formData?.personality ?? ""}
+                      defaultValue={formData?.personality ?? "--"}
                       readOnly
                     />
                   </div>
@@ -268,7 +268,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="dressing"
-                      defaultValue={formData?.dressing ?? ""}
+                      defaultValue={formData?.dressing ?? "--"}
                       readOnly
                     />
                   </div>
@@ -280,7 +280,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="behaviour_in_sg"
-                      defaultValue={formData?.behaviour_in_sg ?? ""}
+                      defaultValue={formData?.behaviour_in_sg ?? "--"}
                       readOnly
                     />
                   </div>
@@ -290,7 +290,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="area_of_livig"
-                      defaultValue={formData?.area_of_livig ?? ""}
+                      defaultValue={formData?.area_of_livig ?? "--"}
                       readOnly
                     />
                   </div>
@@ -300,7 +300,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="how_many_transfer"
-                      defaultValue={formData?.how_many_transfer ?? ""}
+                      defaultValue={formData?.how_many_transfer ?? "--"}
                       readOnly
                     />
                   </div>
@@ -310,7 +310,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="idea_of_settle"
-                      defaultValue={formData?.idea_of_settle ?? ""}
+                      defaultValue={formData?.idea_of_settle ?? "--"}
                       readOnly
                     />
                   </div>
@@ -320,7 +320,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="areas_of_interest"
-                      defaultValue={formData?.areas_of_interest ?? ""}
+                      defaultValue={formData?.areas_of_interest ?? "--"}
                       readOnly
                     />
                   </div>
@@ -332,7 +332,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="possession"
-                      defaultValue={formData?.possession ?? ""}
+                      defaultValue={formData?.possession ?? "--"}
                       readOnly
                     />
                   </div>
@@ -344,7 +344,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="future_travel"
-                      defaultValue={formData?.future_travel ?? ""}
+                      defaultValue={formData?.future_travel ?? "--"}
                       readOnly
                     />
                   </div>
@@ -356,7 +356,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="marks"
-                      defaultValue={formData?.marks ?? ""}
+                      defaultValue={formData?.marks ?? "--"}
                       readOnly
                     />
                   </div>
@@ -368,7 +368,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="courses_apart"
-                      defaultValue={formData?.courses_apart ?? ""}
+                      defaultValue={formData?.courses_apart ?? "--"}
                       readOnly
                     />
                   </div>
@@ -380,7 +380,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="areas_of_success"
-                      defaultValue={formData?.areas_of_success ?? ""}
+                      defaultValue={formData?.areas_of_success ?? "--"}
                       readOnly
                     />
                   </div>
@@ -393,7 +393,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="activities_involved"
-                      defaultValue={formData?.activities_involved ?? ""}
+                      defaultValue={formData?.activities_involved ?? "--"}
                       readOnly
                     />
                   </div>
@@ -405,7 +405,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="leadership_position"
-                      defaultValue={formData?.leadership_position ?? ""}
+                      defaultValue={formData?.leadership_position ?? "--"}
                       readOnly
                     />
                   </div>
@@ -415,7 +415,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="typing_speed"
-                      defaultValue={formData?.typing_speed ?? ""}
+                      defaultValue={formData?.typing_speed ?? "--"}
                       readOnly
                     />
                   </div>
@@ -425,7 +425,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="interesting_subjects"
-                      defaultValue={formData?.interesting_subjects ?? ""}
+                      defaultValue={formData?.interesting_subjects ?? "--"}
                       readOnly
                     />
                   </div>
@@ -435,7 +435,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="current_occupation"
-                      defaultValue={formData?.current_occupation ?? ""}
+                      defaultValue={formData?.current_occupation ?? "--"}
                       readOnly
                     />
                   </div>
@@ -445,7 +445,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="interest_in_occupation"
-                      defaultValue={formData?.interest_in_occupation ?? ""}
+                      defaultValue={formData?.interest_in_occupation ?? "--"}
                       readOnly
                     />
                   </div>
@@ -458,7 +458,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="work_designation"
-                      defaultValue={formData?.work_designation ?? ""}
+                      defaultValue={formData?.work_designation ?? "--"}
                       readOnly
                     />
                   </div>
@@ -470,7 +470,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="interact_with_coworkers"
-                      defaultValue={formData?.interact_with_coworkers ?? ""}
+                      defaultValue={formData?.interact_with_coworkers ?? "--"}
                       readOnly
                     />
                   </div>
@@ -482,7 +482,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="nature_of_job"
-                      defaultValue={formData?.nature_of_job ?? ""}
+                      defaultValue={formData?.nature_of_job ?? "--"}
                       readOnly
                     />
                   </div>
@@ -494,7 +494,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="relation_with"
-                      defaultValue={formData?.relation_with ?? ""}
+                      defaultValue={formData?.relation_with ?? "--"}
                       readOnly
                     />
                   </div>
@@ -506,7 +506,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="issues_in_family"
-                      defaultValue={formData?.issues_in_family ?? ""}
+                      defaultValue={formData?.issues_in_family ?? "--"}
                       readOnly
                     />
                   </div>
@@ -516,7 +516,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="circle_of_frnds"
-                      defaultValue={formData?.circle_of_frnds ?? ""}
+                      defaultValue={formData?.circle_of_frnds ?? "--"}
                       readOnly
                     />
                   </div>
@@ -528,7 +528,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="number_of_partners"
-                      defaultValue={formData?.number_of_partners ?? ""}
+                      defaultValue={formData?.number_of_partners ?? "--"}
                       readOnly
                     />
                   </div>
@@ -538,7 +538,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="fluency_in_lang"
-                      defaultValue={formData?.fluency_in_lang ?? ""}
+                      defaultValue={formData?.fluency_in_lang ?? "--"}
                       readOnly
                     />
                   </div>
@@ -550,7 +550,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="interest_in_other_lang"
-                      defaultValue={formData?.interest_in_other_lang ?? ""}
+                      defaultValue={formData?.interest_in_other_lang ?? "--"}
                       readOnly
                     />
                   </div>
@@ -562,7 +562,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="caste"
-                      defaultValue={formData?.caste ?? ""}
+                      defaultValue={formData?.caste ?? "--"}
                       readOnly
                     />
                   </div>
@@ -574,7 +574,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="faiths"
-                      defaultValue={formData?.faiths ?? ""}
+                      defaultValue={formData?.faiths ?? "--"}
                       readOnly
                     />
                   </div>
@@ -586,7 +586,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="beliefs"
-                      defaultValue={formData?.beliefs ?? ""}
+                      defaultValue={formData?.beliefs ?? "--"}
                       readOnly
                     />
                   </div>
@@ -598,7 +598,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="no_of_cars"
-                      defaultValue={formData?.no_of_cars ?? ""}
+                      defaultValue={formData?.no_of_cars ?? "--"}
                       readOnly
                     />
                   </div>
@@ -610,7 +610,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="no_of_house"
-                      defaultValue={formData?.no_of_house ?? ""}
+                      defaultValue={formData?.no_of_house ?? "--"}
                       readOnly
                     />
                   </div>
@@ -620,7 +620,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="financial_literacy"
-                      defaultValue={formData?.financial_literacy ?? ""}
+                      defaultValue={formData?.financial_literacy ?? "--"}
                       readOnly
                     />
                   </div>
@@ -632,7 +632,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="views_on_invest"
-                      defaultValue={formData?.views_on_invest ?? ""}
+                      defaultValue={formData?.views_on_invest ?? "--"}
                       readOnly
                     />
                   </div>
@@ -642,7 +642,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="How_many_debts"
-                      defaultValue={formData?.How_many_debts ?? ""}
+                      defaultValue={formData?.How_many_debts ?? "--"}
                       readOnly
                     />
                   </div>
@@ -654,7 +654,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="comfort_with_tech"
-                      defaultValue={formData?.comfort_with_tech ?? ""}
+                      defaultValue={formData?.comfort_with_tech ?? "--"}
                       readOnly
                     />
                   </div>
@@ -666,7 +666,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="electronic_devices"
-                      defaultValue={formData?.electronic_devices ?? ""}
+                      defaultValue={formData?.electronic_devices ?? "--"}
                       readOnly
                     />
                   </div>
@@ -679,7 +679,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="appliances_in_use"
-                      defaultValue={formData?.appliances_in_use ?? ""}
+                      defaultValue={formData?.appliances_in_use ?? "--"}
                       readOnly
                     />
                   </div>
@@ -691,7 +691,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="technological_interests"
-                      defaultValue={formData?.technological_interests ?? ""}
+                      defaultValue={formData?.technological_interests ?? "--"}
                       readOnly
                     />
                   </div>
@@ -703,7 +703,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="how_often_chge_devices"
-                      defaultValue={formData?.how_often_chge_devices ?? ""}
+                      defaultValue={formData?.how_often_chge_devices ?? "--"}
                       readOnly
                     />
                   </div>
@@ -715,7 +715,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="traditional_items"
-                      defaultValue={formData?.traditional_items ?? ""}
+                      defaultValue={formData?.traditional_items ?? "--"}
                       readOnly
                     />
                   </div>
@@ -725,7 +725,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="types_of_brands"
-                      defaultValue={formData?.types_of_brands ?? ""}
+                      defaultValue={formData?.types_of_brands ?? "--"}
                       readOnly
                     />
                   </div>
@@ -735,7 +735,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="volunteer_services"
-                      defaultValue={formData?.volunteer_services ?? ""}
+                      defaultValue={formData?.volunteer_services ?? "--"}
                       readOnly
                     />
                   </div>
@@ -745,7 +745,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="fears"
-                      defaultValue={formData?.fears ?? ""}
+                      defaultValue={formData?.fears ?? "--"}
                       readOnly
                     />
                   </div>
@@ -757,7 +757,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="motivations_drawbacks"
-                      defaultValue={formData?.motivations_drawbacks ?? ""}
+                      defaultValue={formData?.motivations_drawbacks ?? "--"}
                       readOnly
                     />
                   </div>
@@ -769,7 +769,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="free_time"
-                      defaultValue={formData?.free_time ?? ""}
+                      defaultValue={formData?.free_time ?? "--"}
                       readOnly
                     />
                   </div>
@@ -781,7 +781,7 @@ const ReferralDetails = () => {
                       className="form-control"
                       type="text"
                       name="outings"
-                      defaultValue={formData?.outings ?? ""}
+                      defaultValue={formData?.outings ?? "--"}
                       readOnly
                     />
                   </div>
