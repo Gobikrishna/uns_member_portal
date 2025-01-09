@@ -46,6 +46,7 @@ const MemberDetails = () => {
   const [formState, setFormState] = useState({});
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const [errors, setErrors] = useState({});
+  const [referrErrors, setReferrErrors] = useState({});
   // Admin Panel End!
 
   // Search functionality
@@ -227,7 +228,7 @@ const MemberDetails = () => {
     ) {
       newErrors.amount = "Valid price is required.";
     }
-    setErrors(newErrors);
+    setReferrErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -1255,9 +1256,9 @@ const MemberDetails = () => {
                                 value={transactionFormState.productName}
                                 onChange={handleTransactionInputChange}
                               />
-                              {errors.productName && (
+                              {referrErrors.productName && (
                                 <div className="text-danger">
-                                  {errors.productName}
+                                  {referrErrors.productName}
                                 </div>
                               )}
                             </div>
@@ -1271,9 +1272,9 @@ const MemberDetails = () => {
                                 value={transactionFormState.amount}
                                 onChange={handleTransactionInputChange}
                               />
-                              {errors.amount && (
+                              {referrErrors.amount && (
                                 <div className="text-danger">
-                                  {errors.amount}
+                                  {referrErrors.amount}
                                 </div>
                               )}
                             </div>
@@ -1282,7 +1283,7 @@ const MemberDetails = () => {
                                 Submit
                               </button>
                             </div>
-                            {successMessage && (
+                            {/* {successMessage && (
                               <div
                                 className={`text-${
                                   successMessage.includes("successfully")
@@ -1292,7 +1293,7 @@ const MemberDetails = () => {
                               >
                                 {successMessage}
                               </div>
-                            )}
+                            )} */}
                           </form>
                         )}
                       </div>
@@ -1346,7 +1347,7 @@ const MemberDetails = () => {
                       <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
                         <h4>Referral List</h4>
                       </div>
-                      {successMessage && (
+                      {/* {successMessage && (
                         <div
                           className="alert alert-success alert-dismissible fade show"
                           role="alert"
@@ -1359,7 +1360,7 @@ const MemberDetails = () => {
                             onClick={handleDismissMessage}
                           ></button>
                         </div>
-                      )}
+                      )} */}
                       <div className="d-flex gap-3">
                         <div className="input-group flex-grow-2 mt-4">
                           <span className="input-group-text">
