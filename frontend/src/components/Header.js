@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import { AuthContext } from "../context/AuthContext";
 
@@ -7,6 +7,7 @@ const Header = () => {
   const { authState, setAuthState } = useContext(AuthContext); // Access context here
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // For controlling dropdown visibility
   const navigate = useNavigate(); // Hook to redirect after logout
+  const location = useLocation();
 
   // Toggle the dropdown visibility
   const toggleDropdown = () => {
@@ -91,6 +92,13 @@ const Header = () => {
                     }`}
                     aria-labelledby="dropdownMenuButton"
                   >
+                    {location.pathname === "/home" && (
+                      <li>
+                        <Link className="dropdown-item" to="/dashboard">
+                          <i className="fa fa-cog me-2"></i>Dashboard
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <Link className="dropdown-item" to="/settings">
                         <i className="fa fa-cog me-2"></i>Settings

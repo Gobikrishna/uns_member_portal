@@ -392,21 +392,72 @@ const MemberDashboard = () => {
           <div className="d-flex justify-content-center mt-3">
             <nav>
               <ul className="pagination">
-                {[...Array(totalPages)].map((_, pageIndex) => (
-                  <li
-                    key={pageIndex}
-                    className={`page-item ${
-                      currentPage === pageIndex + 1 ? "active" : ""
-                    }`}
+                {/* Previous Button */}
+                <li
+                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
                   >
-                    <button
-                      className="page-link"
-                      onClick={() => handlePageChange(pageIndex + 1)}
-                    >
-                      {pageIndex + 1}
-                    </button>
-                  </li>
-                ))}
+                    Previous
+                  </button>
+                </li>
+
+                {/* Page Numbers */}
+                {(() => {
+                  const maxVisiblePages = 8; // Limit to 10 page numbers
+                  let startPage = Math.max(
+                    1,
+                    currentPage - Math.floor(maxVisiblePages / 2)
+                  );
+                  let endPage = Math.min(
+                    totalPages,
+                    startPage + maxVisiblePages - 1
+                  );
+
+                  // Adjust startPage if the total pages are less than maxVisiblePages
+                  if (endPage - startPage < maxVisiblePages - 1) {
+                    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                  }
+
+                  return [...Array(endPage - startPage + 1)].map(
+                    (_, pageIndex) => {
+                      const pageNumber = startPage + pageIndex;
+                      return (
+                        <li
+                          key={pageNumber}
+                          className={`page-item ${
+                            currentPage === pageNumber ? "active" : ""
+                          }`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() => handlePageChange(pageNumber)}
+                          >
+                            {pageNumber}
+                          </button>
+                        </li>
+                      );
+                    }
+                  );
+                })()}
+
+                {/* Next Button */}
+                <li
+                  className={`page-item ${
+                    currentPage === totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                </li>
               </ul>
             </nav>
           </div>
