@@ -67,7 +67,7 @@ const Register = () => {
 
   return (
     <div className="bg-image d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow p-4 boxbg" style={{ width: "500px" }}>
+      <div className="card shadow p-4 boxbg" style={{ width: "400px" }}>
         <div className="bg-overlay"></div>
         <div className="cont-int text-white">
           <div className="text-center mb-2">
