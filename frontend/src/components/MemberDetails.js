@@ -1209,7 +1209,7 @@ const MemberDetails = () => {
                     <button
                       type="submit"
                       className="btn btn-primary"
-                      disabled={getUserData?.role === "admin"}
+                      disabled={getUserData?.role === "admin" || isDisabled}
                     >
                       Submit
                     </button>
