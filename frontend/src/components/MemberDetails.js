@@ -1317,7 +1317,7 @@ const MemberDetails = () => {
                       </thead>
                       <tbody>
                         {transactionData.map((transaction) => (
-                          <tr key={transaction.id}>
+                          <tr key={transaction?.id}>
                             <td>{transaction.userId}</td>
                             <td>{transaction.referredBy}</td>
                             <td>{transaction.productName}</td>

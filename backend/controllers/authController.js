@@ -712,6 +712,22 @@ exports.getReferralTransactionDetails = async (req, res) => {
 
   try {
     // Query to get all transactions related to the user
+    // with member name
+    //     const [transactions] = await db.promise().query(
+    //       `
+    //     SELECT t.id AS transactionId,
+    //      t.userId,
+    //      t.referredBy,
+    //      m1.firstName AS memberName,
+    //      m2.firstName AS referredByName,
+    //      t.createdAt
+    // FROM transactions t
+    // LEFT JOIN members m1 ON t.userId = m1.userId
+    // LEFT JOIN members m2 ON t.referredBy = m2.userId
+    // WHERE t.userId = ? OR t.referredBy = ?
+    // ORDER BY t.createdAt DESC;
+    //     `
+    //     );
     const [transactions] = await db.promise().query(
       `
       SELECT * 

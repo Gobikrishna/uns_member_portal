@@ -314,7 +314,7 @@ const MemberDashboard = () => {
           <div className="mt-2">
             <div className="mb-3 pb-3 border-secondary">
               <h5 className="m-0 pt-2">Referral Contact List</h5>
-              <div className="d-flex gap-3">
+              {/* <div className="d-flex gap-3">
                 <div className="input-group flex-grow-2 mt-4">
                   <input
                     type="text"
@@ -338,7 +338,7 @@ const MemberDashboard = () => {
                   referralId={userData?.id}
                   pageTitle="Add New Member"
                 />
-              </Modal>
+              </Modal> */}
             </div>
           </div>
 
