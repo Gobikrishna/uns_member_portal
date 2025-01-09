@@ -276,6 +276,11 @@ header{
     }
   }
 }
+.table th, .table td {
+  padding: 0.5rem; /* Add padding for better spacing */
+  text-align: center; /* Optional: Center align text */
+  word-wrap: break-word; /* Ensure long words wrap correctly */
+}
 /*=====================Signup & Register end================================*/
 
 /*@media Query styles*/

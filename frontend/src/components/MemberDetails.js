@@ -1219,27 +1219,29 @@ const MemberDetails = () => {
             )}
             {activeTab === "transaction" && (
               <div className="transaction-box">
-                <h4>Transaction</h4>
+                {getUserData?.role && getUserData?.role === "admin" && (
+                  <h4>Transaction</h4>
+                )}
                 <div>
                   {/* Member Details */}
-                  <div className="d-flex responsive-box-container">
-                    <div className="responsive-box shadow">
-                      <div className="">
-                        <div className="detail-item">
-                          <strong>Member ID:</strong> {member?.id}
+                  {getUserData?.role && getUserData?.role === "admin" && (
+                    <div className="d-flex responsive-box-container">
+                      <div className="responsive-box shadow">
+                        <div className="">
+                          <div className="detail-item">
+                            <strong>Member ID:</strong> {member?.id}
+                          </div>
+                          <div className="detail-item">
+                            <strong>Member Name:</strong> {member?.firstName}
+                          </div>
+                          <div className="detail-item">
+                            <strong>Role:</strong> {member?.role}
+                          </div>
+                          <div className="detail-item">
+                            <strong>Mobile:</strong> {member?.mobile}
+                          </div>
                         </div>
-                        <div className="detail-item">
-                          <strong>Member Name:</strong> {member?.firstName}
-                        </div>
-                        <div className="detail-item">
-                          <strong>Role:</strong> {member?.role}
-                        </div>
-                        <div className="detail-item">
-                          <strong>Mobile:</strong> {member?.mobile}
-                        </div>
-                      </div>
 
-                      {getUserData?.role && getUserData?.role === "admin" && (
                         <div className="transaction-form-container">
                           <form onSubmit={handleTransactionSubmit}>
                             <input
@@ -1304,9 +1306,9 @@ const MemberDetails = () => {
                             )} */}
                           </form>
                         </div>
-                      )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   {/* Table */}
                   <div className="d-flex justify-content-between mt-4 pb-2 border-bottom">
                     <h4>Transaction Details</h4>
