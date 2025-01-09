@@ -316,6 +316,9 @@ const MemberDashboard = () => {
               <h5 className="m-0 pt-2">Referral Contact List</h5>
               <div className="d-flex gap-3">
                 <div className="input-group flex-grow-2 mt-4">
+                  <span className="input-group-text">
+                    <img src={search} alt="search icon" />
+                  </span>
                   <input
                     type="text"
                     className="form-control"
@@ -323,9 +326,6 @@ const MemberDashboard = () => {
                     value={searchQuery}
                     onChange={handleSearch}
                   />
-                  <span className="input-group-text">
-                    <img src={search} alt="search icon" />
-                  </span>
                 </div>
                 {/* <div className="mt-4">
                   <button onClick={openModal} className="btn btn-primary">

@@ -99,6 +99,14 @@
       }
     }
   }
+  .modal-header {
+    padding-top:0;
+    padding-bottom:0;
+    .modal-title{
+      background: none !important;
+      color:#333 !important;
+    }
+  }
 }
 
 .user-name {

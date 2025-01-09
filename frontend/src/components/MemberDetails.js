@@ -1343,7 +1343,7 @@ const MemberDetails = () => {
                 {/* admin panel */}
                 {getUserData?.role && getUserData?.role === "admin" && (
                   <div className="mt-2">
-                    <div className="mb-3 pb-3 border-secondary">
+                    <div className="pb-3 border-secondary">
                       <div className="d-flex justify-content-between my-4 pb-2 border-bottom">
                         <h4>Referral List</h4>
                       </div>
@@ -1361,17 +1361,19 @@ const MemberDetails = () => {
                           ></button>
                         </div>
                       )}
-                      <div className="input-group flex-grow-2 mt-4">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Search Mobile Number"
-                          value={searchQuery}
-                          onChange={handleSearch}
-                        />
-                        <span className="input-group-text">
-                          <img src={search} alt="search icon" />
-                        </span>
+                      <div className="d-flex gap-3">
+                        <div className="input-group flex-grow-2 mt-4">
+                          <span className="input-group-text">
+                            <img src={search} alt="search icon" />
+                          </span>
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search Mobile Number"
+                            value={searchQuery}
+                            onChange={handleSearch}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="mt-0">
