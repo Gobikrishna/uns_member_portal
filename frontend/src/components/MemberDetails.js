@@ -1257,7 +1257,7 @@ const MemberDetails = () => {
                                   id="productName"
                                   value={transactionFormState.productName}
                                   onChange={handleTransactionInputChange}
-                                  className="form-control"
+                                  className="form-control pt-0"
                                 />
                                 {referrErrors.productName && (
                                   <div className="text-danger">
@@ -1274,7 +1274,7 @@ const MemberDetails = () => {
                                   id="amount"
                                   value={transactionFormState.amount}
                                   onChange={handleTransactionInputChange}
-                                  className="form-control"
+                                  className="form-control pt-0"
                                 />
                                 {referrErrors.amount && (
                                   <div className="text-danger">
