@@ -1455,20 +1455,14 @@ const MemberDetails = () => {
                                         )}
                                     </td>
                                     <td>
-                                      <span
-                                        onClick={() => openModal(member.id)}
-                                        className="btn btn-primary"
+                                      <Link
+                                        to="/referral-details"
+                                        state={member.id}
                                       >
-                                        view details
-                                      </span>
-                                      <Modal
-                                        showModal={showModal}
-                                        onClose={closeModal}
-                                      >
-                                        <ReferralDetails
-                                          referralId={selectedMemberId}
-                                        />
-                                      </Modal>
+                                        <button className="btn btn-sm btn-primary">
+                                          View Details
+                                        </button>
+                                      </Link>
                                     </td>
                                     <td>
                                       {selectedMemberId === member.id && (

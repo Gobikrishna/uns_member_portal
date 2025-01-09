@@ -15,18 +15,18 @@ import Footer from "./Footer";
 
 const Home = () => {
   const featureImages = [
-    { img: agriculture},
-    { img: education},
-    { img: gamism},
-    { img: energy},
-    { img: hosp},
-    { img: healthcare},
-    { img: sport},
-    { img: hybridcex},
-    { img: realestate},
-    { img: blockchain},
-    { img: ecommerce},
-    { img: dex},
+    { img: agriculture },
+    { img: education },
+    { img: gamism },
+    { img: energy },
+    { img: hosp },
+    { img: healthcare },
+    { img: sport },
+    { img: hybridcex },
+    { img: realestate },
+    { img: blockchain },
+    { img: ecommerce },
+    { img: dex },
   ];
 
   return (
@@ -35,7 +35,7 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <div className="home-cont pb-4">
+      <div className="home-cont pb-4 bg-image">
         {/* <section className="text-white text-center">
           <div className="container px-4 pt-4">
             <img width="100%" src={unsHero} alt="Hero" />
@@ -44,7 +44,9 @@ const Home = () => {
 
         {/* Features Section */}
         <section className="container text-center">
-          <h2 className="text-white p-5">Explore Your Investment Opportunities</h2>
+          <h2 className="text-white p-5">
+            Explore Your Investment Opportunities
+          </h2>
           <div className="grid align-items-center flex-wrap gap-4 select-coloumn uns-items mb-4">
             {featureImages.map((feature, index) => (
               <div key={index} className="">
@@ -56,9 +58,9 @@ const Home = () => {
       </div>
 
       {/* Footer */}
-     <Footer />
+      <Footer />
     </div>
   );
-}
+};
 
 export default Home;
