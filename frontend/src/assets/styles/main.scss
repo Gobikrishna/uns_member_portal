@@ -257,6 +257,25 @@ header{
   font-size: 16px;
   padding: 5px 10px;
 }
+.pagination{
+  .page-item {
+    &:first-child, &:last-child{
+      .page-link{
+      border:0;
+      background: none;
+      border-radius: none;
+      &:focus{
+        box-shadow: none;
+      }
+      }
+    }
+    &:first-child{
+      .page-link{
+        margin-right: 40px;
+      }
+    }
+  }
+}
 /*=====================Signup & Register end================================*/
 
 /*@media Query styles*/
