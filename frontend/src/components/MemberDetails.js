@@ -25,6 +25,7 @@ const MemberDetails = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [memberData, setMemberData] = useState([]);
   const [activeTab, setActiveTab] = useState("referral");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const closeModal = () => {
     setShowModal(false);
@@ -133,7 +134,8 @@ const MemberDetails = () => {
           });
       }
     }
-  }, [authState.isAuthenticated, member]);
+    setIsSubmitted(false);
+  }, [authState.isAuthenticated, member, isSubmitted]);
 
   console.log("memberlists==>", memberData);
   // to open modal window
@@ -233,6 +235,9 @@ const MemberDetails = () => {
   };
 
   const handleTransactionSubmit = (e) => {
+    setTimeout(() => {
+      setIsSubmitted(true);
+    }, 1000);
     e.preventDefault();
 
     if (!validateForm()) {
@@ -295,6 +300,9 @@ const MemberDetails = () => {
   };
 
   const handleReferralTransactionSubmit = (e) => {
+    setTimeout(() => {
+      setIsSubmitted(true);
+    }, 1000);
     e.preventDefault();
     if (getUserData?.role !== "admin") return; // Check the role
 
