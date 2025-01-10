@@ -178,6 +178,10 @@ const MemberDashboard = () => {
       navigate("/defaultRoute"); // Redirect to a default route
     }
   };
+  const getRole = (role) => {
+    const roleFirstLetter = role?.charAt(0).toUpperCase() || "";
+    return roleFirstLetter;
+  };
   // Generate initials for display
   const getInitials = (firstName = "", lastName = "") =>
     `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
@@ -284,7 +288,11 @@ const MemberDashboard = () => {
                           <tbody>
                             {transactionData.map((transaction) => (
                               <tr key={transaction.id}>
-                                <td>{transaction.userId}</td>
+                                <td>
+                                  {getRole(transaction.role) +
+                                    "-" +
+                                    transaction.userId}
+                                </td>
                                 <td>{transaction.referredBy}</td>
                                 <td>{transaction.productName}</td>
                                 <td>{Number(transaction.amount).toFixed(2)}</td>
@@ -361,7 +369,7 @@ const MemberDashboard = () => {
                   {currentItems.length > 0 ? (
                     currentItems.map((member, index) => (
                       <tr key={index}>
-                        <td>{member.id}</td>
+                        <td>{getRole(member.role) + "-" + member.id}</td>
                         <td>{`${member?.firstName} ${member?.lastName}`}</td>
                         <td>{member?.role}</td>
                         <td>{member?.mobile}</td>

@@ -171,6 +171,10 @@ const MemberDetails = () => {
     const lastInitial = lastName?.charAt(0).toUpperCase() || "";
     return firstInitial + lastInitial;
   };
+  const getRole = (role) => {
+    const roleFirstLetter = role?.charAt(0).toUpperCase() || "";
+    return roleFirstLetter;
+  };
 
   // Handle form submission
   const handleInputChange = (e) => {
@@ -1344,7 +1348,11 @@ const MemberDetails = () => {
                         <tbody>
                           {transactionData.map((transaction) => (
                             <tr key={transaction?.id}>
-                              <td>{transaction.userId}</td>
+                              <td>
+                                {getRole(transaction.role) +
+                                  "-" +
+                                  transaction.userId}
+                              </td>
                               <td>{transaction.referredBy}</td>
                               <td>{transaction.productName}</td>
                               <td>{Number(transaction.amount).toFixed(2)}</td>
@@ -1435,7 +1443,9 @@ const MemberDetails = () => {
                                         }
                                       />
                                     </td>
-                                    <td>{member.id}</td>
+                                    <td>
+                                      {getRole(member.role) + "-" + member.id}
+                                    </td>
                                     <td>{`${member.firstName} ${member.lastName}`}</td>
                                     <td>{member.mobile}</td>
                                     <td>

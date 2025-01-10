@@ -713,30 +713,37 @@ exports.getReferralTransactionDetails = async (req, res) => {
   try {
     // Query to get all transactions related to the user
     // with member name
-    //     const [transactions] = await db.promise().query(
-    //       `
-    //     SELECT t.id AS transactionId,
-    //      t.userId,
-    //      t.referredBy,
-    //      m1.firstName AS memberName,
-    //      m2.firstName AS referredByName,
-    //      t.createdAt
-    // FROM transactions t
-    // LEFT JOIN members m1 ON t.userId = m1.userId
-    // LEFT JOIN members m2 ON t.referredBy = m2.userId
-    // WHERE t.userId = ? OR t.referredBy = ?
-    // ORDER BY t.createdAt DESC;
-    //     `
-    //     );
     const [transactions] = await db.promise().query(
       `
-      SELECT * 
-      FROM transactions 
-      WHERE userId = ? OR referredBy = ?
-      ORDER BY createdAt DESC
-      `,
+        SELECT t.id AS transactionId,
+         t.userId,
+         t.referredBy,
+         productName,
+         t.amount,
+         t.commissionEarned,
+         commissionTo,
+         u1.role AS role,
+         m1.firstName AS memberName,
+         m2.firstName AS referredByName,
+         t.createdAt
+    FROM transactions t
+    LEFT JOIN users u1 ON t.userId = u1.id
+    LEFT JOIN members m1 ON t.userId = m1.userId
+    LEFT JOIN members m2 ON t.referredBy = m2.userId
+    WHERE t.userId = ? OR t.referredBy = ?
+    ORDER BY t.createdAt DESC;
+        `,
       [userId, userId]
     );
+    // const [transactions] = await db.promise().query(
+    //   `
+    //   SELECT *
+    //   FROM transactions
+    //   WHERE userId = ? OR referredBy = ?
+    //   ORDER BY createdAt DESC
+    //   `,
+    //   [userId, userId]
+    // );
 
     if (transactions.length === 0) {
       return res

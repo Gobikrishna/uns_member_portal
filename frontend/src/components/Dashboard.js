@@ -182,6 +182,10 @@ const Dashboard = () => {
   } else {
     console.log("No member data found.");
   }
+  const getRole = (role) => {
+    const roleFirstLetter = role?.charAt(0).toUpperCase() || "";
+    return roleFirstLetter;
+  };
 
   return (
     <div className="bg-light dashboard-cont">
@@ -251,7 +255,11 @@ const Dashboard = () => {
                           <tbody>
                             {transactionData.map((transaction) => (
                               <tr key={transaction.id}>
-                                <td>{transaction.userId}</td>
+                                <td>
+                                  {getRole(transaction.role) +
+                                    "-" +
+                                    transaction.userId}
+                                </td>
                                 <td>{transaction.referredBy}</td>
                                 <td>{transaction.productName}</td>
                                 <td>{Number(transaction.amount).toFixed(2)}</td>
@@ -327,7 +335,7 @@ const Dashboard = () => {
                   {currentItems.length > 0 ? (
                     currentItems.map((member, index) => (
                       <tr key={index}>
-                        <td>{member.id}</td>
+                        <td>{getRole(member.role) + "-" + member.id}</td>
                         <td>{`${member.firstName} ${member.lastName}`}</td>
                         <td>{member.role}</td>
                         <td>{member.mobile}</td>
