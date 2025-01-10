@@ -24,7 +24,7 @@ const MemberDetails = () => {
   const location = useLocation();
   const [successMessage, setSuccessMessage] = useState("");
   const [memberData, setMemberData] = useState([]);
-  const [activeTab, setActiveTab] = useState("referral");
+  const [activeTab, setActiveTab] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const closeModal = () => {
@@ -82,6 +82,13 @@ const MemberDetails = () => {
   useEffect(() => {
     if (authState.isAuthenticated) {
       const token = authState.token;
+      const getUserData = JSON.parse(localStorage.getItem("user"));
+      if (getUserData?.role === "admin") {
+        setActiveTab("transaction");
+      } else {
+        setActiveTab("referral");
+      }
+
       if (!member) {
         // Redirect to the dashboard if member data is null or undefined
         navigate("/dashboard");
